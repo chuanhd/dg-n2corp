@@ -70,6 +70,18 @@
 		29EA60B3171B4172002D0666 /* btn-save@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29EA60AD171B4172002D0666 /* btn-save@2x.png */; };
 		29EA60B7171B42B5002D0666 /* SocialHubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29EA60B5171B42B4002D0666 /* SocialHubViewController.m */; };
 		29EA60B8171B42B5002D0666 /* SocialHubViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 29EA60B6171B42B4002D0666 /* SocialHubViewController.xib */; };
+		D9356607171DA0A200F4C910 /* MainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9356605171DA0A200F4C910 /* MainMenuViewController.m */; };
+		D9356608171DA0A200F4C910 /* MainMenuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9356606171DA0A200F4C910 /* MainMenuViewController.xib */; };
+		D935660C171DA37B00F4C910 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D935660A171DA37B00F4C910 /* LoginViewController.m */; };
+		D935660D171DA37B00F4C910 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D935660B171DA37B00F4C910 /* LoginViewController.xib */; };
+		D9356611171DA5AD00F4C910 /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D935660F171DA5AD00F4C910 /* SignUpViewController.m */; };
+		D9356612171DA5AD00F4C910 /* SignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9356610171DA5AD00F4C910 /* SignUpViewController.xib */; };
+		D935661A171DAC3200F4C910 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D9356619171DAC3200F4C910 /* MBProgressHUD.m */; };
+		D98D5056171DBE2900714359 /* btn-create-profile.png in Resources */ = {isa = PBXBuildFile; fileRef = D98D5052171DBE2800714359 /* btn-create-profile.png */; };
+		D98D5057171DBE2900714359 /* btn-create-profile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D98D5053171DBE2800714359 /* btn-create-profile@2x.png */; };
+		D98D5058171DBE2900714359 /* btn-login.png in Resources */ = {isa = PBXBuildFile; fileRef = D98D5054171DBE2800714359 /* btn-login.png */; };
+		D98D5059171DBE2900714359 /* btn-login@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D98D5055171DBE2900714359 /* btn-login@2x.png */; };
+		D98D505C171DC65300714359 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = D98D505B171DC65100714359 /* User.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -155,6 +167,23 @@
 		29EA60B4171B42B4002D0666 /* SocialHubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialHubViewController.h; sourceTree = "<group>"; };
 		29EA60B5171B42B4002D0666 /* SocialHubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialHubViewController.m; sourceTree = "<group>"; };
 		29EA60B6171B42B4002D0666 /* SocialHubViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SocialHubViewController.xib; sourceTree = "<group>"; };
+		D9356604171DA0A100F4C910 /* MainMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuViewController.h; sourceTree = "<group>"; };
+		D9356605171DA0A200F4C910 /* MainMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuViewController.m; sourceTree = "<group>"; };
+		D9356606171DA0A200F4C910 /* MainMenuViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenuViewController.xib; sourceTree = "<group>"; };
+		D9356609171DA37B00F4C910 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		D935660A171DA37B00F4C910 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		D935660B171DA37B00F4C910 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
+		D935660E171DA5AD00F4C910 /* SignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpViewController.h; sourceTree = "<group>"; };
+		D935660F171DA5AD00F4C910 /* SignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
+		D9356610171DA5AD00F4C910 /* SignUpViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignUpViewController.xib; sourceTree = "<group>"; };
+		D9356618171DAC3200F4C910 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		D9356619171DAC3200F4C910 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		D98D5052171DBE2800714359 /* btn-create-profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-create-profile.png"; sourceTree = "<group>"; };
+		D98D5053171DBE2800714359 /* btn-create-profile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-create-profile@2x.png"; sourceTree = "<group>"; };
+		D98D5054171DBE2800714359 /* btn-login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-login.png"; sourceTree = "<group>"; };
+		D98D5055171DBE2900714359 /* btn-login@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-login@2x.png"; sourceTree = "<group>"; };
+		D98D505A171DC64F00714359 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		D98D505B171DC65100714359 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,13 +232,14 @@
 			children = (
 				29EA608D171B39CE002D0666 /* ViewControllers */,
 				29EA6066171B3947002D0666 /* Lib */,
-				29EA607B171B3947002D0666 /* ServerManager */,
 				29EA600F171B26BE002D0666 /* Images */,
 				29EA5FF9171B2665002D0666 /* Supporting Files */,
 				29EA6001171B2665002D0666 /* AppDelegate.h */,
 				29EA6002171B2665002D0666 /* AppDelegate.m */,
 				29EA6038171B2706002D0666 /* RootViewController.h */,
 				29EA6039171B2706002D0666 /* RootViewController.m */,
+				D98D505A171DC64F00714359 /* User.h */,
+				D98D505B171DC65100714359 /* User.m */,
 			);
 			path = Digitz;
 			sourceTree = "<group>";
@@ -232,6 +262,10 @@
 		29EA600F171B26BE002D0666 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				D98D5052171DBE2800714359 /* btn-create-profile.png */,
+				D98D5053171DBE2800714359 /* btn-create-profile@2x.png */,
+				D98D5054171DBE2800714359 /* btn-login.png */,
+				D98D5055171DBE2900714359 /* btn-login@2x.png */,
 				29EA60A8171B4171002D0666 /* btn-back.png */,
 				29EA60A9171B4171002D0666 /* btn-back@2x.png */,
 				29EA60AA171B4171002D0666 /* btn-connect.png */,
@@ -283,6 +317,8 @@
 		29EA6066171B3947002D0666 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				29EA607B171B3947002D0666 /* ServerManager */,
+				D9356617171DAC1C00F4C910 /* MBProgressHUD */,
 				29EA6067171B3947002D0666 /* AFNetworking */,
 			);
 			path = Lib;
@@ -320,7 +356,8 @@
 				29EA607C171B3947002D0666 /* ServerManager.h */,
 				29EA607D171B3947002D0666 /* ServerManager.m */,
 			);
-			path = ServerManager;
+			name = ServerManager;
+			path = ../ServerManager;
 			sourceTree = "<group>";
 		};
 		29EA608D171B39CE002D0666 /* ViewControllers */ = {
@@ -335,8 +372,26 @@
 				29EA60B4171B42B4002D0666 /* SocialHubViewController.h */,
 				29EA60B5171B42B4002D0666 /* SocialHubViewController.m */,
 				29EA60B6171B42B4002D0666 /* SocialHubViewController.xib */,
+				D9356604171DA0A100F4C910 /* MainMenuViewController.h */,
+				D9356605171DA0A200F4C910 /* MainMenuViewController.m */,
+				D9356606171DA0A200F4C910 /* MainMenuViewController.xib */,
+				D9356609171DA37B00F4C910 /* LoginViewController.h */,
+				D935660A171DA37B00F4C910 /* LoginViewController.m */,
+				D935660B171DA37B00F4C910 /* LoginViewController.xib */,
+				D935660E171DA5AD00F4C910 /* SignUpViewController.h */,
+				D935660F171DA5AD00F4C910 /* SignUpViewController.m */,
+				D9356610171DA5AD00F4C910 /* SignUpViewController.xib */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		D9356617171DAC1C00F4C910 /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				D9356618171DAC3200F4C910 /* MBProgressHUD.h */,
+				D9356619171DAC3200F4C910 /* MBProgressHUD.m */,
+			);
+			name = MBProgressHUD;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -434,6 +489,13 @@
 				29EA60B2171B4172002D0666 /* btn-save.png in Resources */,
 				29EA60B3171B4172002D0666 /* btn-save@2x.png in Resources */,
 				29EA60B8171B42B5002D0666 /* SocialHubViewController.xib in Resources */,
+				D9356608171DA0A200F4C910 /* MainMenuViewController.xib in Resources */,
+				D935660D171DA37B00F4C910 /* LoginViewController.xib in Resources */,
+				D9356612171DA5AD00F4C910 /* SignUpViewController.xib in Resources */,
+				D98D5056171DBE2900714359 /* btn-create-profile.png in Resources */,
+				D98D5057171DBE2900714359 /* btn-create-profile@2x.png in Resources */,
+				D98D5058171DBE2900714359 /* btn-login.png in Resources */,
+				D98D5059171DBE2900714359 /* btn-login@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -460,6 +522,11 @@
 				29EA6094171B3A04002D0666 /* EnterYourDigitzViewController.m in Sources */,
 				29EA6095171B3A04002D0666 /* PersonalInformationViewController.m in Sources */,
 				29EA60B7171B42B5002D0666 /* SocialHubViewController.m in Sources */,
+				D9356607171DA0A200F4C910 /* MainMenuViewController.m in Sources */,
+				D935660C171DA37B00F4C910 /* LoginViewController.m in Sources */,
+				D9356611171DA5AD00F4C910 /* SignUpViewController.m in Sources */,
+				D935661A171DAC3200F4C910 /* MBProgressHUD.m in Sources */,
+				D98D505C171DC65300714359 /* User.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -572,6 +639,7 @@
 				29EA600E171B2665002D0666 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
