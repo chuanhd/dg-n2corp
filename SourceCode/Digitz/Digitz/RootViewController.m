@@ -7,7 +7,8 @@
 //
 
 #import "RootViewController.h"
-#import "EnterYourDigitzViewController.h"
+#import "MainMenuViewController.h"
+#import "SignUpViewController.h"
 
 @interface RootViewController ()
 
@@ -27,7 +28,8 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = YES;
-    EnterYourDigitzViewController* vc = [[EnterYourDigitzViewController alloc] init];
+    
+    MainMenuViewController* vc = [[MainMenuViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 

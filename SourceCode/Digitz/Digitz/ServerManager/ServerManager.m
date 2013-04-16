@@ -131,4 +131,52 @@ static id sharedReactor = nil;
     [operation start];
 }
 
+- (void)updateUserInformationWithParams: (NSDictionary *)params {
+    NSLog(@"params: %@", params);
+    NSMutableURLRequest *request = [_httpClient requestWithMethod:@"POST" path:PATH_UPDATE_USER_INFO parameters:params];
+    request.timeoutInterval = TIME_OUT;
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        NSDictionary *result = JSON;
+        NSLog(@"json update user info: %@", result);
+        User *newUser = nil;
+        if ([[result objectForKey:@"success"] boolValue]) {
+            NSDictionary *userDic = [result objectForKey:@"user"];
+            newUser = [self userFromDictionary:userDic];
+        }
+        if (_delegate && [_delegate respondsToSelector:@selector(updateUserInformationWithParamsSuccess:)]) {
+            [_delegate performSelector:@selector(updateUserInformationWithParamsSuccess:) withObject:newUser];
+        }
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        if (_delegate && [_delegate respondsToSelector:@selector(updateUserInformationWithParamsFailedWithError:)]) {
+            [_delegate performSelector:@selector(updateUserInformationWithParamsFailedWithError:) withObject:error];
+        }
+    }];
+    [operation start];
+}
+
+- (User *)userFromDictionary: (NSDictionary *)userDic {
+    User *newUser = [[User alloc] init];
+    newUser.username = [userDic objectForKey:@"username"];
+    newUser.email = [userDic objectForKey:@"email"];
+    newUser.age = [userDic objectForKey:@"age"] != (id) [NSNull null] ? [[userDic objectForKey:@"age"] integerValue] : 18;
+    newUser.phoneNumber = [userDic objectForKey:@"phone_number"];
+    newUser.hometown = [userDic objectForKey:@"hometown"];
+    if ([userDic objectForKey:@"gender"]) {
+        if ([[userDic objectForKey:@"gender"] isEqualToString:@"male"]) {
+            newUser.gender = MALE;
+        }else{
+            newUser.gender = FEMALE;
+        }
+    }else{
+        newUser.gender = MALE;
+    }
+    //newUser.facebook_id = [userDic objectForKey:@"facebook_id"];
+    //newUser.facebook_token = [userDic objectForKey:@"facebook_token"];
+    //newUser.games_count = ([userDic objectForKey:@"games_count"] != (id)[NSNull null]) ? [[userDic objectForKey:@"games_count"] integerValue] : -1;
+    //newUser.device_udid = [userDic objectForKey:@"device_udid"];
+    //newUser.avatar = [userDic objectForKey:@"avatar"];
+    
+    return newUser;
+}
+
 @end

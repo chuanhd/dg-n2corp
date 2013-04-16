@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ServerManager.h"
 
-@interface PersonalInformationViewController : UIViewController
+@interface PersonalInformationViewController : UIViewController <UITextFieldDelegate, ServerManagerDelegate>
 @property (strong, nonatomic) IBOutlet UITextField *txtName;
 @property (strong, nonatomic) IBOutlet UITextField *txtAge;
 @property (strong, nonatomic) IBOutlet UITextField *txtPhoneNumber;
