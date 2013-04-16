@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ServerManager.h"
 
-@interface EnterYourDigitzViewController : UIViewController
+@interface EnterYourDigitzViewController : UIViewController <ServerManagerDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @end
