@@ -47,6 +47,9 @@
 }
 
 - (IBAction)signupButtonTapped:(id)sender {
+    
+    [self.view endEditing:YES];
+    
     if ([self validateField]) {
         ServerManager *server = [ServerManager sharedInstance];
         server.delegate = self;
@@ -93,12 +96,13 @@
 
 #pragma mark text field delegate
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-    if (textField.frame.origin.y > 180) {
+    NSLog(@"textField %f", textField.frame.origin.y);
+    if (textField.superview.frame.origin.y > 180) {
 		[UIView beginAnimations: @"moveField" context: nil];
 		[UIView setAnimationDelegate: self];
 		[UIView setAnimationDuration: 0.25f];
 		[UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
-		self.view.frame = CGRectMake(0, -textField.frame.origin.y + 150, self.view.frame.size.width, self.view.frame.size.height);
+		self.view.frame = CGRectMake(0, -textField.superview.frame.origin.y + 120, self.view.frame.size.width, self.view.frame.size.height);
 		[UIView commitAnimations];
 	}
 }
