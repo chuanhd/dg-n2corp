@@ -180,8 +180,17 @@ static id sharedReactor = nil;
 }
 
 - (void)updateUserInformationWithParams: (NSDictionary *)params {
-    NSLog(@"params: %@", params);
-    NSMutableURLRequest *request = [_httpClient requestWithMethod:@"POST" path:PATH_UPDATE_USER_INFO parameters:params];
+    
+    NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
+    
+    if ([params objectForKey:kKey_UserToken] == nil) {
+        NSString *auth_token = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
+        [mutableParams setObject:auth_token forKey:kKey_UserToken];
+    }
+    
+    NSLog(@"params: %@", mutableParams);
+
+    NSMutableURLRequest *request = [_httpClient requestWithMethod:@"POST" path:PATH_UPDATE_USER_INFO parameters:mutableParams];
     request.timeoutInterval = TIME_OUT;
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         NSDictionary *result = JSON;
@@ -206,10 +215,10 @@ static id sharedReactor = nil;
     User *newUser = [[User alloc] init];
     newUser.username = [userDic objectForKey:@"username"];
     newUser.email = [userDic objectForKey:@"email"];
-    newUser.age = [userDic objectForKey:@"age"] != (id) [NSNull null] ? [[userDic objectForKey:@"age"] integerValue] : 18;
+    //newUser.age = [userDic objectForKey:@"age"];
     newUser.phoneNumber = [userDic objectForKey:@"phone_number"];
     newUser.hometown = [userDic objectForKey:@"hometown"];
-    if ([userDic objectForKey:@"gender"]) {
+    if ([userDic objectForKey:@"gender"] != [NSNull null]) {
         if ([[userDic objectForKey:@"gender"] isEqualToString:@"male"]) {
             newUser.gender = MALE;
         }else{
@@ -218,6 +227,7 @@ static id sharedReactor = nil;
     }else{
         newUser.gender = MALE;
     }
+    newUser.userId = [userDic objectForKey:@"id"];
     //newUser.facebook_id = [userDic objectForKey:@"facebook_id"];
     //newUser.facebook_token = [userDic objectForKey:@"facebook_token"];
     //newUser.games_count = ([userDic objectForKey:@"games_count"] != (id)[NSNull null]) ? [[userDic objectForKey:@"games_count"] integerValue] : -1;
@@ -267,16 +277,31 @@ static id sharedReactor = nil;
     [operation start];
 }
 
-- (void)findNearByFriendsWithToken:(NSString *)token withLong:(float)_long withLat:(float)_lat
+- (void)findNearByFriendsWithToken:(NSString *)token
 {
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:token, @"auth_token", nil];
     NSMutableURLRequest *request = [_httpClient requestWithMethod:@"GET" path:PATH_FIND_FRIENDS parameters:params];
     [request setTimeoutInterval:TIME_OUT];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON){
-        NSString *result = JSON;
+        NSDictionary *result = JSON;
         NSLog(@"json update user info: %@", result);
         
+        NSArray *users = [result objectForKey:@"users"];
+        NSLog(@"users: %d", users.count);
+        NSMutableArray *usersArray = [NSMutableArray array];
+        for (NSDictionary *user in users) {
+            //NSLog(@"user: %@", user);
+            @autoreleasepool {
+                User *_user = [self userFromDictionary:user];
+                [usersArray addObject:_user];
+            }
+        }
         
+        users = nil;
+        
+        if (_delegate && [_delegate respondsToSelector:@selector(findNearByFriendsSuccessWithArray:)]) {
+            [_delegate performSelector:@selector(findNearByFriendsSuccessWithArray:) withObject:usersArray];
+        }
         
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON){
         if (_delegate && [_delegate respondsToSelector:@selector(findNearByFriendFailWithError:)]) {

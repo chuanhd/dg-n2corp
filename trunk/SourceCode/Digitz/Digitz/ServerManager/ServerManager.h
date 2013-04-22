@@ -85,7 +85,8 @@
 - (void)signInWithUsername: (NSString *)username andPassword: (NSString *)password;
 - (void)updateUserInformationWithParams: (NSDictionary *)params;
 - (void) getUserInfoWithToken:(NSString *)token;
-- (void) findNearByFriendsWithToken:(NSString *)token withLong:(float)_long withLat:(float)_lat;
+//- (void) findNearByFriendsWithToken:(NSString *)token withLong:(float)_long withLat:(float)_lat;
+- (void) findNearByFriendsWithToken:(NSString *)token;
 
 
 @end

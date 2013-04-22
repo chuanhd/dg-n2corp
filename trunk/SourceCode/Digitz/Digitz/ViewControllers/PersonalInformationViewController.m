@@ -49,6 +49,7 @@
     self.statePicker.dataSource = self;
     self.statePicker.delegate = self;
     
+    gender = @"male";
 //    UITapGestureRecognizer *txtAgeTapped = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showPickerViewWithTag:)];
 //    [self.txtAge addGestureRecognizer:txtAgeTapped];
     
@@ -158,19 +159,6 @@ static NSString *gender;
 
 }
 
-- (void)updateUserInformationWithParamsSuccess:(User *)user
-{
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
-- (void) updateUserInformationWithParamsFailedWithError:(NSError *)error
-{
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"An error occured" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
-    [alertView show];
-}
-
 - (IBAction)touchBtnBack:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -204,8 +192,7 @@ static NSString *gender;
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     
     if ([textField isEqual:self.txtAge]) {
-        [self.txtName endEditing:YES];
-        [textField resignFirstResponder];
+        [self.view endEditing:YES];
         [self showPickerViewWithTag:textField];
         return;
 
@@ -233,7 +220,7 @@ static NSString *gender;
 //    for (UIView *subView in self.datePickerView.subviews) {
 //        subView.hidden = NO;
 //    }
-    
+    [self.view endEditing:YES];
     UITextField *textField = (UITextField *) sender;
     
     if ([textField isEqual:self.txtAge]) {
