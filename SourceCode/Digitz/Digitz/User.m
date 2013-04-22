@@ -10,6 +10,7 @@
 
 @implementation User
 
+@synthesize userId;
 @synthesize username;
 @synthesize name, email, age, hometown, phoneNumber, gender;
 

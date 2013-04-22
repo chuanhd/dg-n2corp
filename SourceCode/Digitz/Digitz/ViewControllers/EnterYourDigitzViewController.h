@@ -34,5 +34,6 @@
 - (IBAction)btnInstagramTapped:(id)sender;
 - (IBAction)btnTwitterTapped:(id)sender;
 - (IBAction)btnLinkedInTapped:(id)sender;
+- (IBAction)btnBackTapped:(id)sender;
 
 @end

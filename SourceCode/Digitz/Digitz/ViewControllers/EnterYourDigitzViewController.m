@@ -10,6 +10,7 @@
 #import "PersonalInformationViewController.h"
 #import "SocialHubViewController.h"
 #import "MBProgressHUD.h"
+#import "HomeScreenViewController.h"
 
 #define kGoogle @"google"
 #define kFacebook @"facebook"
@@ -291,6 +292,8 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
     //hud.labelText = @"Sending infomation...";
     //[serverManager updateUserInformationWithParams:paramsDict];
     [hud hide:YES];
+    HomeScreenViewController *vc = [[HomeScreenViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void) signUpFailedWithError:(NSError *)error
@@ -298,16 +301,6 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
     [hud hide:YES];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[NSString stringWithFormat:@"Register failed with error %@", error.localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
     [alert show];
-}
-
-- (void)updateUserInformationWithParamsSuccess:(User *)user
-{
-    
-}
-
-- (void)updateUserInformationWithParamsFailedWithError:(NSError *)error
-{
-    
 }
 
 - (IBAction)btnFacebookTapped:(id)sender {
@@ -324,6 +317,10 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
 }
 
 - (IBAction)btnLinkedInTapped:(id)sender {
+}
+
+- (IBAction)btnBackTapped:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void) queryFBUserInfo
