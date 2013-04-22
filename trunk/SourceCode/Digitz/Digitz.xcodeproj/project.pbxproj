@@ -77,6 +77,8 @@
 		D9304748172582090095C636 /* btn-continue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9304744172582090095C636 /* btn-continue@2x.png */; };
 		D9304749172582090095C636 /* btn-save-topbar.png in Resources */ = {isa = PBXBuildFile; fileRef = D9304745172582090095C636 /* btn-save-topbar.png */; };
 		D930474A172582090095C636 /* btn-save-topbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9304746172582090095C636 /* btn-save-topbar@2x.png */; };
+		D930474C17259E770095C636 /* UserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D930474B17259E750095C636 /* UserCell.xib */; };
+		D930474F17259F1B0095C636 /* UserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D930474E17259F190095C636 /* UserCell.m */; };
 		D9356607171DA0A200F4C910 /* MainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9356605171DA0A200F4C910 /* MainMenuViewController.m */; };
 		D9356608171DA0A200F4C910 /* MainMenuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9356606171DA0A200F4C910 /* MainMenuViewController.xib */; };
 		D935660C171DA37B00F4C910 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D935660A171DA37B00F4C910 /* LoginViewController.m */; };
@@ -205,6 +207,9 @@
 		D9304744172582090095C636 /* btn-continue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-continue@2x.png"; sourceTree = "<group>"; };
 		D9304745172582090095C636 /* btn-save-topbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-save-topbar.png"; sourceTree = "<group>"; };
 		D9304746172582090095C636 /* btn-save-topbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-save-topbar@2x.png"; sourceTree = "<group>"; };
+		D930474B17259E750095C636 /* UserCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserCell.xib; sourceTree = "<group>"; };
+		D930474D17259F190095C636 /* UserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCell.h; sourceTree = "<group>"; };
+		D930474E17259F190095C636 /* UserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCell.m; sourceTree = "<group>"; };
 		D9356604171DA0A100F4C910 /* MainMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuViewController.h; sourceTree = "<group>"; };
 		D9356605171DA0A200F4C910 /* MainMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuViewController.m; sourceTree = "<group>"; };
 		D9356606171DA0A200F4C910 /* MainMenuViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenuViewController.xib; sourceTree = "<group>"; };
@@ -482,6 +487,9 @@
 				D9DD705C172445C60014D62B /* HomeScreenViewController.h */,
 				D9DD705D172445C60014D62B /* HomeScreenViewController.m */,
 				D9DD705E172445C70014D62B /* HomeScreenViewController.xib */,
+				D930474B17259E750095C636 /* UserCell.xib */,
+				D930474D17259F190095C636 /* UserCell.h */,
+				D930474E17259F190095C636 /* UserCell.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -626,6 +634,7 @@
 				D9304748172582090095C636 /* btn-continue@2x.png in Resources */,
 				D9304749172582090095C636 /* btn-save-topbar.png in Resources */,
 				D930474A172582090095C636 /* btn-save-topbar@2x.png in Resources */,
+				D930474C17259E770095C636 /* UserCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -659,6 +668,7 @@
 				D98D505C171DC65300714359 /* User.m in Sources */,
 				D9DD705F172445C70014D62B /* HomeScreenViewController.m in Sources */,
 				D930474217257B590095C636 /* JSONKit.m in Sources */,
+				D930474F17259F1B0095C636 /* UserCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
