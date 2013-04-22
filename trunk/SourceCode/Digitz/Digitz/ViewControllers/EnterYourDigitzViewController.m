@@ -356,6 +356,27 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
                 NSLog(@"key: %@ -> value: %@", key, [result objectForKey:key]);
             }
             
+            NSString *fullname = [NSString stringWithFormat:@"%@ %@", [result objectForKey:@"first_name"], [result objectForKey:@"last_name"]];
+            [self.paramsDict setObject:[result objectForKey:@"email"] forKey:kKey_UpdateEmail];
+            [self.paramsDict setObject:fullname forKey:kKey_UpdateName];
+            [self.paramsDict setObject:[result objectForKey:@"link"] forKey:kKey_UpdateFacebookUrl];
+            [self.paramsDict setObject:[result objectForKey:@"gender"] forKey:kKey_UpdateGender];
+            NSMutableDictionary *avatarUrlData = [result objectForKey:@"picture"];
+            avatarUrlData = [avatarUrlData objectForKey:@"data"];
+            NSString *urlString = [avatarUrlData objectForKey:@"url"];
+            [self.paramsDict setObject:urlString forKey:kKey_UpdateAvatar];
+            avatarUrlData = [result objectForKey:@"location"];
+            urlString = [avatarUrlData objectForKey:@"name"];
+            [self.paramsDict setObject:urlString forKey:kKey_UpdateHometown];
+
+            
+            NSString *birthday = [result objectForKey:@"birthday"];
+            NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
+            [dateFormater setDateFormat:@"MM/dd/yyyy"];
+            NSDate *date = [dateFormater dateFromString:birthday];
+            [dateFormater setDateFormat:@"yyyy-MM-dd"];
+            NSLog(@"birthday: %@", [dateFormater stringFromDate:date]);
+            [self.paramsDict setObject:[dateFormater stringFromDate:date] forKey:kKey_UpdateBirthday];
             
 //            NSString *facebookId = [result objectForKey:@"id"];
 //            NSString *facebookEmail = [result objectForKey:@"email"];

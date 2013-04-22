@@ -12,6 +12,9 @@
 #import "User.h"
 
 @interface HomeScreenViewController ()
+{
+    NSArray *searchResults;
+}
 
 @end
 
@@ -42,6 +45,8 @@
     self.digitzUsersTableView.dataSource = self;
     self.digitzUsersTableView.delegate = self;
     
+    self.searchDisplayController.delegate = self;
+    
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
     locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
@@ -49,6 +54,8 @@
     //locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     //[locationManager startUpdatingLocation];
     [locationManager startMonitoringSignificantLocationChanges];
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Getting locaion"];
 }
 
 
@@ -133,12 +140,15 @@
 
 - (void)updateUserInformationWithParamsSuccess:(User *)user
 {
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     NSLog(@"update Success");
 }
 
 - (void)updateUserInformationWithParamsFailedWithError:(NSError *)error
 {
     NSLog(@"update fail: %@", error.description);
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Some error occurred" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    [alert show];
 }
 
 - (IBAction)settingBtnTapped:(id)sender {
@@ -155,7 +165,13 @@
         cell = [itemArray objectAtIndex:0];
     }
     
-    User *user = [self.friendsArray objectAtIndex:indexPath.row];
+    User *user;
+    
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        user = [searchResults objectAtIndex:indexPath.row];
+    }else{
+        user = [self.friendsArray objectAtIndex:indexPath.row];
+    }
     
     cell.txtUsername.text = user.username;
     cell.txtHometown.text = user.hometown;
@@ -165,7 +181,22 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return [searchResults count];
+    }
     return self.friendsArray.count;
+}
+
+- (void) filterContentForSearchText:(NSString *)searchText scope:(NSString *)scope
+{
+    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"self.username CONTAINS %@", searchText];
+    searchResults = [self.friendsArray filteredArrayUsingPredicate:resultPredicate];
+}
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    [self filterContentForSearchText:searchString scope:[[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
+    return YES;
 }
 
 @end

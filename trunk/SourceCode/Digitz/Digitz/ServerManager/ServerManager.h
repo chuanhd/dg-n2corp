@@ -40,6 +40,7 @@
 #define kKey_UpdateInstagramUrl @"user[instagram_url]"
 #define kKey_UpdateLocationLong @"user[location_lng]"
 #define kKey_UpdateLocationLat @"user[location_lat]"
+#define kKey_UpdateAvatar @"user[avatar]"
 
 @protocol ServerManagerDelegate <NSObject>
 
