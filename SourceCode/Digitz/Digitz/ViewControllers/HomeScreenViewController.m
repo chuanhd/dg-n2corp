@@ -101,6 +101,7 @@
 
 - (void)viewDidUnload {
     [self setDigitzUsersTableView:nil];
+    [self setSearchBar:nil];
     [super viewDidUnload];
 }
 
