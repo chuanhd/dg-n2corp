@@ -89,6 +89,9 @@
 }
 
 - (IBAction)touchBtnConnect:(id)sender {
+    if ([self.socialName isEqualToString:kFacebook]) {
+        //[self openSessionWithAllowLoginUI:YES];
+    }
 }
 
 - (IBAction)touchBtnBack:(id)sender {
@@ -98,4 +101,5 @@
 - (IBAction)touchBackground:(id)sender {
     [self.view endEditing:YES];
 }
+
 @end

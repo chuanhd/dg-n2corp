@@ -10,12 +10,17 @@
 #import "MBProgressHUD.h"
 
 @interface PersonalInformationViewController ()
+{
+    NSArray *stateArray;
+}
 
 @end
 
 @implementation PersonalInformationViewController
 @synthesize btnMale;
 @synthesize btnFemale;
+@synthesize serverManager;
+@synthesize parentVC;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -35,6 +40,19 @@
     self.txtHometown.delegate = self;
     self.txtName.delegate = self;
     self.txtPhoneNumber.delegate = self;
+    self.txtState.delegate = self;
+    
+    self.serverManager = [[ServerManager alloc] init];
+    self.serverManager.delegate = self;
+    
+    stateArray = [NSArray arrayWithObjects:@"Hawaii", @"New York", @"Washington DC", @"Nevada", nil];
+    self.statePicker.dataSource = self;
+    self.statePicker.delegate = self;
+    
+//    UITapGestureRecognizer *txtAgeTapped = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showPickerViewWithTag:)];
+//    [self.txtAge addGestureRecognizer:txtAgeTapped];
+    
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -51,8 +69,52 @@
     [self setTxtHometown:nil];
     [self setBtnMale:nil];
     [self setBtnFemale:nil];
+    [self setDatePicker:nil];
+    [self setDatePickerView:nil];
+    [self setStatePicker:nil];
+    [self setTxtState:nil];
     [super viewDidUnload];
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+//    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
+//    NSLog(@"token %@", token);
+//    self.serverManager.delegate = self;
+//    [self.serverManager getUserInfoWithToken:token];
+//    
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES withLabel:@"Fetching..."];
+}
+
+//- (void)getUserInformationSuccessWithUser:(User *)user
+//{
+//    [MBProgressHUD hideHUDForView:self.view animated:YES];
+//
+//    self.txtName.text = user.name;
+//    self.txtAge.text = [NSString stringWithFormat:@"%d", user.age];
+//    self.txtPhoneNumber.text = user.phoneNumber;
+//    self.txtHometown.text = user.hometown;
+//    self.txtEmail.text = user.email;
+//    
+//    if (user.gender == MALE) {
+//        [btnMale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
+//        [btnFemale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
+//        gender = @"male";
+//    }else{
+//        [btnMale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
+//        [btnFemale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
+//        gender = @"female";
+//    }
+//}
+//
+//- (void)getUserInformationFailedWithError:(NSError *)error
+//{
+//    [MBProgressHUD hideHUDForView:self.view animated:YES];
+//    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"An error occured" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+//    [alertView show];
+//}
 
 static NSString *gender;
 
@@ -69,38 +131,36 @@ static NSString *gender;
 }
 
 - (IBAction)touchBtnSave:(id)sender {
-    ServerManager *server = [ServerManager sharedInstance];
-    server.delegate = self;
+    self.serverManager.delegate = self;
     
-    NSUserDefaults *df = [NSUserDefaults standardUserDefaults];
-    NSString *token = [df objectForKey:@"token"];
+//    NSUserDefaults *df = [NSUserDefaults standardUserDefaults];
+//    NSString *token = [df objectForKey:kKey_UserToken];
     
     if (self.txtName.text.length == 0 || self.txtAge.text.length == 0 || self.txtPhoneNumber.text.length == 0 || self.txtEmail.text.length == 0 || self.txtHometown.text.length == 0) {
         return;
     }
     
-    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-    [dic setObject:token forKey:kKey_UserToken];
+    //NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+    //[self.parentVC.paramsDict setObject:token forKey:kKey_UserToken];
     
-    [dic setObject:[NSNumber numberWithInteger:self.txtAge.text.integerValue] forKey:kKey_UpdateAge];
-    [dic setObject:self.txtEmail.text forKey:kKey_UpdateEmail];
-    [dic setObject:self.txtHometown forKey:kKey_UpdateHometown];
-    [dic setObject:self.txtPhoneNumber forKey:kKey_UpdatePhone];
-    [dic setObject:gender forKey:kKey_UpdateGender];
+    [self.parentVC.paramsDict setObject:self.txtAge.text forKey:kKey_UpdateBirthday];
+    [self.parentVC.paramsDict setObject:self.txtEmail.text forKey:kKey_UpdateEmail];
+    [self.parentVC.paramsDict setObject:self.txtHometown.text forKey:kKey_UpdateHometown];
+    [self.parentVC.paramsDict setObject:self.txtPhoneNumber.text forKey:kKey_UpdatePhone];
+    [self.parentVC.paramsDict setObject:gender forKey:kKey_UpdateGender];
     
-    [server updateUserInformationWithParams:dic];
+    self.parentVC.personalInfoFilled = YES;
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES];
+//    [self.serverManager updateUserInformationWithParams:dic];
+//    
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES];
+    [self.navigationController popViewControllerAnimated:YES];
+
 }
 
 - (void)updateUserInformationWithParamsSuccess:(User *)user
 {
     [MBProgressHUD hideHUDForView:self.view animated:YES];
-//    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.view];
-//    hud.labelText = @"Update successful";
-//    [hud showAnimated:YES whileExecutingBlock:nil completionBlock:^{
-//        [hud hide:YES afterDelay:2.0];
-//    }];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -119,8 +179,44 @@ static NSString *gender;
     [self.view endEditing:YES];
 }
 
+- (IBAction)closeDatePickerTapped:(id)sender {
+    NSDate *dateFromPicker = self.datePicker.date;
+    NSDateFormatter *formater = [[NSDateFormatter alloc] init];
+    [formater setDateFormat:@"yyyy-MM-dd"];
+    self.txtAge.text = [formater stringFromDate:dateFromPicker];
+    self.datePickerView.hidden = YES;
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+//    if ([textField isEqual:self.txtAge]) {
+//        return NO;
+//    }
+//    
+//    if ([textField isEqual:self.txtState]) {
+//        return NO;
+//    }
+    
+    return YES;
+}
+
 #pragma mark text field delegate
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
+    
+    if ([textField isEqual:self.txtAge]) {
+        [self.txtName endEditing:YES];
+        [textField resignFirstResponder];
+        [self showPickerViewWithTag:textField];
+        return;
+
+    }
+    
+    if ([textField isEqual:self.txtState]) {
+        [textField resignFirstResponder];
+        [self showPickerViewWithTag:textField];
+        return;
+    }
+    
     if (textField.frame.origin.y > 180) {
 		[UIView beginAnimations: @"moveField" context: nil];
 		[UIView setAnimationDelegate: self];
@@ -129,6 +225,32 @@ static NSString *gender;
 		self.view.frame = CGRectMake(0, -textField.frame.origin.y + 150, self.view.frame.size.width, self.view.frame.size.height);
 		[UIView commitAnimations];
 	}
+
+}
+
+- (void) showPickerViewWithTag:(id)sender
+{
+//    for (UIView *subView in self.datePickerView.subviews) {
+//        subView.hidden = NO;
+//    }
+    
+    UITextField *textField = (UITextField *) sender;
+    
+    if ([textField isEqual:self.txtAge]) {
+        self.datePicker.hidden = NO;
+        self.statePicker.hidden = YES;
+    }else if ([textField isEqual:self.txtState])
+    {
+        self.datePicker.hidden = YES;
+        self.statePicker.hidden = NO;
+    }
+    
+    self.datePickerView.hidden = NO;
+}
+
+- (void) datePickerValueChanged:(id)sender
+{
+
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
@@ -145,4 +267,30 @@ static NSString *gender;
     [textField resignFirstResponder];
     return YES;
 }
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return stateArray.count;
+}
+
+- (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component
+{
+    return 35.0f;
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return [stateArray objectAtIndex:row];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    self.txtState.text = [stateArray objectAtIndex:row];
+}
+
 @end

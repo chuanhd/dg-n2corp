@@ -11,6 +11,11 @@
 #import "SignUpViewController.h"
 #import "EnterYourDigitzViewController.h"
 #import "MBProgressHUD.h"
+#import "HomeScreenViewController.h"
+
+#define kUsernameOrPasswordNotFilled 0
+#define kPasswordTooShort 1
+#define kUsernameTooShort 2
 
 @interface MainMenuViewController ()
 
@@ -42,36 +47,88 @@
 }
 
 - (IBAction)loginButtonTapped:(id)sender {
-    LoginViewController *vc = [[LoginViewController alloc] init];
+//    LoginViewController *vc = [[LoginViewController alloc] init];
+//    [self.navigationController pushViewController:vc animated:YES];
+    
+    NSLog(@"%d", [self validateField]);
+    
+    if ([self validateField] != -1) {
+        UIAlertView *alertView;
+        if ([self validateField] == kUsernameOrPasswordNotFilled) {
+            alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must fill both username and password" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alertView show];
+        }else if ([self validateField] == kPasswordTooShort)
+        {
+            alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Your password length must be great than 8" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alertView show];
+        }else if ([self validateField] == kUsernameTooShort)
+        {
+            alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Your username length must be great than 6" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alertView show];
+        }
+        return;
+    }
+    
+    ServerManager *server = [ServerManager sharedInstance];
+    server.delegate = self;
+    [server signInWithUsername:self.txtUsername.text andPassword:self.txtPassword.text];
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO];
+}
+
+- (void)signInSuccess
+{
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    HomeScreenViewController *vc = [[HomeScreenViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)signInFailedWithError:(NSError *)error
+{
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"An error occured" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+    [alertView show];
 }
 
 - (IBAction)signupButtonTapped:(id)sender {
     
-    [self.view endEditing:YES];
+    EnterYourDigitzViewController *vc = [[EnterYourDigitzViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
     
-    if ([self validateField]) {
-        ServerManager *server = [ServerManager sharedInstance];
-        server.delegate = self;
-        [server signUpWithUsername:self.txtUsername.text andPassword:self.txtPassword.text andEmail:@""];
-    }else{
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Invalid info" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
-        [alertView show];
-        
-    }
+//    [self.view endEditing:YES];
+//    
+//    if ([self validateField]) {
+//        ServerManager *server = [ServerManager sharedInstance];
+//        server.delegate = self;
+//        [server signUpWithUsername:self.txtUsername.text andPassword:self.txtPassword.text andEmail:@""];
+//    }else{
+//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Invalid info" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+//        [alertView show];
+//        
+//    }
 }
 
-- (BOOL) validateField
+- (NSInteger) validateField
 {
     if (self.txtUsername.text.length == 0 || self.txtPassword.text.length == 0) {
-        return NO;
+        return 0;
+    }
+    
+    if (self.txtPassword.text.length < 8) {
+        return 1;
+    }
+    
+    if (self.txtUsername.text.length < 6) {
+        return 2;
     }
     
 //    if (![self.txtPassword.text isEqualToString:self.txtConfirmPassword.text]) {
 //        return NO;
 //    }
     
-    return YES;
+    return -1;
 }
 
 
@@ -121,4 +178,5 @@
     [textField resignFirstResponder];
     return YES;
 }
+
 @end
