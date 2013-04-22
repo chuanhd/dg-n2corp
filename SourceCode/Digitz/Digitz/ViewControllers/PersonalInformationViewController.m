@@ -80,6 +80,21 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.txtName.text = [parentVC.paramsDict objectForKey:kKey_UpdateName];
+    self.txtAge.text = [parentVC.paramsDict objectForKey:kKey_UpdateBirthday];
+    self.txtEmail.text = [parentVC.paramsDict objectForKey:kKey_UpdateEmail];
+    self.txtHometown.text = [parentVC.paramsDict objectForKey:kKey_UpdateHometown];
+    if ([[parentVC.paramsDict objectForKey:kKey_UpdateGender] isEqualToString:@"male"]) {
+        [btnMale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
+        [btnFemale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
+        gender = @"male";
+    }else{
+        [btnMale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
+        [btnFemale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
+        gender = @"female";
+    }
+
+    
     
 //    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
 //    NSLog(@"token %@", token);
@@ -138,6 +153,8 @@ static NSString *gender;
 //    NSString *token = [df objectForKey:kKey_UserToken];
     
     if (self.txtName.text.length == 0 || self.txtAge.text.length == 0 || self.txtPhoneNumber.text.length == 0 || self.txtEmail.text.length == 0 || self.txtHometown.text.length == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must fill all required fields" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
         return;
     }
     
