@@ -8,8 +8,10 @@
 
 #import "AppDelegate.h"
 #import "RootViewController.h"
+#import <FacebookSDK/FacebookSDK.h>
 
 @implementation AppDelegate
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -19,6 +21,11 @@
     UINavigationController *naviVC = [[UINavigationController alloc] initWithRootViewController:self.rootViewController];
     self.window.rootViewController = naviVC;
     [self.window makeKeyAndVisible];
+    
+//    if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
+//        [self openSessionWithAllowLoginUI:YES];
+//    }
+    
     return YES;
 }
 
@@ -42,11 +49,17 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [FBSession.activeSession handleDidBecomeActive];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    return [FBSession.activeSession handleOpenURL:url];
 }
 
 @end

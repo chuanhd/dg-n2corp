@@ -112,6 +112,7 @@ typedef void (^MBProgressHUDCompletionBlock)();
  * @see animationType
  */
 + (MBProgressHUD *)showHUDAddedTo:(UIView *)view animated:(BOOL)animated cancelable:(BOOL)mCancelable;
++ (MBProgressHUD *)showHUDAddedTo:(UIView *)view animated:(BOOL)animated cancelable:(BOOL)mCancelable withLabel:(NSString *)label;
 
 /**
  * Finds the top-most HUD subview and hides it. The counterpart to this method is showHUDAddedTo:animated:.

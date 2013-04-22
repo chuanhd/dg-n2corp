@@ -15,6 +15,8 @@
 #define PATH_SIGNIN @"api/users/sign_in"
 #define PATH_SIGNUP @"api/users/sign_up"
 #define PATH_UPDATE_USER_INFO @"api/users/update_info"
+#define PATH_GET_USER_INFO @"api/users"
+#define PATH_FIND_FRIENDS @"api/users/find_friends"
 
 #define kKey_UserToken @"auth_token"
 #define kKey_UpdateUsername @"user[username]"
@@ -27,6 +29,17 @@
 #define kKey_UpdateGender @"user[gender]"
 #define kKey_UpdatePhone @"user[phone]"
 #define kKey_UpdateHometown @"user[hometown]"
+#define kKey_UpdateBirthday @"user[birthday]"
+#define kKey_UpdateBlogUrl @"user[blog_url]"
+#define kKey_UpdateNotes @"user[notes]"
+#define kKey_UpdateName @"user[name]"
+#define kKey_UpdateFacebookUrl @"user[facebook_url]"
+#define kKey_UpdateGooglePlusUrl @"user[google_plus_url]"
+#define kKey_UpdateTwitterUrl @"user[twitter_url]"
+#define kKey_UpdateLinkedLnUrl @"user[linkedin_url]"
+#define kKey_UpdateInstagramUrl @"user[instagram_url]"
+#define kKey_UpdateLocationLong @"user[location_lng]"
+#define kKey_UpdateLocationLat @"user[location_lat]"
 
 @protocol ServerManagerDelegate <NSObject>
 
@@ -43,6 +56,15 @@
 // update infomation
 - (void)updateUserInformationWithParamsSuccess: (User *)user;
 - (void)updateUserInformationWithParamsFailedWithError: (NSError *)error;
+
+// get user infomation
+- (void)getUserInformationSuccessWithUser: (User *)user;
+- (void)getUserInformationFailedWithError: (NSError *)error;
+
+// find friends
+- (void) findNearByFriendsSuccessWithArray:(NSArray *)users;
+- (void) findNearByFriendFailWithError:(NSError *)error;
+
 @end
 
 @interface ServerManager : NSObject
@@ -58,9 +80,12 @@
 - (void)signUpWithUsername: (NSString *)username
                andPassword: (NSString *)password
                   andEmail: (NSString *)email;
+- (void) signUpwithParamsDict:(NSDictionary *)_paramsDict;
 
 - (void)signInWithUsername: (NSString *)username andPassword: (NSString *)password;
 - (void)updateUserInformationWithParams: (NSDictionary *)params;
+- (void) getUserInfoWithToken:(NSString *)token;
+- (void) findNearByFriendsWithToken:(NSString *)token withLong:(float)_long withLat:(float)_lat;
 
 
 @end

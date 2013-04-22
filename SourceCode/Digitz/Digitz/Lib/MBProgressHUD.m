@@ -106,6 +106,15 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	return MB_AUTORELEASE(hud);
 }
 
++ (MBProgressHUD *)showHUDAddedTo:(UIView *)view animated:(BOOL)animated cancelable:(BOOL)mCancelable withLabel:(NSString *)label{
+	MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:view];
+    hud.labelText = label;
+	[view addSubview:hud];
+    hud.cancelable = mCancelable;
+	[hud show:animated];
+	return MB_AUTORELEASE(hud);
+}
+
 + (BOOL)hideHUDForView:(UIView *)view animated:(BOOL)animated {
 	MBProgressHUD *hud = [MBProgressHUD HUDForView:view];
 	if (hud != nil) {
