@@ -12,6 +12,7 @@
 #import "EnterYourDigitzViewController.h"
 #import "MBProgressHUD.h"
 #import "HomeScreenViewController.h"
+#import "PersonalInformationViewController.h"
 
 #define kUsernameOrPasswordNotFilled 0
 #define kPasswordTooShort 1
@@ -88,6 +89,9 @@
 {
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     
+    
+    NSLog(@"error: %@", error);
+    
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"An error occured" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
     [alertView show];
 }
@@ -95,6 +99,7 @@
 - (IBAction)signupButtonTapped:(id)sender {
     
     EnterYourDigitzViewController *vc = [[EnterYourDigitzViewController alloc] init];
+//    PersonalInformationViewController *vc = [[PersonalInformationViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
     
 //    [self.view endEditing:YES];

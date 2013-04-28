@@ -241,7 +241,7 @@
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<string key="IBUIText">Hometown</string>
+								<string key="IBUIText">City</string>
 								<nil key="IBUITextColor"/>
 								<nil key="IBUIHighlightedColor"/>
 								<int key="IBUIBaselineAdjustment">0</int>
@@ -622,8 +622,12 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 								<object class="NSDate" key="IBUIDate">
 									<double key="NS.time">388257200.76165903</double>
 								</object>
+								<object class="NSDate" key="IBUIMinimumDate">
+									<double key="NS.time">-3187256800</double>
+								</object>
 								<int key="IBUIMinuteInterval">1</int>
 								<bool key="IBUIHasMinimumDate">YES</bool>
+								<bool key="IBUIHasMaximumDate">YES</bool>
 							</object>
 							<object class="IBUIButton" id="241078383">
 								<reference key="NSNextResponder" ref="203905335"/>
