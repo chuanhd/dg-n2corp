@@ -41,6 +41,7 @@
 #define kKey_UpdateLocationLong @"user[location_lng]"
 #define kKey_UpdateLocationLat @"user[location_lat]"
 #define kKey_UpdateAvatar @"user[avatar]"
+#define kKey_UpdateState @"user[state]"
 
 @protocol ServerManagerDelegate <NSObject>
 

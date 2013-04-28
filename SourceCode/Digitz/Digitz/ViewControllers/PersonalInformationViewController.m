@@ -21,6 +21,7 @@
 @synthesize btnFemale;
 @synthesize serverManager;
 @synthesize parentVC;
+@synthesize keyboardControls = _keyboardControls;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -45,11 +46,20 @@
     self.serverManager = [[ServerManager alloc] init];
     self.serverManager.delegate = self;
     
-    stateArray = [NSArray arrayWithObjects:@"Hawaii", @"New York", @"Washington DC", @"Nevada", nil];
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"states" ofType:@"plist"];
+    stateArray = [NSArray arrayWithContentsOfFile:plistPath];
+    //stateArray = [dict objectForKey:@"Root"];
+    //stateArray = [NSArray arrayWithObjects:@"Hawaii", @"New York", @"Washington DC", @"Nevada", nil];
+    NSLog(@"stateArray count: %d", stateArray.count);
     self.statePicker.dataSource = self;
     self.statePicker.delegate = self;
     
     gender = @"male";
+    
+    NSArray *fields = @[self.txtName, self.txtAge, self.txtPhoneNumber, self.txtEmail, self.txtHometown, self.txtState];
+    [self setKeyboardControls:[[BSKeyboardControls alloc] initWithFields:fields]];
+    self.keyboardControls.delegate = self;
+
 //    UITapGestureRecognizer *txtAgeTapped = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showPickerViewWithTag:)];
 //    [self.txtAge addGestureRecognizer:txtAgeTapped];
     
@@ -93,6 +103,8 @@
         [btnFemale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
         gender = @"female";
     }
+    self.txtPhoneNumber.text  = [parentVC.paramsDict objectForKey:kKey_UpdatePhone];
+    self.txtState.text = [parentVC.paramsDict objectForKey:kKey_UpdateState];
 
     
     
@@ -161,17 +173,39 @@ static NSString *gender;
     //NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
     //[self.parentVC.paramsDict setObject:token forKey:kKey_UserToken];
     
-    [self.parentVC.paramsDict setObject:self.txtAge.text forKey:kKey_UpdateBirthday];
+    [self.parentVC.paramsDict setObject:self.txtName.text forKey:kKey_UpdateName];
+    NSString *birthday = self.txtAge.text;
+    NSDateFormatter *formater = [[NSDateFormatter alloc] init];
+    [formater setDateFormat:@"MM-dd-yyyy"];
+    NSDate *date = [formater dateFromString:birthday];
+    [formater setDateFormat:@"yyyy-MM-dd"];
+    birthday = [formater stringFromDate:date];
+    NSLog(@"birthday: %@", birthday);
+    
+    if (birthday.length == 0 || birthday == nil) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must fill all required fields" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+    
+    [self.parentVC.paramsDict setObject:birthday forKey:kKey_UpdateBirthday];
     [self.parentVC.paramsDict setObject:self.txtEmail.text forKey:kKey_UpdateEmail];
     [self.parentVC.paramsDict setObject:self.txtHometown.text forKey:kKey_UpdateHometown];
     [self.parentVC.paramsDict setObject:self.txtPhoneNumber.text forKey:kKey_UpdatePhone];
     [self.parentVC.paramsDict setObject:gender forKey:kKey_UpdateGender];
+    [self.parentVC.paramsDict setObject:self.txtState.text forKey:kKey_UpdateState];
     
     self.parentVC.personalInfoFilled = YES;
     
 //    [self.serverManager updateUserInformationWithParams:dic];
 //    
 //    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES];
+    
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"personalInfoFilled"
+     object:self
+     userInfo:nil];
+    
     [self.navigationController popViewControllerAnimated:YES];
 
 }
@@ -187,7 +221,7 @@ static NSString *gender;
 - (IBAction)closeDatePickerTapped:(id)sender {
     NSDate *dateFromPicker = self.datePicker.date;
     NSDateFormatter *formater = [[NSDateFormatter alloc] init];
-    [formater setDateFormat:@"yyyy-MM-dd"];
+    [formater setDateFormat:@"MM-dd-yyyy"];
     self.txtAge.text = [formater stringFromDate:dateFromPicker];
     self.datePickerView.hidden = YES;
 }
@@ -209,51 +243,32 @@ static NSString *gender;
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     
     if ([textField isEqual:self.txtAge]) {
-        [self.view endEditing:YES];
-        [self showPickerViewWithTag:textField];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.view endEditing:YES];
+            [self showPickerViewWithTag:textField];
+        });
         return;
 
     }
     
     if ([textField isEqual:self.txtState]) {
-        [textField resignFirstResponder];
-        [self showPickerViewWithTag:textField];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.view endEditing:YES];
+            [self showPickerViewWithTag:textField];
+        });
         return;
     }
     
-    if (textField.frame.origin.y > 180) {
+    [_keyboardControls setActiveField:textField];
+    
+    if (textField.frame.origin.y > 160) {
 		[UIView beginAnimations: @"moveField" context: nil];
 		[UIView setAnimationDelegate: self];
 		[UIView setAnimationDuration: 0.25f];
 		[UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
-		self.view.frame = CGRectMake(0, -textField.frame.origin.y + 150, self.view.frame.size.width, self.view.frame.size.height);
+		self.view.frame = CGRectMake(0, -textField.frame.origin.y + 120, self.view.frame.size.width, self.view.frame.size.height);
 		[UIView commitAnimations];
 	}
-
-}
-
-- (void) showPickerViewWithTag:(id)sender
-{
-//    for (UIView *subView in self.datePickerView.subviews) {
-//        subView.hidden = NO;
-//    }
-    [self.view endEditing:YES];
-    UITextField *textField = (UITextField *) sender;
-    
-    if ([textField isEqual:self.txtAge]) {
-        self.datePicker.hidden = NO;
-        self.statePicker.hidden = YES;
-    }else if ([textField isEqual:self.txtState])
-    {
-        self.datePicker.hidden = YES;
-        self.statePicker.hidden = NO;
-    }
-    
-    self.datePickerView.hidden = NO;
-}
-
-- (void) datePickerValueChanged:(id)sender
-{
 
 }
 
@@ -270,6 +285,49 @@ static NSString *gender;
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return YES;
+}
+
+- (void)keyboardControls:(BSKeyboardControls *)keyboardControls selectedField:(UIView *)field inDirection:(BSKeyboardControlsDirection)direction
+{
+    if (field.frame.origin.y > 160) {
+		[UIView beginAnimations: @"moveField" context: nil];
+		[UIView setAnimationDelegate: self];
+		[UIView setAnimationDuration: 0.25f];
+		[UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
+		self.view.frame = CGRectMake(0, -field.frame.origin.y + 120, self.view.frame.size.width, self.view.frame.size.height);
+		[UIView commitAnimations];
+	}
+}
+
+- (void)keyboardControlsDonePressed:(BSKeyboardControls *)keyboardControls
+{
+    [UIView beginAnimations: @"moveField" context: nil];
+    [UIView setAnimationDelegate: self];
+    [UIView setAnimationDuration: 0.25f];
+    [UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
+    self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    [UIView commitAnimations];
+    [_keyboardControls.activeField resignFirstResponder];
+}
+
+- (void) showPickerViewWithTag:(id)sender
+{
+    //    for (UIView *subView in self.datePickerView.subviews) {
+    //        subView.hidden = NO;
+    //    }
+    [self.view endEditing:YES];
+    UITextField *textField = (UITextField *) sender;
+    
+    if ([textField isEqual:self.txtAge]) {
+        self.datePicker.hidden = NO;
+        self.statePicker.hidden = YES;
+    }else if ([textField isEqual:self.txtState])
+    {
+        self.datePicker.hidden = YES;
+        self.statePicker.hidden = NO;
+    }
+    
+    self.datePickerView.hidden = NO;
 }
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
@@ -328,6 +386,7 @@ static NSString *gender;
         
         return YES;
     }
+    return YES;
 }
 
 -(NSString*)formatNumber:(NSString*)mobileNumber

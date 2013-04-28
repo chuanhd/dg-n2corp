@@ -8,12 +8,20 @@
 
 #import <UIKit/UIKit.h>
 #import "RootViewController.h"
+#import "GPPURLHandler.h"
+#import "GTMOAuth2Authentication.h"
+#import "MainMenuViewController.h"
+
 
 @class RootViewController;
+
+static NSString * const kClientId = @"48661555086.apps.googleusercontent.com";
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) RootViewController *rootViewController;
+@property (strong, nonatomic) GTMOAuth2Authentication *auth;
 
 
 @end

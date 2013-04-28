@@ -9,9 +9,11 @@
 #import "AppDelegate.h"
 #import "RootViewController.h"
 #import <FacebookSDK/FacebookSDK.h>
+#import "EnterYourDigitzViewController.h"
 
 @implementation AppDelegate
 
+@synthesize auth;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -21,6 +23,7 @@
     UINavigationController *naviVC = [[UINavigationController alloc] initWithRootViewController:self.rootViewController];
     self.window.rootViewController = naviVC;
     [self.window makeKeyAndVisible];
+    [self.window makeKeyWindow];
     
 //    if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
 //        [self openSessionWithAllowLoginUI:YES];
@@ -59,7 +62,15 @@
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
+    NSLog(@"source application: %@ and openUrl: %@", sourceApplication, url.scheme);
+    //return [FBSession.activeSession handleOpenURL:url];
+    
+    if ([url.scheme isEqualToString:@"com.digitz.dg"]) { // Google+ url
+        return [GPPURLHandler handleURL:url sourceApplication:sourceApplication annotation:annotation];
+    }
+    
     return [FBSession.activeSession handleOpenURL:url];
+    
 }
 
 @end

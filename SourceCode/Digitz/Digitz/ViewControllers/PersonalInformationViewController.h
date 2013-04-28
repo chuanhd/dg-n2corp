@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "ServerManager.h"
 #import "EnterYourDigitzViewController.h"
+#import "BSKeyboardControls.h"
 
-@interface PersonalInformationViewController : UIViewController <UITextFieldDelegate, ServerManagerDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
+@interface PersonalInformationViewController : UIViewController <UITextFieldDelegate, ServerManagerDelegate, UIPickerViewDataSource, UIPickerViewDelegate, BSKeyboardControlsDelegate>
 @property (strong, nonatomic) IBOutlet UITextField *txtName;
 @property (strong, nonatomic) IBOutlet UITextField *txtAge;
 @property (strong, nonatomic) IBOutlet UITextField *txtPhoneNumber;
@@ -25,6 +26,7 @@
 
 @property (strong, nonatomic) ServerManager *serverManager;
 @property (strong, nonatomic) EnterYourDigitzViewController *parentVC;
+@property (strong, nonatomic) BSKeyboardControls *keyboardControls;
 
 - (IBAction)touchBtnMale:(id)sender;
 - (IBAction)touchBtnFemale:(id)sender;

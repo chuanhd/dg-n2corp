@@ -55,7 +55,7 @@
     //[locationManager startUpdatingLocation];
     [locationManager startMonitoringSignificantLocationChanges];
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Getting locaion"];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Getting location"];
 }
 
 
@@ -172,8 +172,11 @@
     }else{
         user = [self.friendsArray objectAtIndex:indexPath.row];
     }
-    
-    cell.txtUsername.text = user.username;
+    if (user.name && user.name.length > 0) {
+        cell.txtUsername.text = user.name;
+    }else{
+        cell.txtUsername.text = user.username;
+    }
     cell.txtHometown.text = user.hometown;
     
     return cell;
