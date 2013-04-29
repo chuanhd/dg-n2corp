@@ -41,6 +41,7 @@
 @property (nonatomic) ACAccountStore *accountStore;
 @property (strong, nonatomic) BSKeyboardControls *keyboardControls;
 @property (strong, nonatomic) OAuthLoginView *oauthLoginView;
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollview;
 
 - (IBAction)btnFacebookTapped:(id)sender;
 - (IBAction)btnGoogleTapped:(id)sender;

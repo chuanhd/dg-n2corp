@@ -53,7 +53,7 @@
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>location_services</string>
+		<string>location-services</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
