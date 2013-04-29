@@ -224,11 +224,11 @@ static NSString *gender;
         NSDateFormatter *formater = [[NSDateFormatter alloc] init];
         [formater setDateFormat:@"MM-dd-yyyy"];
         self.txtAge.text = [formater stringFromDate:dateFromPicker];
-        self.datePickerView.hidden = YES;
     }else{
         //self.txtState.text =
     }
-    
+    self.datePickerView.hidden = YES;
+
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
@@ -358,6 +358,7 @@ static NSString *gender;
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
     self.txtState.text = [stateArray objectAtIndex:row];
+    self.datePickerView.hidden = YES;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
