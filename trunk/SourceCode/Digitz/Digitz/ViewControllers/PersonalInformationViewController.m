@@ -219,11 +219,16 @@ static NSString *gender;
 }
 
 - (IBAction)closeDatePickerTapped:(id)sender {
-    NSDate *dateFromPicker = self.datePicker.date;
-    NSDateFormatter *formater = [[NSDateFormatter alloc] init];
-    [formater setDateFormat:@"MM-dd-yyyy"];
-    self.txtAge.text = [formater stringFromDate:dateFromPicker];
-    self.datePickerView.hidden = YES;
+    if (self.datePicker.hidden == NO) {
+        NSDate *dateFromPicker = self.datePicker.date;
+        NSDateFormatter *formater = [[NSDateFormatter alloc] init];
+        [formater setDateFormat:@"MM-dd-yyyy"];
+        self.txtAge.text = [formater stringFromDate:dateFromPicker];
+        self.datePickerView.hidden = YES;
+    }else{
+        //self.txtState.text =
+    }
+    
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
