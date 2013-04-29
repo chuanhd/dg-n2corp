@@ -92,6 +92,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
     instagramLinked = NO;
     linkedinLinked = NO;
 
+    self.scrollview.contentSize = CGSizeMake(320, 470);
     
     // register to be told when the login is finished
 //    [[NSNotificationCenter defaultCenter] addObserver:self
