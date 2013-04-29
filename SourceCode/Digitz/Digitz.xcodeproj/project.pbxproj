@@ -97,8 +97,6 @@
 		D90AF2AD172C0A5200D39E15 /* label-OR-lined.png in Resources */ = {isa = PBXBuildFile; fileRef = D90AF2A3172C0A5200D39E15 /* label-OR-lined.png */; };
 		D90AF2AE172C0A5200D39E15 /* label-Social-lined.png in Resources */ = {isa = PBXBuildFile; fileRef = D90AF2A4172C0A5200D39E15 /* label-Social-lined.png */; };
 		D90AF2AF172C0A5200D39E15 /* label-Social-lined@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D90AF2A5172C0A5200D39E15 /* label-Social-lined@2x.png */; };
-		D90AF2B0172C0A5200D39E15 /* text-Digizt-w.png in Resources */ = {isa = PBXBuildFile; fileRef = D90AF2A6172C0A5200D39E15 /* text-Digizt-w.png */; };
-		D90AF2B1172C0A5200D39E15 /* text-Digizt-w@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D90AF2A7172C0A5200D39E15 /* text-Digizt-w@2x.png */; };
 		D90AF2B2172C0A5200D39E15 /* label-OR-lined@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D90AF2A8172C0A5200D39E15 /* label-OR-lined@2x.png */; };
 		D9304732172561250095C636 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9304731172561250095C636 /* MapKit.framework */; };
 		D930473517256E200095C636 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D930473417256E1F0095C636 /* CoreLocation.framework */; };
@@ -473,8 +471,6 @@
 		D90AF2A3172C0A5200D39E15 /* label-OR-lined.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "label-OR-lined.png"; sourceTree = "<group>"; };
 		D90AF2A4172C0A5200D39E15 /* label-Social-lined.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "label-Social-lined.png"; sourceTree = "<group>"; };
 		D90AF2A5172C0A5200D39E15 /* label-Social-lined@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "label-Social-lined@2x.png"; sourceTree = "<group>"; };
-		D90AF2A6172C0A5200D39E15 /* text-Digizt-w.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text-Digizt-w.png"; sourceTree = "<group>"; };
-		D90AF2A7172C0A5200D39E15 /* text-Digizt-w@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text-Digizt-w@2x.png"; sourceTree = "<group>"; };
 		D90AF2A8172C0A5200D39E15 /* label-OR-lined@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "label-OR-lined@2x.png"; sourceTree = "<group>"; };
 		D9304731172561250095C636 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		D930473417256E1F0095C636 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -945,8 +941,6 @@
 				D90AF2A3172C0A5200D39E15 /* label-OR-lined.png */,
 				D90AF2A4172C0A5200D39E15 /* label-Social-lined.png */,
 				D90AF2A5172C0A5200D39E15 /* label-Social-lined@2x.png */,
-				D90AF2A6172C0A5200D39E15 /* text-Digizt-w.png */,
-				D90AF2A7172C0A5200D39E15 /* text-Digizt-w@2x.png */,
 				D90AF2A8172C0A5200D39E15 /* label-OR-lined@2x.png */,
 				D9DD706517245C630014D62B /* bg-box-7-rows.png */,
 				D9DD706617245C630014D62B /* bg-box-7-rows@2x.png */,
@@ -2471,8 +2465,6 @@
 				D90AF2AD172C0A5200D39E15 /* label-OR-lined.png in Resources */,
 				D90AF2AE172C0A5200D39E15 /* label-Social-lined.png in Resources */,
 				D90AF2AF172C0A5200D39E15 /* label-Social-lined@2x.png in Resources */,
-				D90AF2B0172C0A5200D39E15 /* text-Digizt-w.png in Resources */,
-				D90AF2B1172C0A5200D39E15 /* text-Digizt-w@2x.png in Resources */,
 				D90AF2B2172C0A5200D39E15 /* label-OR-lined@2x.png in Resources */,
 				D9B2F47A172C1B3F001DA599 /* PersonalInfo.xib in Resources */,
 				D9B2F48D172CED2A001DA599 /* states.plist in Resources */,
@@ -3345,7 +3337,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Digitz/Digitz-Prefix.pch";
 				INFOPLIST_FILE = "Digitz/Digitz-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Digitz/Lib\"",
@@ -3356,6 +3348,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -3374,7 +3367,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Digitz/Digitz-Prefix.pch";
 				INFOPLIST_FILE = "Digitz/Digitz-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Digitz/Lib\"",
