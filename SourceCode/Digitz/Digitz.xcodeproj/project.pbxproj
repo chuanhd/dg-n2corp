@@ -129,6 +129,8 @@
 		D95BF533171F009F0063B5DC /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D95BF532171F009F0063B5DC /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D95BF535171F00AA0063B5DC /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D95BF534171F00AA0063B5DC /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D95BF537171F00B60063B5DC /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D95BF536171F00B50063B5DC /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		D9716B51172E7B4200E95CD9 /* btn-accept.png in Resources */ = {isa = PBXBuildFile; fileRef = D9716B4F172E7B4200E95CD9 /* btn-accept.png */; };
+		D9716B52172E7B4200E95CD9 /* btn-accept@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9716B50172E7B4200E95CD9 /* btn-accept@2x.png */; };
 		D9722874172964380021399F /* btn-login.png in Resources */ = {isa = PBXBuildFile; fileRef = D972285C172964380021399F /* btn-login.png */; };
 		D9722875172964380021399F /* btn-login@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D972285D172964380021399F /* btn-login@2x.png */; };
 		D9722876172964380021399F /* icon-check-mark.png in Resources */ = {isa = PBXBuildFile; fileRef = D972285E172964380021399F /* icon-check-mark.png */; };
@@ -509,6 +511,8 @@
 		D95BF532171F009F0063B5DC /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		D95BF534171F00AA0063B5DC /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		D95BF536171F00B50063B5DC /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		D9716B4F172E7B4200E95CD9 /* btn-accept.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-accept.png"; sourceTree = "<group>"; };
+		D9716B50172E7B4200E95CD9 /* btn-accept@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-accept@2x.png"; sourceTree = "<group>"; };
 		D972285C172964380021399F /* btn-login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-login.png"; sourceTree = "<group>"; };
 		D972285D172964380021399F /* btn-login@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-login@2x.png"; sourceTree = "<group>"; };
 		D972285E172964380021399F /* icon-check-mark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-check-mark.png"; sourceTree = "<group>"; };
@@ -905,6 +909,8 @@
 				29EA60AA171B4171002D0666 /* btn-connect.png */,
 				29EA60AB171B4172002D0666 /* btn-connect@2x.png */,
 				D972285C172964380021399F /* btn-login.png */,
+				D9716B4F172E7B4200E95CD9 /* btn-accept.png */,
+				D9716B50172E7B4200E95CD9 /* btn-accept@2x.png */,
 				D972285D172964380021399F /* btn-login@2x.png */,
 				D972285E172964380021399F /* icon-check-mark.png */,
 				D972285F172964380021399F /* icon-check-mark@2x.png */,
@@ -2469,6 +2475,8 @@
 				D9B2F47A172C1B3F001DA599 /* PersonalInfo.xib in Resources */,
 				D9B2F48D172CED2A001DA599 /* states.plist in Resources */,
 				D9F6A8C9172D77670037A4BA /* OAuthLoginView.xib in Resources */,
+				D9716B51172E7B4200E95CD9 /* btn-accept.png in Resources */,
+				D9716B52172E7B4200E95CD9 /* btn-accept@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
