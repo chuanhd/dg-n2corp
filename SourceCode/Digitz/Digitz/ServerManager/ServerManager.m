@@ -214,6 +214,7 @@ static id sharedReactor = nil;
 - (User *)userFromDictionary: (NSDictionary *)userDic {
     User *newUser = [[User alloc] init];
     newUser.username = [userDic objectForKey:@"username"];
+    newUser.name = [userDic objectForKey:@"name"];
     newUser.email = [userDic objectForKey:@"email"];
     //newUser.age = [userDic objectForKey:@"age"];
     newUser.phoneNumber = [userDic objectForKey:@"phone_number"];

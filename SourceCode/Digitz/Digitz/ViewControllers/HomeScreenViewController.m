@@ -83,7 +83,7 @@
         [serverManager updateUserInformationWithParams:param];
         
         if (newLocation.horizontalAccuracy <= locationManager.desiredAccuracy) {
-            
+            [self stopUpdatingLocation:NSLocalizedString(@"Acquired Location", @"Acquired Location")];
         }
     }
 }
@@ -110,6 +110,13 @@
     [self setDigitzUsersTableView:nil];
     [self setSearchBar:nil];
     [super viewDidUnload];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [locationManager stopMonitoringSignificantLocationChanges];
+    [locationManager stopUpdatingLocation];
 }
 
 - (IBAction)refreshButtonTapped:(id)sender {
