@@ -35,6 +35,7 @@
 - (IBAction)instagramBtnTapped:(id)sender;
 - (IBAction)twitterBtnTapped:(id)sender;
 - (IBAction)linkedinBtnTapped:(id)sender;
+- (IBAction)updateInfoBtnTapped:(id)sender;
 
 
 

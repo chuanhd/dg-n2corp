@@ -143,6 +143,8 @@
                                   object:self 
                                 userInfo:nil];
 
+            NSLog(@"post notification: loginViewDidFinish");
+            
             if ([self respondsToSelector:@selector(dismissModalViewControllerAnimated:)]) {
                 [self dismissModalViewControllerAnimated:YES];
             }else{
@@ -229,12 +231,19 @@
     self.profile = [responseBody objectFromJSONString];
     
     // Notify parent and close this view
-    [[NSNotificationCenter defaultCenter] 
-            postNotificationName:@"loginViewDidFinish"        
-                          object:self
-                        userInfo:self.profile];
-
-    [self dismissModalViewControllerAnimated:YES];
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"loginViewDidFinish"
+     object:self
+     userInfo:nil];
+    
+    NSLog(@"post notification: loginViewDidFinish");
+    
+    if ([self respondsToSelector:@selector(dismissModalViewControllerAnimated:)]) {
+        [self dismissModalViewControllerAnimated:YES];
+    }else{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+    
 }
 
 - (void)testApiCallResult:(OAServiceTicket *)ticket didFail:(NSData *)error 

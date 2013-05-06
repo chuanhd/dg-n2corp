@@ -229,11 +229,14 @@ static id sharedReactor = nil;
         newUser.gender = MALE;
     }
     newUser.userId = [userDic objectForKey:@"id"];
-    newUser.facebookUrl = [userDic objectForKey:kKey_UpdateFacebookUrl];
-    newUser.googleUrl = [userDic objectForKey:kKey_UpdateGooglePlusUrl];
-    newUser.twitterUrl = [userDic objectForKey:kKey_UpdateTwitterUrl];
-    newUser.linkedinUrl = [userDic objectForKey:kKey_UpdateLinkedLnUrl];
-    newUser.instagramUrl = [userDic objectForKey:kKey_UpdateInstagramUrl];
+    
+    NSLog(@"facebookUrl: %@", [userDic objectForKey:@"facebook_url"]);
+    
+    newUser.facebookUrl = [userDic objectForKey:@"facebook_url"];
+    newUser.googleUrl = [userDic objectForKey:@"google_plus_url"];
+    newUser.twitterUrl = [userDic objectForKey:@"twitter_url"];
+    newUser.linkedinUrl = [userDic objectForKey:@"linkedin_url"];
+    newUser.instagramUrl = [userDic objectForKey:@"instagram_url"];
 
 
     

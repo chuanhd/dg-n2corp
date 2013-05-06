@@ -100,6 +100,19 @@
 }
 
 - (IBAction)instagramBtnTapped:(id)sender {
+    instagramViewController = [[InstagramAuthViewController alloc] initWithNibName:nil bundle:nil];
+    
+    // register to be told when the login is finished
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(instagramOAuthViewDidFinish:)
+                                                 name:@"instagramOAuthViewDidFinish"
+                                               object:instagramViewController];
+    
+    if ([self respondsToSelector:@selector(presentModalViewController:animated:)]) {
+        [self presentModalViewController:instagramViewController animated:YES];
+    }else{
+        [self presentViewController:instagramViewController animated:YES completion:nil];
+    }
 }
 
 - (IBAction)twitterBtnTapped:(id)sender {
@@ -108,6 +121,59 @@
 }
 
 - (IBAction)linkedinBtnTapped:(id)sender {
+    oauthLoginView = [[OAuthLoginView alloc] initWithNibName:nil bundle:nil];
+    
+    // register to be told when the login is finished
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(linkedinLoginViewDidFinish:)
+                                                 name:@"loginViewDidFinish"
+                                               object:oauthLoginView];
+    
+    if ([self respondsToSelector:@selector(presentModalViewController:animated:)]) {
+        [self presentModalViewController:oauthLoginView animated:YES];
+    }else{
+        [self presentViewController:oauthLoginView animated:YES completion:nil];
+    }
+}
+
+- (IBAction)updateInfoBtnTapped:(id)sender {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Update user information..."];
+    [_serverManager updateUserInformationWithParams:self.paramsDict];
+}
+
+- (void) showToast:(NSString *)message
+{
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO];
+    // Configure for text only and offset down
+	hud.mode = MBProgressHUDModeText;
+	hud.labelText = message;
+	hud.margin = 10.f;
+    
+        hud.yOffset = 140.f;
+	hud.removeFromSuperViewOnHide = YES;
+	[hud hide:YES afterDelay:1.0f];
+    hud = nil;
+}
+
+- (void)updateUserInformationWithParamsSuccess:(User *)user
+{
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self showToast:@"Update successfully"];
+    });
+    
+    
+}
+
+- (void)updateUserInformationWithParamsFailedWithError:(NSError *)error
+{
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self showToast:@"Update fail"];
+    });
 }
 
 #pragma mark ServerManager delegate
@@ -156,24 +222,36 @@
         [_paramsDict setObject:user.instagramUrl forKey:kKey_UpdateInstagramUrl];
     }
     
+    NSLog(@"check fb: %d", user.facebookUrl != nil);
+    NSLog(@"check fb: %d", user.googleUrl != nil);
+
+    NSLog(@"check fb: %d", user.twitterUrl != nil);
+
+    NSLog(@"check fb: %d", user.linkedinUrl != nil);
+    NSLog(@"check fb: %d", user.instagramUrl != nil);
+
     
     if (![user.facebookUrl isEqual:[NSNull null]]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.facebookBtn setImage:[UIImage imageNamed:@"icon-fb-r-green"] forState:UIControlStateNormal];
         });
-    }else if (![user.googleUrl isEqual:[NSNull null]]) {
+    }
+    if (![user.googleUrl isEqual:[NSNull null]]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.googleBtn setImage:[UIImage imageNamed:@"icon-gg-r-green"] forState:UIControlStateNormal];
         });
-    }else if (![user.twitterUrl isEqual:[NSNull null]]) {
+    }
+    if (![user.twitterUrl isEqual:[NSNull null]]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.twitterBtn setImage:[UIImage imageNamed:@"icon-tw-r-green"] forState:UIControlStateNormal];
         });
-    }else if (![user.linkedinUrl isEqual:[NSNull null]]) {
+    }
+    if (![user.linkedinUrl isEqual:[NSNull null]]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.linkedlnBtn setImage:[UIImage imageNamed:@"icon-lnk-r-green"] forState:UIControlStateNormal];
         });
-    }else if (![user.instagramUrl isEqual:[NSNull null]]) {
+    }
+    if (![user.instagramUrl isEqual:[NSNull null]]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.instagramBtn setImage:[UIImage imageNamed:@"icon-ins-r-green"] forState:UIControlStateNormal];
         });
@@ -517,7 +595,7 @@
                         NSLog(@"Name: %@ %@", person.name.familyName, person.name.givenName);
                         NSLog(@"Avatar url: %@", person.image.url);
                         NSLog(@"Profile url: %@", person.url);
-                        [self.paramsDict setObject:kKey_UpdateGooglePlusUrl forKey:person.url];
+                        [self.paramsDict setObject:person.url forKey:kKey_UpdateGooglePlusUrl];
                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"Your google+ account are linked" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                         [alert show];
                         dispatch_async(dispatch_get_main_queue(), ^{
@@ -615,11 +693,65 @@
                 
             }else{
                 NSLog(@"Error: %@", error.description);
+                if (error.code == 6) {
+                    [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Account not found. Please setup your account in setting app." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil] show];
+                }else if (error.code == 7){
+                    [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Access denied." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil] show];
+                }
             }
         }];
         
     }
     
+}
+
+-(void) linkedinLoginViewDidFinish:(NSNotification*)notification
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+	NSDictionary *profile = [notification userInfo];
+    if ( profile )
+    {
+        NSLog(@"profile: %@", profile);
+        
+        NSDictionary *url = [profile objectForKey:@"siteStandardProfileRequest"];
+        NSLog(@"url: %@", [url objectForKey:@"url"]);
+        [self.paramsDict setObject:[url objectForKey:@"url"] forKey:kKey_UpdateLinkedLnUrl];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //linkedinLinked = YES;
+            [self.linkedlnBtn setImage:[UIImage imageNamed:@"icon-lnk-r-green"] forState:UIControlStateNormal];
+            
+        });
+        //        name.text = [[NSString alloc] initWithFormat:@"%@ %@",
+        //                     [profile objectForKey:@"firstName"], [profile objectForKey:@"lastName"]];
+        //        headline.text = [profile objectForKey:@"headline"];
+    }
+}
+
+- (void) instagramOAuthViewDidFinish:(NSNotification *)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    NSDictionary *profile = [notification userInfo];
+    if (profile) {
+        NSLog(@"profile: %@", profile);
+        
+        NSDictionary *user = [profile objectForKey:@"user"];
+        NSString *urlString = [NSString stringWithFormat:@"instagram.com/%@", [user objectForKey:@"username"]];
+        
+        NSLog(@"url: %@", urlString);
+        
+        
+        [self.paramsDict setObject:urlString forKey:kKey_UpdateInstagramUrl];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //instagramLinked = YES;
+            [self.instagramBtn setImage:[UIImage imageNamed:@"icon-lnk-r-green"] forState:UIControlStateNormal];
+            
+        });
+        
+    }
 }
 
 @end
