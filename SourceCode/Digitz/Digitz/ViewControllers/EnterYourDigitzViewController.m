@@ -19,6 +19,7 @@
 #import "InformationCell.h"
 #import "PersonalInfo.h"
 #import "LinkedinOAuthView.h"
+#import "OptionalInfoViewController.h"
 
 NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FBSessionStateChangedNotification";
 
@@ -42,6 +43,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
 @synthesize accountStore;
 @synthesize keyboardControls;
 @synthesize oauthLoginView;
+@synthesize instagramAuthView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -239,6 +241,10 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
                 case 1:
                 {
                     // optional information
+                    OptionalInfoViewController *vc = [[OptionalInfoViewController alloc] init];
+                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
+                    
+                    [self.navigationController pushViewController:vc animated:YES];
                 }
                     break;
                 case 2:
@@ -263,6 +269,155 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
 }
 
 
+- (IBAction)btnContinueTapped:(id)sender {
+    //[MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Registering..."];
+    
+    if (!personalInfoFilled) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must fill all required fields" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+    
+    hud.labelText = @"Registering...";
+    hud.cancelable = NO;
+    [hud show:YES];
+    
+    [self.paramsDict setObject:self.txtUsername.text forKey:kKey_UpdateUsername];
+    [self.paramsDict setObject:self.txtPassword.text forKey:kKey_UpdatePassword];
+    //[self.paramsDict setObject:@"" forKey:kKey_UpdateEmail];
+    
+    for (NSString *key in self.paramsDict) {
+        NSLog(@"key %@ - value %@", key, [self.paramsDict objectForKey:key]);
+    }
+    
+    [serverManager signUpwithParamsDict:self.paramsDict];
+    //[serverManager signUpWithUsername:self.txtUsername.text andPassword:self.txtPassword.text andEmail:@""];
+}
+
+- (void)signUpSuccess
+{
+    //hud.labelText = @"Sending infomation...";
+    //[serverManager updateUserInformationWithParams:paramsDict];
+    [hud hide:YES];
+    HomeScreenViewController *vc = [[HomeScreenViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void) signUpFailedWithError:(NSError *)error
+{
+    [hud hide:YES];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[NSString stringWithFormat:@"Register failed with error %@", error.localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    [alert show];
+}
+
+- (IBAction)btnFacebookTapped:(id)sender {
+    [self openSessionWithAllowLoginUI:YES];
+}
+
+- (IBAction)btnGoogleTapped:(id)sender {
+    [signIn authenticate];
+}
+
+- (IBAction)btnInstagramTapped:(id)sender {
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"This function current is not available" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//    [alert show];
+    
+    
+    
+    instagramAuthView = [[InstagramAuthViewController alloc] initWithNibName:nil bundle:nil];
+    
+    // register to be told when the login is finished
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(instagramOAuthViewDidFinish:)
+                                                 name:@"instagramOAuthViewDidFinish"
+                                               object:instagramAuthView];
+    
+    if ([self respondsToSelector:@selector(presentModalViewController:animated:)]) {
+        [self presentModalViewController:instagramAuthView animated:YES];
+    }else{
+        [self presentViewController:instagramAuthView animated:YES completion:nil];
+    }
+}
+
+- (IBAction)btnTwitterTapped:(id)sender {
+    [self fetchTwitterUserInfo];
+}
+
+- (IBAction)btnLinkedInTapped:(id)sender {
+//    LinkedinOAuthView *linkedinView = [[LinkedinOAuthView alloc] init];
+//    linkedinView.frame = CGRectMake(10, 40, 310, 400);
+//    linkedinView.hidden = NO;
+//    [linkedinView startOAuth];
+    
+    oauthLoginView = [[OAuthLoginView alloc] initWithNibName:nil bundle:nil];
+    
+    // register to be told when the login is finished
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(loginViewDidFinish:)
+                                                 name:@"loginViewDidFinish"
+                                               object:oauthLoginView];
+    
+    if ([self respondsToSelector:@selector(presentModalViewController:animated:)]) {
+        [self presentModalViewController:oauthLoginView animated:YES];
+    }else{
+        [self presentViewController:oauthLoginView animated:YES completion:nil];
+    }
+}
+
+- (IBAction)btnBackTapped:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(void) loginViewDidFinish:(NSNotification*)notification
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+	NSDictionary *profile = [notification userInfo];
+    if ( profile )
+    {
+        NSLog(@"profile: %@", profile);
+        
+        NSDictionary *url = [profile objectForKey:@"siteStandardProfileRequest"];
+        NSLog(@"url: %@", [url objectForKey:@"url"]);
+        [self.paramsDict setObject:[url objectForKey:@"url"] forKey:kKey_UpdateLinkedLnUrl];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            linkedinLinked = YES;
+            [self.btnLinkedIn setImage:[UIImage imageNamed:@"icon-lnk-r-green"] forState:UIControlStateNormal];
+
+        });
+//        name.text = [[NSString alloc] initWithFormat:@"%@ %@",
+//                     [profile objectForKey:@"firstName"], [profile objectForKey:@"lastName"]];
+//        headline.text = [profile objectForKey:@"headline"];
+    }
+}
+
+- (void) instagramOAuthViewDidFinish:(NSNotification *)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    NSDictionary *profile = [notification userInfo];
+    if (profile) {
+        NSLog(@"profile: %@", profile);
+        
+        NSDictionary *user = [profile objectForKey:@"user"];
+        NSString *urlString = [NSString stringWithFormat:@"instagram.com/%@", [user objectForKey:@"username"]];
+        
+        NSLog(@"url: %@", urlString);
+        
+        
+        [self.paramsDict setObject:urlString forKey:kKey_UpdateInstagramUrl];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            instagramLinked = YES;
+            [self.btnInstagram setImage:[UIImage imageNamed:@"icon-lnk-r-green"] forState:UIControlStateNormal];
+            
+        });
+        
+    }
+}
+
+#pragma mark Facebook functions
 /*
  *  Callback for session changes
  */
@@ -276,7 +431,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
                 // We have a valid session
                 NSLog(@"User session found: %@", session.accessTokenData.expirationDate);
                 //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    [self queryFBUserInfo];
+                [self queryFBUserInfo];
                 //});
             }
             break;
@@ -330,110 +485,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
                                          }];
 }
 
-- (IBAction)btnContinueTapped:(id)sender {
-    //[MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Registering..."];
-    
-    if (!personalInfoFilled) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must fill all required fields" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
-        return;
-    }
-    
-    hud.labelText = @"Registering...";
-    hud.cancelable = NO;
-    [hud show:YES];
-    
-    [self.paramsDict setObject:self.txtUsername.text forKey:kKey_UpdateUsername];
-    [self.paramsDict setObject:self.txtPassword.text forKey:kKey_UpdatePassword];
-    //[self.paramsDict setObject:@"" forKey:kKey_UpdateEmail];
-    
-    for (NSString *key in self.paramsDict) {
-        NSLog(@"key %@ - value %@", key, [self.paramsDict objectForKey:key]);
-    }
-    
-    [serverManager signUpwithParamsDict:self.paramsDict];
-    //[serverManager signUpWithUsername:self.txtUsername.text andPassword:self.txtPassword.text andEmail:@""];
-}
 
-- (void)signUpSuccess
-{
-    //hud.labelText = @"Sending infomation...";
-    //[serverManager updateUserInformationWithParams:paramsDict];
-    [hud hide:YES];
-    HomeScreenViewController *vc = [[HomeScreenViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-- (void) signUpFailedWithError:(NSError *)error
-{
-    [hud hide:YES];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[NSString stringWithFormat:@"Register failed with error %@", error.localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    [alert show];
-}
-
-- (IBAction)btnFacebookTapped:(id)sender {
-    [self openSessionWithAllowLoginUI:YES];
-}
-
-- (IBAction)btnGoogleTapped:(id)sender {
-    [signIn authenticate];
-}
-
-- (IBAction)btnInstagramTapped:(id)sender {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"This function current is not available" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    [alert show];
-}
-
-- (IBAction)btnTwitterTapped:(id)sender {
-    [self fetchTwitterUserInfo];
-}
-
-- (IBAction)btnLinkedInTapped:(id)sender {
-//    LinkedinOAuthView *linkedinView = [[LinkedinOAuthView alloc] init];
-//    linkedinView.frame = CGRectMake(10, 40, 310, 400);
-//    linkedinView.hidden = NO;
-//    [linkedinView startOAuth];
-    
-    oauthLoginView = [[OAuthLoginView alloc] initWithNibName:nil bundle:nil];
-    
-    // register to be told when the login is finished
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(loginViewDidFinish:)
-                                                 name:@"loginViewDidFinish"
-                                               object:oauthLoginView];
-    
-    [self presentModalViewController:oauthLoginView animated:YES];
-}
-
-- (IBAction)btnBackTapped:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
--(void) loginViewDidFinish:(NSNotification*)notification
-{
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	
-	NSDictionary *profile = [notification userInfo];
-    if ( profile )
-    {
-        NSLog(@"profile: %@", profile);
-        
-        NSDictionary *url = [profile objectForKey:@"siteStandardProfileRequest"];
-        NSLog(@"url: %@", [url objectForKey:@"url"]);
-        [self.paramsDict setObject:[url objectForKey:@"url"] forKey:kKey_UpdateLinkedLnUrl];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            linkedinLinked = YES;
-            [self.btnLinkedIn setImage:[UIImage imageNamed:@"icon-lnk-r-green"] forState:UIControlStateNormal];
-
-        });
-//        name.text = [[NSString alloc] initWithFormat:@"%@ %@",
-//                     [profile objectForKey:@"firstName"], [profile objectForKey:@"lastName"]];
-//        headline.text = [profile objectForKey:@"headline"];
-    }
-}
-
-#pragma mark Facebook functions
 - (void) queryFBUserInfo
 {
     //FBRequest *fbRequest = [FBRequest requestForMe];
@@ -472,7 +524,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
             [alert show];
             dispatch_async(dispatch_get_main_queue(), ^{
                 facebookLinked = YES;
-                [self.btnGoogle setImage:[UIImage imageNamed:@"icon-fb-r-green"] forState:UIControlStateNormal];
+                [self.btnFacebook setImage:[UIImage imageNamed:@"icon-fb-r-green"] forState:UIControlStateNormal];
             });
             
 //            for (NSString *key in result) {

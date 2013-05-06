@@ -10,6 +10,7 @@
 #import "MBProgressHUD.h"
 #import "UserCell.h"
 #import "User.h"
+#import "ProfileViewController.h"
 
 @interface HomeScreenViewController ()
 {
@@ -120,12 +121,17 @@
 }
 
 - (IBAction)refreshButtonTapped:(id)sender {
+    NSString *auth_token = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES withLabel:@"Finding nearby users"];
+    [serverManager findNearByFriendsWithToken:auth_token];
 }
 
 - (IBAction)findNearByUserBtnTapped:(id)sender {
-    NSString *auth_token = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES];
-    [serverManager findNearByFriendsWithToken:auth_token];
+//    NSString *auth_token = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES];
+//    [serverManager findNearByFriendsWithToken:auth_token];
+    [locationManager startMonitoringSignificantLocationChanges];
+
 }
 
 - (void)findNearByFriendsSuccessWithArray:(NSArray *)users
@@ -149,6 +155,9 @@
 {
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     NSLog(@"update Success");
+    NSString *auth_token = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES withLabel:@"Finding nearby users"];
+    [serverManager findNearByFriendsWithToken:auth_token];
 }
 
 - (void)updateUserInformationWithParamsFailedWithError:(NSError *)error
@@ -159,6 +168,8 @@
 }
 
 - (IBAction)settingBtnTapped:(id)sender {
+    ProfileViewController *vc = [[ProfileViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -179,7 +190,10 @@
     }else{
         user = [self.friendsArray objectAtIndex:indexPath.row];
     }
-    if (user.name && user.name.length > 0) {
+    
+    NSLog(@"user %@", user);
+    
+    if (![user.name isEqual:[NSNull null]]) {
         cell.txtUsername.text = user.name;
     }else{
         cell.txtUsername.text = user.username;
@@ -187,6 +201,11 @@
     cell.txtHometown.text = user.hometown;
     
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 64;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

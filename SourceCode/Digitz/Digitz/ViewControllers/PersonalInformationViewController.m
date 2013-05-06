@@ -90,21 +90,51 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.txtName.text = [parentVC.paramsDict objectForKey:kKey_UpdateName];
-    self.txtAge.text = [parentVC.paramsDict objectForKey:kKey_UpdateBirthday];
-    self.txtEmail.text = [parentVC.paramsDict objectForKey:kKey_UpdateEmail];
-    self.txtHometown.text = [parentVC.paramsDict objectForKey:kKey_UpdateHometown];
-    if ([[parentVC.paramsDict objectForKey:kKey_UpdateGender] isEqualToString:@"male"]) {
-        [btnMale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
-        [btnFemale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
-        gender = @"male";
-    }else{
-        [btnMale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
-        [btnFemale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
-        gender = @"female";
+    
+    if ([self.parentVC isKindOfClass:[EnterYourDigitzViewController class]]) {
+        self.txtName.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateName];
+        //self.txtAge.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateBirthday];
+        self.txtEmail.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateEmail];
+        self.txtHometown.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateHometown];
+        if ([[((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateGender] isEqualToString:@"male"]) {
+            [btnMale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
+            [btnFemale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
+            gender = @"male";
+        }else{
+            [btnMale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
+            [btnFemale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
+            gender = @"female";
+        }
+        
+        NSString *birthday = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateBirthday];
+        NSDateFormatter *formater = [[NSDateFormatter alloc] init];
+        [formater setDateFormat:@"yyyy-MM-dd"];
+        NSDate *date = [formater dateFromString:birthday];
+        [formater setDateFormat:@"MM-dd-yyyy"];
+        birthday = [formater stringFromDate:date];
+        NSLog(@"birthday: %@", birthday);
+        
+        self.txtAge.text = birthday;
+        
+        self.txtPhoneNumber.text  = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdatePhone];
+        self.txtState.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateState];
     }
-    self.txtPhoneNumber.text  = [parentVC.paramsDict objectForKey:kKey_UpdatePhone];
-    self.txtState.text = [parentVC.paramsDict objectForKey:kKey_UpdateState];
+    
+//    self.txtName.text = [parentVC.paramsDict objectForKey:kKey_UpdateName];
+//    self.txtAge.text = [parentVC.paramsDict objectForKey:kKey_UpdateBirthday];
+//    self.txtEmail.text = [parentVC.paramsDict objectForKey:kKey_UpdateEmail];
+//    self.txtHometown.text = [parentVC.paramsDict objectForKey:kKey_UpdateHometown];
+//    if ([[parentVC.paramsDict objectForKey:kKey_UpdateGender] isEqualToString:@"male"]) {
+//        [btnMale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
+//        [btnFemale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
+//        gender = @"male";
+//    }else{
+//        [btnMale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
+//        [btnFemale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
+//        gender = @"female";
+//    }
+//    self.txtPhoneNumber.text  = [parentVC.paramsDict objectForKey:kKey_UpdatePhone];
+//    self.txtState.text = [parentVC.paramsDict objectForKey:kKey_UpdateState];
 
     
     
@@ -173,7 +203,10 @@ static NSString *gender;
     //NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
     //[self.parentVC.paramsDict setObject:token forKey:kKey_UserToken];
     
-    [self.parentVC.paramsDict setObject:self.txtName.text forKey:kKey_UpdateName];
+    if ([self.parentVC isKindOfClass:[EnterYourDigitzViewController class]]) {
+        [ ((EnterYourDigitzViewController *) self.parentVC).paramsDict setObject:self.txtName.text forKey:kKey_UpdateName];
+    }
+    //[self.parentVC.paramsDict setObject:self.txtName.text forKey:kKey_UpdateName];
     NSString *birthday = self.txtAge.text;
     NSDateFormatter *formater = [[NSDateFormatter alloc] init];
     [formater setDateFormat:@"MM-dd-yyyy"];
@@ -183,19 +216,31 @@ static NSString *gender;
     NSLog(@"birthday: %@", birthday);
     
     if (birthday.length == 0 || birthday == nil) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must fill all required fields" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must fill birthday fields" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show];
         return;
     }
     
-    [self.parentVC.paramsDict setObject:birthday forKey:kKey_UpdateBirthday];
-    [self.parentVC.paramsDict setObject:self.txtEmail.text forKey:kKey_UpdateEmail];
-    [self.parentVC.paramsDict setObject:self.txtHometown.text forKey:kKey_UpdateHometown];
-    [self.parentVC.paramsDict setObject:self.txtPhoneNumber.text forKey:kKey_UpdatePhone];
-    [self.parentVC.paramsDict setObject:gender forKey:kKey_UpdateGender];
-    [self.parentVC.paramsDict setObject:self.txtState.text forKey:kKey_UpdateState];
+    if ([self.parentVC isKindOfClass:[EnterYourDigitzViewController class]]) {
+        [((EnterYourDigitzViewController *) self.parentVC).paramsDict setObject:birthday forKey:kKey_UpdateBirthday];
+        [((EnterYourDigitzViewController *) self.parentVC).paramsDict setObject:self.txtEmail.text forKey:kKey_UpdateEmail];
+        [((EnterYourDigitzViewController *) self.parentVC).paramsDict setObject:self.txtHometown.text forKey:kKey_UpdateHometown];
+        [((EnterYourDigitzViewController *) self.parentVC).paramsDict setObject:self.txtPhoneNumber.text forKey:kKey_UpdatePhone];
+        [((EnterYourDigitzViewController *) self.parentVC).paramsDict setObject:gender forKey:kKey_UpdateGender];
+        [((EnterYourDigitzViewController *) self.parentVC).paramsDict setObject:self.txtState.text forKey:kKey_UpdateState];
+        
+        ((EnterYourDigitzViewController *) self.parentVC).personalInfoFilled = YES;
+    }
     
-    self.parentVC.personalInfoFilled = YES;
+//    [self.parentVC.paramsDict setObject:birthday forKey:kKey_UpdateBirthday];
+//    [self.parentVC.paramsDict setObject:self.txtEmail.text forKey:kKey_UpdateEmail];
+//    [self.parentVC.paramsDict setObject:self.txtHometown.text forKey:kKey_UpdateHometown];
+//    [self.parentVC.paramsDict setObject:self.txtPhoneNumber.text forKey:kKey_UpdatePhone];
+//    [self.parentVC.paramsDict setObject:gender forKey:kKey_UpdateGender];
+//    [self.parentVC.paramsDict setObject:self.txtState.text forKey:kKey_UpdateState];
+//    
+//    self.parentVC.personalInfoFilled = YES;
+    
     
 //    [self.serverManager updateUserInformationWithParams:dic];
 //    
