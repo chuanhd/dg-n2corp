@@ -8,6 +8,7 @@
 
 #import "PersonalInformationViewController.h"
 #import "MBProgressHUD.h"
+#import "ProfileViewController.h"
 
 @interface PersonalInformationViewController ()
 {
@@ -118,61 +119,35 @@
         
         self.txtPhoneNumber.text  = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdatePhone];
         self.txtState.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateState];
+    }else if([self.parentVC isKindOfClass:[ProfileViewController class]]){
+        self.txtName.text = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateName];
+        //self.txtAge.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateBirthday];
+        self.txtEmail.text = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateEmail];
+        self.txtHometown.text = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateHometown];
+        if ([[((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateGender] isEqualToString:@"male"]) {
+            [btnMale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
+            [btnFemale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
+            gender = @"male";
+        }else{
+            [btnMale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
+            [btnFemale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
+            gender = @"female";
+        }
+        
+        NSString *birthday = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateBirthday];
+        NSDateFormatter *formater = [[NSDateFormatter alloc] init];
+        [formater setDateFormat:@"yyyy-MM-dd"];
+        NSDate *date = [formater dateFromString:birthday];
+        [formater setDateFormat:@"MM-dd-yyyy"];
+        birthday = [formater stringFromDate:date];
+        NSLog(@"birthday: %@", birthday);
+        
+        self.txtAge.text = birthday;
+        
+        self.txtPhoneNumber.text  = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdatePhone];
+        self.txtState.text = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateState];
     }
-    
-//    self.txtName.text = [parentVC.paramsDict objectForKey:kKey_UpdateName];
-//    self.txtAge.text = [parentVC.paramsDict objectForKey:kKey_UpdateBirthday];
-//    self.txtEmail.text = [parentVC.paramsDict objectForKey:kKey_UpdateEmail];
-//    self.txtHometown.text = [parentVC.paramsDict objectForKey:kKey_UpdateHometown];
-//    if ([[parentVC.paramsDict objectForKey:kKey_UpdateGender] isEqualToString:@"male"]) {
-//        [btnMale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
-//        [btnFemale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
-//        gender = @"male";
-//    }else{
-//        [btnMale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
-//        [btnFemale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
-//        gender = @"female";
-//    }
-//    self.txtPhoneNumber.text  = [parentVC.paramsDict objectForKey:kKey_UpdatePhone];
-//    self.txtState.text = [parentVC.paramsDict objectForKey:kKey_UpdateState];
-
-    
-    
-//    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
-//    NSLog(@"token %@", token);
-//    self.serverManager.delegate = self;
-//    [self.serverManager getUserInfoWithToken:token];
-//    
-//    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES withLabel:@"Fetching..."];
 }
-
-//- (void)getUserInformationSuccessWithUser:(User *)user
-//{
-//    [MBProgressHUD hideHUDForView:self.view animated:YES];
-//
-//    self.txtName.text = user.name;
-//    self.txtAge.text = [NSString stringWithFormat:@"%d", user.age];
-//    self.txtPhoneNumber.text = user.phoneNumber;
-//    self.txtHometown.text = user.hometown;
-//    self.txtEmail.text = user.email;
-//    
-//    if (user.gender == MALE) {
-//        [btnMale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
-//        [btnFemale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
-//        gender = @"male";
-//    }else{
-//        [btnMale setImage:[UIImage imageNamed:@"icon-uncheck-box"] forState:UIControlStateNormal];
-//        [btnFemale setImage:[UIImage imageNamed:@"icon-check-box"] forState:UIControlStateNormal];
-//        gender = @"female";
-//    }
-//}
-//
-//- (void)getUserInformationFailedWithError:(NSError *)error
-//{
-//    [MBProgressHUD hideHUDForView:self.view animated:YES];
-//    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"An error occured" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
-//    [alertView show];
-//}
 
 static NSString *gender;
 
@@ -230,6 +205,15 @@ static NSString *gender;
         [((EnterYourDigitzViewController *) self.parentVC).paramsDict setObject:self.txtState.text forKey:kKey_UpdateState];
         
         ((EnterYourDigitzViewController *) self.parentVC).personalInfoFilled = YES;
+    }else if ([self.parentVC isKindOfClass:[ProfileViewController class]]) {
+        [((ProfileViewController *) self.parentVC).paramsDict setObject:birthday forKey:kKey_UpdateBirthday];
+        [((ProfileViewController *) self.parentVC).paramsDict setObject:self.txtEmail.text forKey:kKey_UpdateEmail];
+        [((ProfileViewController *) self.parentVC).paramsDict setObject:self.txtHometown.text forKey:kKey_UpdateHometown];
+        [((ProfileViewController *) self.parentVC).paramsDict setObject:self.txtPhoneNumber.text forKey:kKey_UpdatePhone];
+        [((ProfileViewController *) self.parentVC).paramsDict setObject:gender forKey:kKey_UpdateGender];
+        [((ProfileViewController *) self.parentVC).paramsDict setObject:self.txtState.text forKey:kKey_UpdateState];
+        
+        ((ProfileViewController *) self.parentVC).personalInfoFilled = YES;
     }
     
 //    [self.parentVC.paramsDict setObject:birthday forKey:kKey_UpdateBirthday];

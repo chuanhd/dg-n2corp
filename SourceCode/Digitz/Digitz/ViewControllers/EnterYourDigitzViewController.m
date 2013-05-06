@@ -605,7 +605,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
                         NSLog(@"Name: %@ %@", person.name.familyName, person.name.givenName);
                         NSLog(@"Avatar url: %@", person.image.url);
                         NSLog(@"Profile url: %@", person.url);
-                        [self.paramsDict setObject:kKey_UpdateGooglePlusUrl forKey:person.url];
+                        [self.paramsDict setObject:person.url forKey:kKey_UpdateGooglePlusUrl];
                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"Your google+ account are linked" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                         [alert show];
                         dispatch_async(dispatch_get_main_queue(), ^{
