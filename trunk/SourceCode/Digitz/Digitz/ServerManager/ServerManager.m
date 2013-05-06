@@ -229,6 +229,14 @@ static id sharedReactor = nil;
         newUser.gender = MALE;
     }
     newUser.userId = [userDic objectForKey:@"id"];
+    newUser.facebookUrl = [userDic objectForKey:kKey_UpdateFacebookUrl];
+    newUser.googleUrl = [userDic objectForKey:kKey_UpdateGooglePlusUrl];
+    newUser.twitterUrl = [userDic objectForKey:kKey_UpdateTwitterUrl];
+    newUser.linkedinUrl = [userDic objectForKey:kKey_UpdateLinkedLnUrl];
+    newUser.instagramUrl = [userDic objectForKey:kKey_UpdateInstagramUrl];
+
+
+    
     //newUser.facebook_id = [userDic objectForKey:@"facebook_id"];
     //newUser.facebook_token = [userDic objectForKey:@"facebook_token"];
     //newUser.games_count = ([userDic objectForKey:@"games_count"] != (id)[NSNull null]) ? [[userDic objectForKey:@"games_count"] integerValue] : -1;
@@ -245,7 +253,7 @@ static id sharedReactor = nil;
     [request setTimeoutInterval:TIME_OUT];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON){
         NSDictionary *result = JSON;
-        NSLog(@"json update user info: %@", result);
+        NSLog(@"get user info: %@", result);
         NSInteger status = [[result objectForKey:@"status"] integerValue];
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         if (status) {

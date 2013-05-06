@@ -143,7 +143,11 @@
                                   object:self 
                                 userInfo:nil];
 
-            [self dismissModalViewControllerAnimated:YES];
+            if ([self respondsToSelector:@selector(dismissModalViewControllerAnimated:)]) {
+                [self dismissModalViewControllerAnimated:YES];
+            }else{
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }
         }
     }
     else

@@ -25,7 +25,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtState;
 
 @property (strong, nonatomic) ServerManager *serverManager;
-@property (strong, nonatomic) EnterYourDigitzViewController *parentVC;
+//@property (strong, nonatomic) EnterYourDigitzViewController *parentVC;
+@property (strong, nonatomic) UIViewController *parentVC;
 @property (strong, nonatomic) BSKeyboardControls *keyboardControls;
 
 - (IBAction)touchBtnMale:(id)sender;

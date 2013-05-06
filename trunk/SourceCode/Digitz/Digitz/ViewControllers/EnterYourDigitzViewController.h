@@ -13,6 +13,7 @@
 #import <Twitter/Twitter.h>
 #import "BSKeyboardControls.h"
 #import "OAuthLoginView.h"
+#import "InstagramAuthViewController.h"
 
 #define kGoogle @"google"
 #define kFacebook @"facebook"
@@ -41,6 +42,7 @@
 @property (nonatomic) ACAccountStore *accountStore;
 @property (strong, nonatomic) BSKeyboardControls *keyboardControls;
 @property (strong, nonatomic) OAuthLoginView *oauthLoginView;
+@property (strong, nonatomic) InstagramAuthViewController *instagramAuthView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollview;
 
 - (IBAction)btnFacebookTapped:(id)sender;
