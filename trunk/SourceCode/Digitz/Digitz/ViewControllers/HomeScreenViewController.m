@@ -54,7 +54,8 @@
     locationManager.distanceFilter = 500;
     //locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     //[locationManager startUpdatingLocation];
-    [locationManager startMonitoringSignificantLocationChanges];
+    //[locationManager startMonitoringSignificantLocationChanges];
+    [locationManager startUpdatingLocation];
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Getting location"];
 }
@@ -98,7 +99,7 @@
 
 - (void) stopUpdatingLocation:(NSString *)state
 {
-    [locationManager stopMonitoringSignificantLocationChanges];
+    [locationManager stopUpdatingLocation];
 }
 
 - (void)didReceiveMemoryWarning
@@ -130,7 +131,8 @@
 //    NSString *auth_token = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
 //    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES];
 //    [serverManager findNearByFriendsWithToken:auth_token];
-    [locationManager startMonitoringSignificantLocationChanges];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES withLabel:@"Getting your location (Temporary function in this build)"];
+    [locationManager startUpdatingLocation];
 
 }
 
