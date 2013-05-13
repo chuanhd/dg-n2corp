@@ -60,10 +60,10 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
         __weak EnterYourDigitzViewController *temp = (EnterYourDigitzViewController *) parentVC;
         self.txtOrganization.text = [temp.paramsDict objectForKey:kKey_UpdateCompany];
         self.txtAddress.text = [temp.paramsDict objectForKey:kKey_UpdateAddress];
-        self.txtHomepage = [temp.paramsDict objectForKey:kKey_UpdateHomepage];
-        self.txtAlterEmail = [temp.paramsDict objectForKey:kKey_UpdateAlterEmail];
-        self.txtAlterPhoneNo = [temp.paramsDict objectForKey:kKey_UpdateAlterPhone];
-        self.txtPersonalBio = [temp.paramsDict objectForKey:kKey_UpdatePersonalBio];
+        self.txtHomepage.text = [temp.paramsDict objectForKey:kKey_UpdateHomepage];
+        self.txtAlterEmail.text = [temp.paramsDict objectForKey:kKey_UpdateAlterEmail];
+        self.txtAlterPhoneNo.text = [temp.paramsDict objectForKey:kKey_UpdateAlterPhone];
+        self.txtPersonalBio.text = [temp.paramsDict objectForKey:kKey_UpdatePersonalBio];
         
         if ([temp.paramsDict objectForKey:@"avatar"]) {
             [self showAvatarWithUrl:[temp.paramsDict objectForKey:@"avatar"]];
@@ -73,10 +73,10 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
         __weak ProfileViewController *temp = (ProfileViewController *) parentVC;
         self.txtOrganization.text = [temp.paramsDict objectForKey:kKey_UpdateCompany];
         self.txtAddress.text = [temp.paramsDict objectForKey:kKey_UpdateAddress];
-        self.txtHomepage = [temp.paramsDict objectForKey:kKey_UpdateHomepage];
-        self.txtAlterEmail = [temp.paramsDict objectForKey:kKey_UpdateAlterEmail];
-        self.txtAlterPhoneNo = [temp.paramsDict objectForKey:kKey_UpdateAlterPhone];
-        self.txtPersonalBio = [temp.paramsDict objectForKey:kKey_UpdatePersonalBio];
+        self.txtHomepage.text = [temp.paramsDict objectForKey:kKey_UpdateHomepage];
+        self.txtAlterEmail.text = [temp.paramsDict objectForKey:kKey_UpdateAlterEmail];
+        self.txtAlterPhoneNo.text = [temp.paramsDict objectForKey:kKey_UpdateAlterPhone];
+        self.txtPersonalBio.text = [temp.paramsDict objectForKey:kKey_UpdatePersonalBio];
         
         if ([temp.paramsDict objectForKey:@"avatar"]) {
             [self showAvatarWithUrl:[temp.paramsDict objectForKey:@"avatar"]];
@@ -97,12 +97,44 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
 - (IBAction)saveBtnTapped:(id)sender {
     if ([self.parentVC isKindOfClass:[EnterYourDigitzViewController class]]) {
         __weak EnterYourDigitzViewController *temp = (EnterYourDigitzViewController *) parentVC;
-        [temp.paramsDict setObject:self.txtOrganization.text forKey:kKey_UpdateCompany];
-        [temp.paramsDict setObject:self.txtAddress.text forKey:kKey_UpdateAddress];
-        [temp.paramsDict setObject:self.txtHomepage.text forKey:kKey_UpdateHomepage];
-        [temp.paramsDict setObject:self.txtAlterEmail.text forKey:kKey_UpdateAlterEmail];
-        [temp.paramsDict setObject:self.txtAlterPhoneNo.text forKey:kKey_UpdateAlterPhone];
-        [temp.paramsDict setObject:self.txtPersonalBio.text forKey:kKey_UpdatePersonalBio];
+        if (self.txtOrganization.text != nil) {
+            [temp.paramsDict setObject:self.txtOrganization.text forKey:kKey_UpdateCompany];
+        }
+        
+        NSLog(@"organization: %@", self.txtOrganization.text);
+        
+        if (self.txtAddress.text != nil) {
+            [temp.paramsDict setObject:self.txtAddress.text forKey:kKey_UpdateAddress];
+        }
+        
+        NSLog(@"txtAddress: %@", self.txtAddress.text);
+
+        
+        if (self.txtHomepage.text != nil) {
+            [temp.paramsDict setObject:self.txtHomepage.text forKey:kKey_UpdateHomepage];
+        }
+        
+        NSLog(@"txtHomepage: %@", self.txtHomepage.text);
+
+        if (self.txtAlterEmail.text != nil) {
+            [temp.paramsDict setObject:self.txtAlterEmail.text forKey:kKey_UpdateAlterEmail];
+
+        }
+
+        NSLog(@"txtAlterEmail: %@", self.txtAlterEmail.text);
+
+        
+        if (self.txtAlterPhoneNo.text != nil) {
+            [temp.paramsDict setObject:self.txtAlterPhoneNo.text forKey:kKey_UpdateAlterPhone];
+        }
+
+        NSLog(@"txtAlterPhoneNo: %@", self.txtAlterPhoneNo.text);
+        
+        if (self.txtPersonalBio.text != nil) {
+            [temp.paramsDict setObject:self.txtPersonalBio.text forKey:kKey_UpdatePersonalBio];
+        }
+
+        NSLog(@"txtPersonalBio: %@", self.txtPersonalBio.text);
         
         NSLog(@"paramDict: %@", temp);
         
@@ -110,25 +142,57 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
         
     }else{
         __weak ProfileViewController *temp = (ProfileViewController *) parentVC;
-        [temp.paramsDict setObject:self.txtOrganization.text forKey:kKey_UpdateCompany];
-        [temp.paramsDict setObject:self.txtAddress.text forKey:kKey_UpdateAddress];
-        [temp.paramsDict setObject:self.txtHomepage.text forKey:kKey_UpdateHomepage];
-        [temp.paramsDict setObject:self.txtAlterEmail.text forKey:kKey_UpdateAlterEmail];
-        [temp.paramsDict setObject:self.txtAlterPhoneNo.text forKey:kKey_UpdateAlterPhone];
-        [temp.paramsDict setObject:self.txtPersonalBio.text forKey:kKey_UpdatePersonalBio];
+        if (self.txtOrganization.text != nil) {
+            [temp.paramsDict setObject:self.txtOrganization.text forKey:kKey_UpdateCompany];
+        }
+        
+        NSLog(@"organization: %@", self.txtOrganization.text);
+        
+        if (self.txtAddress.text != nil) {
+            [temp.paramsDict setObject:self.txtAddress.text forKey:kKey_UpdateAddress];
+        }
+        
+        NSLog(@"txtAddress: %@", self.txtAddress.text);
+        
+        
+        if (self.txtHomepage.text != nil) {
+            [temp.paramsDict setObject:self.txtHomepage.text forKey:kKey_UpdateHomepage];
+        }
+        
+        NSLog(@"txtHomepage: %@", self.txtHomepage.text);
+        
+        if (self.txtAlterEmail.text != nil) {
+            [temp.paramsDict setObject:self.txtAlterEmail.text forKey:kKey_UpdateAlterEmail];
+            
+        }
+        
+        NSLog(@"txtAlterEmail: %@", self.txtAlterEmail.text);
+        
+        
+        if (self.txtAlterPhoneNo.text != nil) {
+            [temp.paramsDict setObject:self.txtAlterPhoneNo.text forKey:kKey_UpdateAlterPhone];
+        }
+        
+        NSLog(@"txtAlterPhoneNo: %@", self.txtAlterPhoneNo.text);
+        
+        if (self.txtPersonalBio.text != nil) {
+            [temp.paramsDict setObject:self.txtPersonalBio.text forKey:kKey_UpdatePersonalBio];
+        }
+        
+        NSLog(@"txtPersonalBio: %@", self.txtPersonalBio.text);
         
         NSLog(@"paramDict: %@", temp);
+        
+        temp.optionalInfoFilled = YES;
 
     }
-    
-    
-    
-    [self.navigationController popViewControllerAnimated:YES];
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"personalInfoFilled"
      object:self
      userInfo:nil];
+    
+    [self.navigationController popViewControllerAnimated:YES];
     
 }
 
@@ -148,10 +212,10 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
 {
     [self.mKeyboardControls setActiveField:textField];
     
-    NSLog(@"frame: %f", textField.frame.origin.y);
+    NSLog(@"frame: %f", textField.superview.frame.origin.y);
     
-    if (textField.frame.origin.y > 80) {
-        CGRect rect = CGRectMake(textField.frame.origin.x, textField.frame.origin.y, self.scrllViewFields.frame.size.width, 575 - textField.frame.origin.y);
+    if (textField.superview.frame.origin.y > 80) {
+        CGRect rect = CGRectMake(textField.frame.origin.x, textField.frame.origin.y, self.scrllViewFields.frame.size.width, 575 - textField.superview.frame.origin.y);
         NSLog(@"scroll to rect: %@", NSStringFromCGRect(rect));
         [self.scrllViewFields scrollRectToVisible:rect animated:YES];
     }
@@ -164,8 +228,8 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
     
     NSLog(@"frame: %f", textView.frame.origin.y);
     
-    if (textView.frame.origin.y > 80) {
-        CGRect rect = CGRectMake(textView.frame.origin.x, textView.frame.origin.y, self.scrllViewFields.frame.size.width, self.scrllViewFields.contentSize.height - textView.frame.origin.y);
+    if (textView.superview.frame.origin.y > 80) {
+        CGRect rect = CGRectMake(textView.frame.origin.x, textView.frame.origin.y, self.scrllViewFields.frame.size.width, self.scrllViewFields.contentSize.height - textView.superview.frame.origin.y);
         NSLog(@"scroll to rect: %@", NSStringFromCGRect(rect));
         [self.scrllViewFields scrollRectToVisible:rect animated:YES];
     }
@@ -175,6 +239,11 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
         textView.textColor = [UIColor blackColor];
     }
     
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    NSLog(@"textField value: %@", textField.text);
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView
