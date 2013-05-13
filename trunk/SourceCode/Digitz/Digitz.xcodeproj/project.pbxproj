@@ -68,8 +68,6 @@
 		29EA60B1171B4172002D0666 /* btn-connect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29EA60AB171B4172002D0666 /* btn-connect@2x.png */; };
 		29EA60B2171B4172002D0666 /* btn-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 29EA60AC171B4172002D0666 /* btn-save.png */; };
 		29EA60B3171B4172002D0666 /* btn-save@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29EA60AD171B4172002D0666 /* btn-save@2x.png */; };
-		29EA60B7171B42B5002D0666 /* SocialHubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29EA60B5171B42B4002D0666 /* SocialHubViewController.m */; };
-		29EA60B8171B42B5002D0666 /* SocialHubViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 29EA60B6171B42B4002D0666 /* SocialHubViewController.xib */; };
 		D906810D17284F6B003E2EDE /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = D906810717284F6B003E2EDE /* Base64Transcoder.c */; };
 		D906810E17284F6B003E2EDE /* hmac.c in Sources */ = {isa = PBXBuildFile; fileRef = D906810917284F6B003E2EDE /* hmac.c */; };
 		D906810F17284F6B003E2EDE /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = D906810B17284F6B003E2EDE /* sha1.c */; };
@@ -98,6 +96,14 @@
 		D90AF2AE172C0A5200D39E15 /* label-Social-lined.png in Resources */ = {isa = PBXBuildFile; fileRef = D90AF2A4172C0A5200D39E15 /* label-Social-lined.png */; };
 		D90AF2AF172C0A5200D39E15 /* label-Social-lined@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D90AF2A5172C0A5200D39E15 /* label-Social-lined@2x.png */; };
 		D90AF2B2172C0A5200D39E15 /* label-OR-lined@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D90AF2A8172C0A5200D39E15 /* label-OR-lined@2x.png */; };
+		D922436A174140A50085328F /* bg-box-foot.png in Resources */ = {isa = PBXBuildFile; fileRef = D9224364174140A50085328F /* bg-box-foot.png */; };
+		D922436B174140A50085328F /* bg-box-head.png in Resources */ = {isa = PBXBuildFile; fileRef = D9224365174140A50085328F /* bg-box-head.png */; };
+		D922436C174140A50085328F /* bg-box-head@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9224366174140A50085328F /* bg-box-head@2x.png */; };
+		D922436D174140A50085328F /* bg-box-mid.png in Resources */ = {isa = PBXBuildFile; fileRef = D9224367174140A50085328F /* bg-box-mid.png */; };
+		D922436E174140A50085328F /* bg-box-mid@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9224368174140A50085328F /* bg-box-mid@2x.png */; };
+		D922436F174140A50085328F /* bg-box-foot@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9224369174140A50085328F /* bg-box-foot@2x.png */; };
+		D9224373174158430085328F /* bg-box-4-rows-empty.png in Resources */ = {isa = PBXBuildFile; fileRef = D9224371174158430085328F /* bg-box-4-rows-empty.png */; };
+		D9224374174158430085328F /* bg-box-4-rows-empty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9224372174158430085328F /* bg-box-4-rows-empty@2x.png */; };
 		D92D8AEE1735741F005E5662 /* btc-decline.png in Resources */ = {isa = PBXBuildFile; fileRef = D92D8AE61735741F005E5662 /* btc-decline.png */; };
 		D92D8AEF1735741F005E5662 /* btc-decline@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D92D8AE71735741F005E5662 /* btc-decline@2x.png */; };
 		D92D8AF01735741F005E5662 /* btn-add-acq.png in Resources */ = {isa = PBXBuildFile; fileRef = D92D8AE81735741F005E5662 /* btn-add-acq.png */; };
@@ -139,9 +145,23 @@
 		D9356611171DA5AD00F4C910 /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D935660F171DA5AD00F4C910 /* SignUpViewController.m */; };
 		D9356612171DA5AD00F4C910 /* SignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9356610171DA5AD00F4C910 /* SignUpViewController.xib */; };
 		D935661A171DAC3200F4C910 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D9356619171DAC3200F4C910 /* MBProgressHUD.m */; };
+		D9365566173A93050045EE7B /* DigitzUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D9365565173A93050045EE7B /* DigitzUtils.m */; };
+		D936556A173A9BFF0045EE7B /* DigitzRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D9365569173A9BFF0045EE7B /* DigitzRequest.m */; };
+		D936556D173AB7930045EE7B /* btn-close-topbar.png in Resources */ = {isa = PBXBuildFile; fileRef = D936556B173AB7930045EE7B /* btn-close-topbar.png */; };
+		D936556E173AB7930045EE7B /* btn-close-topbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D936556C173AB7930045EE7B /* btn-close-topbar@2x.png */; };
 		D95BF533171F009F0063B5DC /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D95BF532171F009F0063B5DC /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D95BF535171F00AA0063B5DC /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D95BF534171F00AA0063B5DC /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D95BF537171F00B60063B5DC /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D95BF536171F00B50063B5DC /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		D96FA2FB173E992F00D9CDCA /* PrivacySettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D96FA2F9173E992F00D9CDCA /* PrivacySettingsViewController.m */; };
+		D96FA2FC173E992F00D9CDCA /* PrivacySettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D96FA2FA173E992F00D9CDCA /* PrivacySettingsViewController.xib */; };
+		D96FA30A173F51B100D9CDCA /* DigitzInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D96FA308173F51B100D9CDCA /* DigitzInfoViewController.m */; };
+		D96FA30B173F51B100D9CDCA /* DigitzInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D96FA309173F51B100D9CDCA /* DigitzInfoViewController.xib */; };
+		D96FA30F173F5D0400D9CDCA /* SocialHubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D96FA30D173F5D0400D9CDCA /* SocialHubViewController.m */; };
+		D96FA310173F5D0400D9CDCA /* SocialHubViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D96FA30E173F5D0400D9CDCA /* SocialHubViewController.xib */; };
+		D96FA314173F5E6300D9CDCA /* FriendsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D96FA312173F5E6300D9CDCA /* FriendsListViewController.m */; };
+		D96FA315173F5E6300D9CDCA /* FriendsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D96FA313173F5E6300D9CDCA /* FriendsListViewController.xib */; };
+		D96FA319173F619B00D9CDCA /* UIMultilineSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = D96FA318173F619B00D9CDCA /* UIMultilineSegmentedControl.m */; };
+		D96FA31C173F631800D9CDCA /* UIView+LayerShot.m in Sources */ = {isa = PBXBuildFile; fileRef = D96FA31B173F631800D9CDCA /* UIView+LayerShot.m */; };
 		D9716B51172E7B4200E95CD9 /* btn-accept.png in Resources */ = {isa = PBXBuildFile; fileRef = D9716B4F172E7B4200E95CD9 /* btn-accept.png */; };
 		D9716B52172E7B4200E95CD9 /* btn-accept@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9716B50172E7B4200E95CD9 /* btn-accept@2x.png */; };
 		D9722874172964380021399F /* btn-login.png in Resources */ = {isa = PBXBuildFile; fileRef = D972285C172964380021399F /* btn-login.png */; };
@@ -454,9 +474,6 @@
 		29EA60AB171B4172002D0666 /* btn-connect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-connect@2x.png"; sourceTree = "<group>"; };
 		29EA60AC171B4172002D0666 /* btn-save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-save.png"; sourceTree = "<group>"; };
 		29EA60AD171B4172002D0666 /* btn-save@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-save@2x.png"; sourceTree = "<group>"; };
-		29EA60B4171B42B4002D0666 /* SocialHubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialHubViewController.h; sourceTree = "<group>"; };
-		29EA60B5171B42B4002D0666 /* SocialHubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialHubViewController.m; sourceTree = "<group>"; };
-		29EA60B6171B42B4002D0666 /* SocialHubViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SocialHubViewController.xib; sourceTree = "<group>"; };
 		D906810717284F6B003E2EDE /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
 		D906810817284F6B003E2EDE /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
 		D906810917284F6B003E2EDE /* hmac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hmac.c; sourceTree = "<group>"; };
@@ -507,6 +524,14 @@
 		D90AF2A4172C0A5200D39E15 /* label-Social-lined.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "label-Social-lined.png"; sourceTree = "<group>"; };
 		D90AF2A5172C0A5200D39E15 /* label-Social-lined@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "label-Social-lined@2x.png"; sourceTree = "<group>"; };
 		D90AF2A8172C0A5200D39E15 /* label-OR-lined@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "label-OR-lined@2x.png"; sourceTree = "<group>"; };
+		D9224364174140A50085328F /* bg-box-foot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-box-foot.png"; sourceTree = "<group>"; };
+		D9224365174140A50085328F /* bg-box-head.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-box-head.png"; sourceTree = "<group>"; };
+		D9224366174140A50085328F /* bg-box-head@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-box-head@2x.png"; sourceTree = "<group>"; };
+		D9224367174140A50085328F /* bg-box-mid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-box-mid.png"; sourceTree = "<group>"; };
+		D9224368174140A50085328F /* bg-box-mid@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-box-mid@2x.png"; sourceTree = "<group>"; };
+		D9224369174140A50085328F /* bg-box-foot@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-box-foot@2x.png"; sourceTree = "<group>"; };
+		D9224371174158430085328F /* bg-box-4-rows-empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-box-4-rows-empty.png"; sourceTree = "<group>"; };
+		D9224372174158430085328F /* bg-box-4-rows-empty@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-box-4-rows-empty@2x.png"; sourceTree = "<group>"; };
 		D92D8AE61735741F005E5662 /* btc-decline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btc-decline.png"; sourceTree = "<group>"; };
 		D92D8AE71735741F005E5662 /* btc-decline@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btc-decline@2x.png"; sourceTree = "<group>"; };
 		D92D8AE81735741F005E5662 /* btn-add-acq.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-add-acq.png"; sourceTree = "<group>"; };
@@ -555,9 +580,31 @@
 		D9356610171DA5AD00F4C910 /* SignUpViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignUpViewController.xib; sourceTree = "<group>"; };
 		D9356618171DAC3200F4C910 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		D9356619171DAC3200F4C910 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		D9365564173A93050045EE7B /* DigitzUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DigitzUtils.h; sourceTree = "<group>"; };
+		D9365565173A93050045EE7B /* DigitzUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DigitzUtils.m; sourceTree = "<group>"; };
+		D9365568173A9BFF0045EE7B /* DigitzRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DigitzRequest.h; sourceTree = "<group>"; };
+		D9365569173A9BFF0045EE7B /* DigitzRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DigitzRequest.m; sourceTree = "<group>"; };
+		D936556B173AB7930045EE7B /* btn-close-topbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-close-topbar.png"; sourceTree = "<group>"; };
+		D936556C173AB7930045EE7B /* btn-close-topbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-close-topbar@2x.png"; sourceTree = "<group>"; };
 		D95BF532171F009F0063B5DC /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		D95BF534171F00AA0063B5DC /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		D95BF536171F00B50063B5DC /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		D96FA2F8173E992F00D9CDCA /* PrivacySettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivacySettingsViewController.h; sourceTree = "<group>"; };
+		D96FA2F9173E992F00D9CDCA /* PrivacySettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrivacySettingsViewController.m; sourceTree = "<group>"; };
+		D96FA2FA173E992F00D9CDCA /* PrivacySettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PrivacySettingsViewController.xib; sourceTree = "<group>"; };
+		D96FA307173F51B100D9CDCA /* DigitzInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DigitzInfoViewController.h; sourceTree = "<group>"; };
+		D96FA308173F51B100D9CDCA /* DigitzInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DigitzInfoViewController.m; sourceTree = "<group>"; };
+		D96FA309173F51B100D9CDCA /* DigitzInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DigitzInfoViewController.xib; sourceTree = "<group>"; };
+		D96FA30C173F5D0400D9CDCA /* SocialHubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialHubViewController.h; sourceTree = "<group>"; };
+		D96FA30D173F5D0400D9CDCA /* SocialHubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialHubViewController.m; sourceTree = "<group>"; };
+		D96FA30E173F5D0400D9CDCA /* SocialHubViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SocialHubViewController.xib; sourceTree = "<group>"; };
+		D96FA311173F5E6200D9CDCA /* FriendsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsListViewController.h; sourceTree = "<group>"; };
+		D96FA312173F5E6300D9CDCA /* FriendsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendsListViewController.m; sourceTree = "<group>"; };
+		D96FA313173F5E6300D9CDCA /* FriendsListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendsListViewController.xib; sourceTree = "<group>"; };
+		D96FA317173F619B00D9CDCA /* UIMultilineSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIMultilineSegmentedControl.h; sourceTree = "<group>"; };
+		D96FA318173F619B00D9CDCA /* UIMultilineSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIMultilineSegmentedControl.m; sourceTree = "<group>"; };
+		D96FA31A173F631800D9CDCA /* UIView+LayerShot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+LayerShot.h"; sourceTree = "<group>"; };
+		D96FA31B173F631800D9CDCA /* UIView+LayerShot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+LayerShot.m"; sourceTree = "<group>"; };
 		D9716B4F172E7B4200E95CD9 /* btn-accept.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-accept.png"; sourceTree = "<group>"; };
 		D9716B50172E7B4200E95CD9 /* btn-accept@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-accept@2x.png"; sourceTree = "<group>"; };
 		D972285C172964380021399F /* btn-login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-login.png"; sourceTree = "<group>"; };
@@ -951,6 +998,16 @@
 		29EA600F171B26BE002D0666 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				D9224371174158430085328F /* bg-box-4-rows-empty.png */,
+				D9224372174158430085328F /* bg-box-4-rows-empty@2x.png */,
+				D9224364174140A50085328F /* bg-box-foot.png */,
+				D9224365174140A50085328F /* bg-box-head.png */,
+				D9224366174140A50085328F /* bg-box-head@2x.png */,
+				D9224367174140A50085328F /* bg-box-mid.png */,
+				D9224368174140A50085328F /* bg-box-mid@2x.png */,
+				D9224369174140A50085328F /* bg-box-foot@2x.png */,
+				D936556B173AB7930045EE7B /* btn-close-topbar.png */,
+				D936556C173AB7930045EE7B /* btn-close-topbar@2x.png */,
 				D92D8AF71735742D005E5662 /* bg-dark-568h@2x.png */,
 				D9DCFA1E1736B7CB00C54236 /* bg-box-opt-info.png */,
 				D9DCFA1F1736B7CB00C54236 /* bg-box-opt-info@2x.png */,
@@ -1088,6 +1145,7 @@
 		29EA6066171B3947002D0666 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				D96FA316173F617600D9CDCA /* MultilineSegmentControl */,
 				D97228A017297ECF0021399F /* BSKeyboardControls */,
 				D906810417284F5B003E2EDE /* Linkedin */,
 				D9FEA4AB1726D9C8007352E3 /* GooglePlusSDK */,
@@ -1147,9 +1205,6 @@
 				29EA6093171B3A04002D0666 /* PersonalInformationViewController.h */,
 				29EA608F171B3A04002D0666 /* PersonalInformationViewController.m */,
 				29EA6091171B3A04002D0666 /* PersonalInformationViewController.xib */,
-				29EA60B4171B42B4002D0666 /* SocialHubViewController.h */,
-				29EA60B5171B42B4002D0666 /* SocialHubViewController.m */,
-				29EA60B6171B42B4002D0666 /* SocialHubViewController.xib */,
 				D9356604171DA0A100F4C910 /* MainMenuViewController.h */,
 				D9356605171DA0A200F4C910 /* MainMenuViewController.m */,
 				D9356606171DA0A200F4C910 /* MainMenuViewController.xib */,
@@ -1192,6 +1247,22 @@
 				D9DCFA191736AE6400C54236 /* OptionalInfoViewController.h */,
 				D9DCFA1A1736AE6400C54236 /* OptionalInfoViewController.m */,
 				D9DCFA1B1736AE6500C54236 /* OptionalInfoViewController.xib */,
+				D9365564173A93050045EE7B /* DigitzUtils.h */,
+				D9365565173A93050045EE7B /* DigitzUtils.m */,
+				D9365568173A9BFF0045EE7B /* DigitzRequest.h */,
+				D9365569173A9BFF0045EE7B /* DigitzRequest.m */,
+				D96FA2F8173E992F00D9CDCA /* PrivacySettingsViewController.h */,
+				D96FA2F9173E992F00D9CDCA /* PrivacySettingsViewController.m */,
+				D96FA2FA173E992F00D9CDCA /* PrivacySettingsViewController.xib */,
+				D96FA307173F51B100D9CDCA /* DigitzInfoViewController.h */,
+				D96FA308173F51B100D9CDCA /* DigitzInfoViewController.m */,
+				D96FA309173F51B100D9CDCA /* DigitzInfoViewController.xib */,
+				D96FA30C173F5D0400D9CDCA /* SocialHubViewController.h */,
+				D96FA30D173F5D0400D9CDCA /* SocialHubViewController.m */,
+				D96FA30E173F5D0400D9CDCA /* SocialHubViewController.xib */,
+				D96FA311173F5E6200D9CDCA /* FriendsListViewController.h */,
+				D96FA312173F5E6300D9CDCA /* FriendsListViewController.m */,
+				D96FA313173F5E6300D9CDCA /* FriendsListViewController.xib */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -1282,6 +1353,17 @@
 				D9356619171DAC3200F4C910 /* MBProgressHUD.m */,
 			);
 			name = MBProgressHUD;
+			sourceTree = "<group>";
+		};
+		D96FA316173F617600D9CDCA /* MultilineSegmentControl */ = {
+			isa = PBXGroup;
+			children = (
+				D96FA317173F619B00D9CDCA /* UIMultilineSegmentedControl.h */,
+				D96FA318173F619B00D9CDCA /* UIMultilineSegmentedControl.m */,
+				D96FA31A173F631800D9CDCA /* UIView+LayerShot.h */,
+				D96FA31B173F631800D9CDCA /* UIView+LayerShot.m */,
+			);
+			name = MultilineSegmentControl;
 			sourceTree = "<group>";
 		};
 		D97228A017297ECF0021399F /* BSKeyboardControls */ = {
@@ -2400,7 +2482,6 @@
 				29EA60B1171B4172002D0666 /* btn-connect@2x.png in Resources */,
 				29EA60B2171B4172002D0666 /* btn-save.png in Resources */,
 				29EA60B3171B4172002D0666 /* btn-save@2x.png in Resources */,
-				29EA60B8171B42B5002D0666 /* SocialHubViewController.xib in Resources */,
 				D9356608171DA0A200F4C910 /* MainMenuViewController.xib in Resources */,
 				D935660D171DA37B00F4C910 /* LoginViewController.xib in Resources */,
 				D9356612171DA5AD00F4C910 /* SignUpViewController.xib in Resources */,
@@ -2615,6 +2696,20 @@
 				D9DCFA2C1736B7CB00C54236 /* label-opt-info-lined.png in Resources */,
 				D9DCFA2D1736B7CB00C54236 /* label-opt-info-lined@2x.png in Resources */,
 				D9DCFA351736C97200C54236 /* FacebookSDKResources.bundle in Resources */,
+				D936556D173AB7930045EE7B /* btn-close-topbar.png in Resources */,
+				D936556E173AB7930045EE7B /* btn-close-topbar@2x.png in Resources */,
+				D96FA2FC173E992F00D9CDCA /* PrivacySettingsViewController.xib in Resources */,
+				D96FA30B173F51B100D9CDCA /* DigitzInfoViewController.xib in Resources */,
+				D96FA310173F5D0400D9CDCA /* SocialHubViewController.xib in Resources */,
+				D96FA315173F5E6300D9CDCA /* FriendsListViewController.xib in Resources */,
+				D922436A174140A50085328F /* bg-box-foot.png in Resources */,
+				D922436B174140A50085328F /* bg-box-head.png in Resources */,
+				D922436C174140A50085328F /* bg-box-head@2x.png in Resources */,
+				D922436D174140A50085328F /* bg-box-mid.png in Resources */,
+				D922436E174140A50085328F /* bg-box-mid@2x.png in Resources */,
+				D922436F174140A50085328F /* bg-box-foot@2x.png in Resources */,
+				D9224373174158430085328F /* bg-box-4-rows-empty.png in Resources */,
+				D9224374174158430085328F /* bg-box-4-rows-empty@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2640,7 +2735,6 @@
 				29EA6087171B3947002D0666 /* ServerManager.m in Sources */,
 				29EA6094171B3A04002D0666 /* EnterYourDigitzViewController.m in Sources */,
 				29EA6095171B3A04002D0666 /* PersonalInformationViewController.m in Sources */,
-				29EA60B7171B42B5002D0666 /* SocialHubViewController.m in Sources */,
 				D9356607171DA0A200F4C910 /* MainMenuViewController.m in Sources */,
 				D935660C171DA37B00F4C910 /* LoginViewController.m in Sources */,
 				D9356611171DA5AD00F4C910 /* SignUpViewController.m in Sources */,
@@ -2718,6 +2812,14 @@
 				D92D8AFC17357D81005E5662 /* ReceiveRequestViewController.m in Sources */,
 				D9DCFA181736527700C54236 /* SocialShareCell.m in Sources */,
 				D9DCFA1C1736AE6500C54236 /* OptionalInfoViewController.m in Sources */,
+				D9365566173A93050045EE7B /* DigitzUtils.m in Sources */,
+				D936556A173A9BFF0045EE7B /* DigitzRequest.m in Sources */,
+				D96FA2FB173E992F00D9CDCA /* PrivacySettingsViewController.m in Sources */,
+				D96FA30A173F51B100D9CDCA /* DigitzInfoViewController.m in Sources */,
+				D96FA30F173F5D0400D9CDCA /* SocialHubViewController.m in Sources */,
+				D96FA314173F5E6300D9CDCA /* FriendsListViewController.m in Sources */,
+				D96FA319173F619B00D9CDCA /* UIMultilineSegmentedControl.m in Sources */,
+				D96FA31C173F631800D9CDCA /* UIView+LayerShot.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
