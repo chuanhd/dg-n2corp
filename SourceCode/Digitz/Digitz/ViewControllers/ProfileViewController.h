@@ -26,7 +26,11 @@
 
 @property (strong, nonatomic) ServerManager *serverManager;
 @property (strong, nonatomic) NSMutableDictionary *paramsDict;
+
 @property BOOL personalInfoFilled;
+@property BOOL optionalInfoFilled;
+@property BOOL privacySettingFilled;
+@property BOOL agreeTermAndCondition;
 
 - (IBAction)backBtnTapped:(id)sender;
 - (IBAction)signOutBtnTapped:(id)sender;

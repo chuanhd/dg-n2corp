@@ -8,8 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "ServerManager.h"
+#import "User.h"
+#import "DigitzRequest.h"
 
 @interface ReceiveRequestViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, ServerManagerDelegate>
+
+@property (strong, nonatomic) DigitzRequest *request;
+@property (strong, nonatomic) ServerManager *serverManager;
+@property (strong, nonatomic) NSMutableArray *fields;
 
 @property (weak, nonatomic) IBOutlet UIImageView *imgAvatar;
 @property (weak, nonatomic) IBOutlet UILabel *lblUsername;
@@ -20,5 +26,8 @@
 
 - (IBAction)acceptBtnTapped:(id)sender;
 - (IBAction)declineBtnTapped:(id)sender;
+
+- (void) addFieldToArray:(NSString *)field;
+- (void) removeFieldFromArray:(NSString *)field;
 
 @end

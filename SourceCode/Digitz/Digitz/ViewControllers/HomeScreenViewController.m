@@ -10,7 +10,12 @@
 #import "MBProgressHUD.h"
 #import "UserCell.h"
 #import "User.h"
+#import "DigitzRequest.h"
 #import "ProfileViewController.h"
+#import "RequestDigitzViewController.h"
+#import "ReceiveRequestViewController.h"
+#import "DigitzUtils.h"
+#import "FriendsListViewController.h"
 
 @interface HomeScreenViewController ()
 {
@@ -25,6 +30,7 @@
 @synthesize locationManager;
 @synthesize bestEffortLocation;
 @synthesize friendsArray;
+@synthesize secondArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -45,6 +51,9 @@
     
     self.digitzUsersTableView.dataSource = self;
     self.digitzUsersTableView.delegate = self;
+    
+    self.secondTableView.dataSource = self;
+    self.secondTableView.delegate = self;
     
     self.searchDisplayController.delegate = self;
     
@@ -174,8 +183,65 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+- (IBAction)friendBtnTapped:(id)sender {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Getting friends list"];
+    [serverManager getAllFriendsOfUser];
+}
+
+- (void)getAllFriendSuccessWithArray:(NSArray *)friends
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        if (friends.count > 0) {
+            [DigitzUtils showToast:@"Get friend list successful" inView:self.view];
+            FriendsListViewController *vc = [[FriendsListViewController alloc] initWithNibName:nil bundle:nil];
+            vc.friendsArray = [NSMutableArray arrayWithArray:friends];
+            [self.navigationController pushViewController:vc animated:YES];
+        }else{
+            [DigitzUtils showToast:@"You have no friend" inView:self.view];
+        }
+        
+    });
+}
+
+- (void)getAllFriendFailWithError:(NSError *)error
+{
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+}
+
+- (IBAction)showRequestBtnTapped:(id)sender {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Getting friends request"];
+    [serverManager getAllFriendRequest];
+}
+
+- (void)getAllFriendRequestSuccessWithArray:(NSArray *)request
+{
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    self.secondArray = [request mutableCopy];
+    self.popupView.hidden = NO;
+    self.lblPopupView.text = @"Friend requests";
+    [self.secondTableView reloadData];
+}
+
+- (void)getAllFriendRequestFailWithError:(NSError *)error
+{
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+}
+
+- (IBAction)recentBtnTapped:(id)sender {
+}
+
+- (IBAction)closeBtnTapped:(id)sender {
+    self.popupView.hidden = YES;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    if (tableView != self.secondTableView) {
+        
+    }
+    
     static NSString *cellIdentifier = @"UserCell";
     
     UserCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -185,15 +251,23 @@
         cell = [itemArray objectAtIndex:0];
     }
     
+
     User *user;
     
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        user = [searchResults objectAtIndex:indexPath.row];
+    if (tableView != self.secondTableView) {
+        if (tableView == self.searchDisplayController.searchResultsTableView) {
+            user = [searchResults objectAtIndex:indexPath.row];
+        }else if(tableView == self.digitzUsersTableView){
+            user = [self.friendsArray objectAtIndex:indexPath.row];
+        }
     }else{
-        user = [self.friendsArray objectAtIndex:indexPath.row];
+        __weak DigitzRequest *request = [self.secondArray objectAtIndex:indexPath.row];
+        user = request.sender;
     }
     
-    NSLog(@"user %@", user);
+    NSLog(@"cell for row: %d",  indexPath.row);
+    
+    NSLog(@"user %@", user.username);
     
     if (![user.name isEqual:[NSNull null]]) {
         cell.txtUsername.text = user.name;
@@ -214,9 +288,29 @@
 {
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         return [searchResults count];
+    }else if (tableView == self.digitzUsersTableView){
+        return self.friendsArray.count;
+    }else{
+        return self.secondArray.count;
     }
-    return self.friendsArray.count;
 }
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tableView != self.secondTableView) {
+        RequestDigitzViewController *vc = [[RequestDigitzViewController alloc] initWithNibName:nil bundle:nil];
+        vc.requestUser = [self.friendsArray objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:vc animated:YES];
+    }else{
+        ReceiveRequestViewController *vc = [[ReceiveRequestViewController alloc] initWithNibName:nil bundle:nil];
+        __weak DigitzRequest *request = [self.secondArray objectAtIndex:indexPath.row];
+        vc.request = request;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    NSLog(@"select row: %d", indexPath.row);
+    
+}
+
 
 - (void) filterContentForSearchText:(NSString *)searchText scope:(NSString *)scope
 {

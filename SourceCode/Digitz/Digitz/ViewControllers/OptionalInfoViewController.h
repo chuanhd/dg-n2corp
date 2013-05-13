@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "BSKeyboardControls.h"
 
-@interface OptionalInfoViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate, BSKeyboardControlsDelegate>
+@interface OptionalInfoViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate, BSKeyboardControlsDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *imgAvatar;
 @property (weak, nonatomic) IBOutlet UITextField *txtOrganization;
@@ -24,9 +24,11 @@
 
 @property (strong, nonatomic) UIViewController *parentVC;
 @property (strong, nonatomic) BSKeyboardControls *mKeyboardControls;
+@property (strong, nonatomic) UIImagePickerController *imagePicker;
 
 - (IBAction)backBtnTapped:(id)sender;
 - (IBAction)saveBtnTapped:(id)sender;
+- (IBAction)avatarTapped:(id)sender;
 
 
 @end

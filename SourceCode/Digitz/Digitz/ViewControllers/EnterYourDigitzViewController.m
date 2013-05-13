@@ -20,6 +20,7 @@
 #import "PersonalInfo.h"
 #import "LinkedinOAuthView.h"
 #import "OptionalInfoViewController.h"
+#import "PrivacySettingsViewController.h"
 
 NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FBSessionStateChangedNotification";
 
@@ -38,6 +39,10 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
 @implementation EnterYourDigitzViewController
 
 @synthesize personalInfoFilled;
+@synthesize optionalInfoFilled;
+@synthesize privacySettingFilled;
+@synthesize agreeTermAndCondition;
+
 @synthesize paramsDict;
 @synthesize serverManager;
 @synthesize accountStore;
@@ -60,6 +65,10 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
     // Do any additional setup after loading the view from its nib.
     
     personalInfoFilled = NO;
+    optionalInfoFilled = NO;
+    privacySettingFilled = NO;
+    agreeTermAndCondition = NO;
+    
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
@@ -204,12 +213,27 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
                     break;
                 case 1:
                     cell.txtInfo.text = @"Optional Information";
+                    if (self.optionalInfoFilled) {
+                        cell.imgCheckmark.hidden = NO;
+                    }else{
+                        cell.imgCheckmark.hidden = YES;
+                    }
                     break;
                 case 2:
                     cell.txtInfo.text = @"Privacy Settings*";
+                    if (self.privacySettingFilled) {
+                        cell.imgCheckmark.hidden = NO;
+                    }else{
+                        cell.imgCheckmark.hidden = YES;
+                    }
                     break;
                 case 3:
                     cell.txtInfo.text = @"Terms & Conditions*";
+                    if (self.agreeTermAndCondition) {
+                        cell.imgCheckmark.hidden = NO;
+                    }else{
+                        cell.imgCheckmark.hidden = YES;
+                    }
                     break;
                 default:
                     break;
@@ -242,6 +266,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
                 {
                     // optional information
                     OptionalInfoViewController *vc = [[OptionalInfoViewController alloc] init];
+                    vc.parentVC = self;
                     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
                     
                     [self.navigationController pushViewController:vc animated:YES];
@@ -250,6 +275,10 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
                 case 2:
                 {
                     // privacy settings
+                    PrivacySettingsViewController *vc = [[PrivacySettingsViewController alloc] init];
+                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
+                    
+                    [self.navigationController pushViewController:vc animated:YES];
                 }
                     break;
                 case 3:
@@ -383,7 +412,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
         
         dispatch_async(dispatch_get_main_queue(), ^{
             linkedinLinked = YES;
-            [self.btnLinkedIn setImage:[UIImage imageNamed:@"icon-lnk-r-green"] forState:UIControlStateNormal];
+            [self.btnLinkedIn setImage:[UIImage imageNamed:@"icon-lnk-r-green.png"] forState:UIControlStateNormal];
 
         });
 //        name.text = [[NSString alloc] initWithFormat:@"%@ %@",
@@ -410,7 +439,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
         
         dispatch_async(dispatch_get_main_queue(), ^{
             instagramLinked = YES;
-            [self.btnInstagram setImage:[UIImage imageNamed:@"icon-lnk-r-green"] forState:UIControlStateNormal];
+            [self.btnInstagram setImage:[UIImage imageNamed:@"icon-ins-r-green.png"] forState:UIControlStateNormal];
             
         });
         
@@ -507,7 +536,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
     
     //FBRequest *fbRequest = [FBRequest requestWithGraphPath:@"me?fields=picture,email,hometown,first_name,last_name,location,gender,birthday,link" parameters:nil HTTPMethod:@"GET"];
     
-    FBRequest *fbRequest = [FBRequest requestWithGraphPath:@"me?fields=link" parameters:nil HTTPMethod:@"GET"];
+    FBRequest *fbRequest = [FBRequest requestWithGraphPath:@"me?fields=link,picture" parameters:nil HTTPMethod:@"GET"];
 
     
     [fbRequest startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary *result, NSError *error){
@@ -524,8 +553,13 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
             [alert show];
             dispatch_async(dispatch_get_main_queue(), ^{
                 facebookLinked = YES;
-                [self.btnFacebook setImage:[UIImage imageNamed:@"icon-fb-r-green"] forState:UIControlStateNormal];
+                [self.btnFacebook setImage:[UIImage imageNamed:@"icon-fb-r-green.png"] forState:UIControlStateNormal];
             });
+            
+            NSMutableDictionary *avatarUrlData = [result objectForKey:@"picture"];
+            avatarUrlData = [avatarUrlData objectForKey:@"data"];
+            NSString *urlString = [avatarUrlData objectForKey:@"url"];
+            [self.paramsDict setObject:urlString forKey:kKey_UpdateRemoteAvatar];
             
 //            for (NSString *key in result) {
 //                NSLog(@"key: %@ -> value: %@", key, [result objectForKey:key]);
@@ -610,7 +644,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
                         [alert show];
                         dispatch_async(dispatch_get_main_queue(), ^{
                             googleLinked = YES;
-                            [self.btnGoogle setImage:[UIImage imageNamed:@"icon-gg-r-green"] forState:UIControlStateNormal];
+                            [self.btnGoogle setImage:[UIImage imageNamed:@"icon-gg-r-green.png"] forState:UIControlStateNormal];
                         });
                     }
                 }];

@@ -15,6 +15,7 @@
 #import "GTLServicePlus.h"
 #import "GTLQueryPlus.h"
 #import "GTLPlusPerson.h"
+#import "OptionalInfoViewController.h"
 
 //NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FBSessionStateChangedNotification";
 
@@ -33,6 +34,9 @@
 @synthesize serverManager = _serverManager;
 @synthesize paramsDict = _paramsDict;
 @synthesize personalInfoFilled = _personalInfoFilled;
+@synthesize optionalInfoFilled = _optionalInfoFilled;
+@synthesize privacySettingFilled = _privacySettingFilled;
+@synthesize agreeTermAndCondition = _agreeTermAndCondition;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -222,38 +226,57 @@
         [_paramsDict setObject:user.instagramUrl forKey:kKey_UpdateInstagramUrl];
     }
     
-    NSLog(@"check fb: %d", user.facebookUrl != nil);
-    NSLog(@"check fb: %d", user.googleUrl != nil);
-
-    NSLog(@"check fb: %d", user.twitterUrl != nil);
-
-    NSLog(@"check fb: %d", user.linkedinUrl != nil);
-    NSLog(@"check fb: %d", user.instagramUrl != nil);
-
+    if (![user.avatarUrl isEqual:[NSNull null]] && user.avatarUrl != nil) {
+        [_paramsDict setObject:user.avatarUrl forKey:kKey_UpdateAvatar];
+    }
+    
+    if (![user.company isEqual:[NSNull null]] && user.company != nil) {
+        [_paramsDict setObject:user.company forKey:kKey_UpdateCompany];
+    }
+    
+    if (![user.address isEqual:[NSNull null]] && user.address != nil) {
+        [_paramsDict setObject:user.address forKey:kKey_UpdateAddress];
+    }
+    
+    if (![user.homepage isEqual:[NSNull null]] && user.homepage != nil) {
+        [_paramsDict setObject:user.homepage forKey:kKey_UpdateHomepage];
+    }
+    
+    if (![user.emailHome isEqual:[NSNull null]] && user.emailHome != nil) {
+        [_paramsDict setObject:user.emailHome forKey:kKey_UpdateAlterEmail];
+    }
+    
+    if (![user.phoneHome isEqual:[NSNull null]] && user.phoneHome != nil) {
+        [_paramsDict setObject:user.phoneHome forKey:kKey_UpdateAlterPhone];
+    }
+    
+    if (![user.bio isEqual:[NSNull null]] && user.bio != nil) {
+        [_paramsDict setObject:user.bio forKey:kKey_UpdatePersonalBio];
+    }
     
     if (![user.facebookUrl isEqual:[NSNull null]]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.facebookBtn setImage:[UIImage imageNamed:@"icon-fb-r-green"] forState:UIControlStateNormal];
+            [self.facebookBtn setImage:[UIImage imageNamed:@"icon-fb-r-green.png"] forState:UIControlStateNormal];
         });
     }
     if (![user.googleUrl isEqual:[NSNull null]]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.googleBtn setImage:[UIImage imageNamed:@"icon-gg-r-green"] forState:UIControlStateNormal];
+            [self.googleBtn setImage:[UIImage imageNamed:@"icon-gg-r-green.png"] forState:UIControlStateNormal];
         });
     }
     if (![user.twitterUrl isEqual:[NSNull null]]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.twitterBtn setImage:[UIImage imageNamed:@"icon-tw-r-green"] forState:UIControlStateNormal];
+            [self.twitterBtn setImage:[UIImage imageNamed:@"icon-tw-r-green.png"] forState:UIControlStateNormal];
         });
     }
     if (![user.linkedinUrl isEqual:[NSNull null]]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.linkedlnBtn setImage:[UIImage imageNamed:@"icon-lnk-r-green"] forState:UIControlStateNormal];
+            [self.linkedlnBtn setImage:[UIImage imageNamed:@"icon-lnk-r-green.png"] forState:UIControlStateNormal];
         });
     }
     if (![user.instagramUrl isEqual:[NSNull null]]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.instagramBtn setImage:[UIImage imageNamed:@"icon-ins-r-green"] forState:UIControlStateNormal];
+            [self.instagramBtn setImage:[UIImage imageNamed:@"icon-ins-r-green.png"] forState:UIControlStateNormal];
         });
     }
     
@@ -349,12 +372,27 @@
             break;
         case 1:
             cell.txtInfo.text = @"Optional Information";
+            if (self.optionalInfoFilled) {
+                cell.imgCheckmark.hidden = NO;
+            }else{
+                cell.imgCheckmark.hidden = YES;
+            }
             break;
         case 2:
             cell.txtInfo.text = @"Privacy Settings*";
+            if (self.privacySettingFilled) {
+                cell.imgCheckmark.hidden = NO;
+            }else{
+                cell.imgCheckmark.hidden = YES;
+            }
             break;
         case 3:
             cell.txtInfo.text = @"Terms & Conditions*";
+            if (self.agreeTermAndCondition) {
+                cell.imgCheckmark.hidden = NO;
+            }else{
+                cell.imgCheckmark.hidden = YES;
+            }
             break;
         default:
             break;
@@ -386,6 +424,12 @@
         case 1:
         {
             // optional information
+            OptionalInfoViewController *vc = [[OptionalInfoViewController alloc] init];
+            vc.parentVC = self;
+            
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
+            
+            [self.navigationController pushViewController:vc animated:YES];
         }
             break;
         case 2:
@@ -516,7 +560,7 @@
             [alert show];
             dispatch_async(dispatch_get_main_queue(), ^{
                 //facebookLinked = YES;
-                [self.facebookBtn setImage:[UIImage imageNamed:@"icon-fb-r-green"] forState:UIControlStateNormal];
+                [self.facebookBtn setImage:[UIImage imageNamed:@"icon-fb-r-green.png"] forState:UIControlStateNormal];
             });
             
             //            for (NSString *key in result) {
@@ -600,7 +644,7 @@
                         [alert show];
                         dispatch_async(dispatch_get_main_queue(), ^{
                             //googleLinked = YES;
-                            [self.googleBtn setImage:[UIImage imageNamed:@"icon-gg-r-green"] forState:UIControlStateNormal];
+                            [self.googleBtn setImage:[UIImage imageNamed:@"icon-gg-r-green.png"] forState:UIControlStateNormal];
                         });
                     }
                 }];
@@ -640,7 +684,7 @@
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         //twitterLinked = YES;
-                        [self.twitterBtn setImage:[UIImage imageNamed:@"icon-tw-r-green"] forState:UIControlStateNormal];
+                        [self.twitterBtn setImage:[UIImage imageNamed:@"icon-tw-r-green.png"] forState:UIControlStateNormal];
                     });
                     
                     /*
@@ -720,7 +764,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             //linkedinLinked = YES;
-            [self.linkedlnBtn setImage:[UIImage imageNamed:@"icon-lnk-r-green"] forState:UIControlStateNormal];
+            [self.linkedlnBtn setImage:[UIImage imageNamed:@"icon-lnk-r-green.png"] forState:UIControlStateNormal];
             
         });
         //        name.text = [[NSString alloc] initWithFormat:@"%@ %@",
@@ -747,7 +791,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             //instagramLinked = YES;
-            [self.instagramBtn setImage:[UIImage imageNamed:@"icon-lnk-r-green"] forState:UIControlStateNormal];
+            [self.instagramBtn setImage:[UIImage imageNamed:@"icon-ins-r-green.png"] forState:UIControlStateNormal];
             
         });
         

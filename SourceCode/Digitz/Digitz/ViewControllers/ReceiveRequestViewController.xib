@@ -112,7 +112,7 @@
 							</object>
 							<object class="IBUIButton" id="1042187213">
 								<reference key="NSNextResponder" ref="449859564"/>
-								<int key="NSvFlags">292</int>
+								<int key="NSvFlags">-2147483356</int>
 								<string key="NSFrame">{{247, 0}, {73, 44}}</string>
 								<reference key="NSSuperview" ref="449859564"/>
 								<reference key="NSWindow"/>
@@ -164,6 +164,10 @@
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<object class="NSCustomResource" key="IBUIImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">icon-default-ava.png</string>
+								</object>
 							</object>
 							<object class="IBUILabel" id="244040927">
 								<reference key="NSNextResponder" ref="83154179"/>
@@ -252,7 +256,7 @@
 							<object class="IBUIImageView" id="638554225">
 								<reference key="NSNextResponder" ref="144815631"/>
 								<int key="NSvFlags">274</int>
-								<string key="NSFrameSize">{304, 178}</string>
+								<string key="NSFrameSize">{304, 188}</string>
 								<reference key="NSSuperview" ref="144815631"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="162448424"/>
@@ -267,7 +271,7 @@
 							<object class="IBUITableView" id="162448424">
 								<reference key="NSNextResponder" ref="144815631"/>
 								<int key="NSvFlags">274</int>
-								<string key="NSFrame">{{4, 2}, {300, 176}}</string>
+								<string key="NSFrame">{{0, 2}, {304, 188}}</string>
 								<reference key="NSSuperview" ref="144815631"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="196502695"/>
@@ -288,7 +292,7 @@
 								<float key="IBUISectionFooterHeight">22</float>
 							</object>
 						</array>
-						<string key="NSFrame">{{8, 170}, {304, 178}}</string>
+						<string key="NSFrame">{{8, 170}, {304, 188}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="638554225"/>
@@ -303,7 +307,7 @@
 					<object class="IBUIButton" id="196502695">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{21, 363}, {278, 44}}</string>
+						<string key="NSFrame">{{21, 366}, {278, 44}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="811850915"/>
@@ -329,10 +333,9 @@
 					<object class="IBUIButton" id="811850915">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{21, 409}, {278, 44}}</string>
+						<string key="NSFrame">{{21, 412}, {278, 44}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -615,6 +618,7 @@
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="acceptBtnTapped:">id</string>
 						<string key="backBtnTapped:">id</string>
+						<string key="declineBtnTapped:">id</string>
 						<string key="settingBtnTapped:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
@@ -624,6 +628,10 @@
 						</object>
 						<object class="IBActionInfo" key="backBtnTapped:">
 							<string key="name">backBtnTapped:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="declineBtnTapped:">
+							<string key="name">declineBtnTapped:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="settingBtnTapped:">
@@ -674,6 +682,7 @@
 			<string key="btn-accept.png">{278, 45}</string>
 			<string key="btn-back-topbar.png">{49, 29}</string>
 			<string key="btn-setting-topbar.png">{29, 29}</string>
+			<string key="icon-default-ava.png">{100, 100}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1929</string>
 	</data>

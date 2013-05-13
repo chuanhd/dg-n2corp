@@ -244,7 +244,15 @@ static id sharedReactor = nil;
     //newUser.facebook_token = [userDic objectForKey:@"facebook_token"];
     //newUser.games_count = ([userDic objectForKey:@"games_count"] != (id)[NSNull null]) ? [[userDic objectForKey:@"games_count"] integerValue] : -1;
     //newUser.device_udid = [userDic objectForKey:@"device_udid"];
-    //newUser.avatar = [userDic objectForKey:@"avatar"];
+    newUser.avatarUrl = [userDic objectForKey:@"avatar"];
+    newUser.company = [userDic objectForKey:@"company"];
+    newUser.address = [userDic objectForKey:@"address"];
+    newUser.homepage = [userDic objectForKey:@"homepage"];
+    newUser.emailHome = [userDic objectForKey:@"email_home"];
+    newUser.emailWork = [userDic objectForKey:@"email_work"];
+    newUser.cellPhone = [userDic objectForKey:@"cell_phone"];
+    newUser.phoneHome = [userDic objectForKey:@"home_phone"];
+    newUser.phoneWork = [userDic objectForKey:@"work_phone"];
     
     return newUser;
 }
@@ -321,6 +329,226 @@ static id sharedReactor = nil;
         }
     }];
     
+    [operation start];
+}
+
+- (void)sendFriendRequestWithUserId:(NSString *)userId
+{
+    __weak NSString *authToken = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:authToken, @"auth_token", userId, @"receiver_id", nil];
+    NSMutableURLRequest *request = [_httpClient requestWithMethod:@"POST" path:PATH_SEND_FRIEND_REQ parameters:params];
+    [request setTimeoutInterval:TIME_OUT];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON){
+        NSDictionary *result = (NSDictionary *) JSON;
+        NSLog(@"sendFriendRequest: %@", result);
+        
+        if (_delegate && [_delegate respondsToSelector:@selector(sendFriendReqSuscess)]) {
+            [_delegate performSelector:@selector(sendFriendReqSuscess)];
+        }
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON){
+        if (_delegate && [_delegate respondsToSelector:@selector(sendFriendReqFailWithError:)]) {
+            [_delegate performSelector:@selector(sendFriendReqFailWithError:) withObject:error];
+        }
+    }];
+    
+    [operation start];
+}
+
+- (void)getAllFriendRequest
+{
+    __weak NSString *authToken = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:authToken, @"auth_token", nil];
+    NSMutableURLRequest *request = [_httpClient requestWithMethod:@"POST" path:PATH_ALL_RECEIVED_REQ parameters:params];
+    [request setTimeoutInterval:TIME_OUT];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON){
+        NSArray *result = (NSArray *) JSON;
+        NSLog(@"getAllFriendRequest: %@", result);
+        
+        NSMutableArray *requestArray = [NSMutableArray array];
+        
+        for (NSDictionary *requestDict in result) {
+            @autoreleasepool {
+                NSString *reqId = [requestDict objectForKey:@"id"];
+                NSDictionary *userDic = [requestDict objectForKey:@"sender"];
+                User *sender = [self userFromDictionary:userDic];
+                userDic = [requestDict objectForKey:@"receiver"];
+                User *receiver = [self userFromDictionary:userDic];
+                DigitzRequest *digitzReq = [[DigitzRequest alloc] initWithId:reqId withSender:sender withReceiver:receiver];
+                [requestArray addObject:digitzReq];
+            }
+        }
+        
+        NSLog(@"requestArray: %d", requestArray.count);
+        
+        if (_delegate && [_delegate respondsToSelector:@selector(getAllFriendRequestSuccessWithArray:)]) {
+            [_delegate performSelector:@selector(getAllFriendRequestSuccessWithArray:) withObject:requestArray];
+        }
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON){
+        if (_delegate && [_delegate respondsToSelector:@selector(getAllFriendRequestFailWithError:)]) {
+            [_delegate performSelector:@selector(getAllFriendRequestFailWithError:) withObject:error];
+        }
+    }];
+    
+    [operation start];
+}
+
+- (void)getAllFriendsOfUser
+{
+    __weak NSString *authToken = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:authToken, @"auth_token", nil];
+    NSMutableURLRequest *request = [_httpClient requestWithMethod:@"POST" path:PATH_ADDRESS_BOOK parameters:params];
+    [request setTimeoutInterval:TIME_OUT];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON){
+        NSArray *result = (NSArray *) JSON;
+        NSLog(@"getAllFriendOfUser: %@", result);
+        
+        NSMutableArray *userArray = [NSMutableArray array];
+        
+        for (NSDictionary *requestDict in result) {
+            @autoreleasepool {
+                User *friend = [self userFromDictionary:requestDict];
+                [userArray addObject:friend];
+            }
+        }
+        
+        NSLog(@"requestArray: %d", userArray.count);
+        
+        if (_delegate && [_delegate respondsToSelector:@selector(getAllFriendSuccessWithArray:)]) {
+            [_delegate performSelector:@selector(getAllFriendSuccessWithArray:) withObject:userArray];
+        }
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON){
+        if (_delegate && [_delegate respondsToSelector:@selector(getALlFriendFailWithError:)]) {
+            [_delegate performSelector:@selector(getALlFriendFailWithError:) withObject:error];
+        }
+    }];
+    
+    [operation start];
+
+}
+
+- (void)acceptFriendRequestWithFriendUsername:(NSString *)username withFields:(NSString *)fields
+{
+    __weak NSString *authToken = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:authToken, @"auth_token", username, @"friend", fields, @"fields", nil];
+    
+    NSLog(@"accept friend param: %@", params);
+    
+    NSMutableURLRequest *request = [_httpClient requestWithMethod:@"POST" path:PATH_SEND_INFO parameters:params];
+    [request setTimeoutInterval:TIME_OUT];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON){
+        NSDictionary *result = (NSDictionary *) JSON;
+        NSLog(@"result: %@", result);
+        
+        if ([[result objectForKey:@"success"] boolValue] == YES) {
+            if (_delegate && [_delegate respondsToSelector:@selector(acceptFriendSuccessful:)]) {
+                [_delegate performSelector:@selector(acceptFriendSuccessful)];
+            }
+        }else{
+            if (_delegate && [_delegate respondsToSelector:@selector(acceptFriendFailWithError:)]) {
+                [_delegate performSelector:@selector(acceptFriendFailWithError:) withObject:nil];
+            }
+        }
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON){
+        if (_delegate && [_delegate respondsToSelector:@selector(acceptFriendFailWithError:)]) {
+            [_delegate performSelector:@selector(acceptFriendFailWithError:) withObject:error];
+        }
+    }];
+    
+    [operation start];
+    
+}
+
+- (void)declineFriendRequestWithRequestId:(NSString *)requestId
+{
+    __weak NSString *authToken = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:authToken, @"auth_token", requestId, @"request_id", nil];
+    NSMutableURLRequest *request = [_httpClient requestWithMethod:@"POST" path:PATH_DECLINE_REQUEST parameters:params];
+    [request setTimeoutInterval:TIME_OUT];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON){
+        NSDictionary *result = (NSDictionary *) JSON;
+        NSLog(@"result: %@", result);
+        
+        if ([[result objectForKey:@"success"] boolValue] == YES) {
+            if (_delegate && [_delegate respondsToSelector:@selector(declineFriendSuccessful)]) {
+                [_delegate performSelector:@selector(declineFriendSuccessful)];
+            }
+        }else{
+            if (_delegate && [_delegate respondsToSelector:@selector(declineFriendFailWithError:)]) {
+                [_delegate performSelector:@selector(declineFriendFailWithError:) withObject:nil];
+            }
+        }
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON){
+        if (_delegate && [_delegate respondsToSelector:@selector(declineFriendFailWithError:)]) {
+            [_delegate performSelector:@selector(declineFriendFailWithError:) withObject:error];
+        }
+    }];
+    
+    [operation start];
+}
+
+// Upload user avatar
+- (void)updateUserAvatarWithImage: (UIImage *)avatar {
+    __weak NSString *authToken = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:authToken, @"auth_token", nil];
+    NSData *imageData = UIImagePNGRepresentation(avatar);
+    NSMutableURLRequest *request = [_httpClient multipartFormRequestWithMethod:@"POST" path:PATH_UPDATE_USER_INFO parameters:params constructingBodyWithBlock: ^(id <AFMultipartFormData> formData) {
+        [formData appendPartWithFileData:imageData name:@"user[avatar]" fileName:@"user[avatar]" mimeType:@"user[avatar]"];
+        //[formData appendPartWithFormData:imageData name:@"user[avatar]"];
+    }];
+    request.timeoutInterval = 30.0;
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        NSDictionary *result = JSON;
+        NSLog(@"%@", JSON);
+        if ([[result objectForKey:@"success"] boolValue]) {
+            NSDictionary *userDic = [result objectForKey:@"user"];
+            User *newUser = [self userFromDictionary:userDic];
+            if (_delegate && [_delegate respondsToSelector:@selector(updateUserAvatarSuccessWithUser:)]) {
+                [_delegate performSelector:@selector(updateUserAvatarSuccessWithUser:) withObject:newUser];
+            }
+        }
+        else {
+            NSError *error = nil;
+            NSDictionary *details = [[NSDictionary alloc] initWithObjectsAndKeys:@"Update Avatar Failed", NSLocalizedDescriptionKey, nil];
+            error = [NSError errorWithDomain:@"Update Avatar Failed" code:2000 userInfo:details];
+            if (_delegate && [_delegate respondsToSelector:@selector(updateUserAvatarFailedWithError:)]) {
+                [_delegate performSelector:@selector(updateUserAvatarFailedWithError:) withObject:error];
+            }
+        }
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        if (_delegate && [_delegate respondsToSelector:@selector(updateUserAvatarFailedWithError:)]) {
+            [_delegate performSelector:@selector(updateUserAvatarFailedWithError:) withObject:error];
+        }
+    }];
+    [operation start];
+}
+
+//update user avatar from link image
+- (void)updateUserAvatarWithLinkImage: (NSString *)urlImage {
+    __weak NSString *authToken = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:authToken, @"auth_token", urlImage, @"user[remote_avatar_url]", nil];
+    NSMutableURLRequest *request = [_httpClient requestWithMethod:@"POST" path:PATH_UPDATE_USER_INFO parameters:params];
+    request.timeoutInterval = TIME_OUT;
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        NSDictionary *result = JSON;
+        if ([[result objectForKey:@"success"] boolValue]) {
+            User *user = [self userFromDictionary:[result objectForKey:@"user"]];
+            if (_delegate && [_delegate respondsToSelector:@selector(updateUserAvatarFromLinkSuccess:)]) {
+                [_delegate performSelector:@selector(updateUserAvatarFromLinkSuccess:) withObject:user];
+            }
+        }
+        else {
+            NSError *error = nil;
+            NSDictionary *details = [[NSDictionary alloc] initWithObjectsAndKeys:@"Update Avatar Failed", NSLocalizedDescriptionKey, nil];
+            error = [NSError errorWithDomain:@"Update Avatar Failed" code:2000 userInfo:details];
+            if (_delegate && [_delegate respondsToSelector:@selector(updateUserAvatarFromLinkFailedWithError:)]) {
+                [_delegate performSelector:@selector(updateUserAvatarFromLinkFailedWithError:) withObject:error];
+            }
+        }
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        if (_delegate && [_delegate respondsToSelector:@selector(updateUserAvatarFromLinkFailedWithError:)]) {
+            [_delegate performSelector:@selector(updateUserAvatarFromLinkFailedWithError:) withObject:error];
+        }
+    }];
     [operation start];
 }
 

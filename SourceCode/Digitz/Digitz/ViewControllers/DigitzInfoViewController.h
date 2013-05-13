@@ -1,5 +1,5 @@
 //
-//  SocialHubViewController.h
+//  DigitzInfoViewController.h
 //  Digitz
 //
 //  Created by chuanhd on 5/12/13.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SocialHubViewController : UITabBarController
+@interface DigitzInfoViewController : UIViewController
 
 @end
