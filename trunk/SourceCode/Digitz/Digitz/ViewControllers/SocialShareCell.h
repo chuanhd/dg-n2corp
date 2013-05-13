@@ -12,5 +12,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblSocialNetworkName;
 @property (weak, nonatomic) IBOutlet UISwitch *switchShare;
 
+@property (strong, nonatomic) UIViewController *parentVC;
+@property NSInteger index;
+
 - (IBAction)shareSwitched:(id)sender;
 @end

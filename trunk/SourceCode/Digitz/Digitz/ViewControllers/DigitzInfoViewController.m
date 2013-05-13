@@ -1,18 +1,18 @@
 //
-//  SocialHubViewController.m
+//  DigitzInfoViewController.m
 //  Digitz
 //
 //  Created by chuanhd on 5/12/13.
 //  Copyright (c) 2013 N2Corp. All rights reserved.
 //
 
-#import "SocialHubViewController.h"
+#import "DigitzInfoViewController.h"
 
-@interface SocialHubViewController ()
+@interface DigitzInfoViewController ()
 
 @end
 
-@implementation SocialHubViewController
+@implementation DigitzInfoViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

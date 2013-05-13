@@ -10,6 +10,7 @@
 #import "AFHTTPClient.h"
 #import "AFJSONRequestOperation.h"
 #import "User.h"
+#import "DigitzRequest.h"
 
 #define BASE_URL @"http://digitz.herokuapp.com/"
 #define PATH_SIGNIN @"api/users/sign_in"
@@ -17,6 +18,11 @@
 #define PATH_UPDATE_USER_INFO @"api/users/update_info"
 #define PATH_GET_USER_INFO @"api/users"
 #define PATH_FIND_FRIENDS @"api/users/find_friends"
+#define PATH_SEND_FRIEND_REQ @"api/users/request_info"
+#define PATH_ALL_RECEIVED_REQ @"api/users/received_requests"
+#define PATH_SEND_INFO @"api/users/send_info"
+#define PATH_ADDRESS_BOOK @"api/users/address_book"
+#define PATH_DECLINE_REQUEST @"api/users/decline_request"
 
 #define kKey_UserToken @"auth_token"
 #define kKey_UpdateUsername @"user[username]"
@@ -41,7 +47,15 @@
 #define kKey_UpdateLocationLong @"user[location_lng]"
 #define kKey_UpdateLocationLat @"user[location_lat]"
 #define kKey_UpdateAvatar @"user[avatar]"
+#define kKey_UpdateRemoteAvatar @"user[remote_avatar_url]"
 #define kKey_UpdateState @"user[state]"
+
+#define kKey_UpdateCompany @"user[company]"
+#define kKey_UpdateAddress @"user[address]"
+#define kKey_UpdateHomepage @"user[homepage]"
+#define kKey_UpdateAlterEmail @"user[email_home]"
+#define kKey_UpdateAlterPhone @"user[home_phone]"
+#define kKey_UpdatePersonalBio @"user[bio]"
 
 @protocol ServerManagerDelegate <NSObject>
 
@@ -67,6 +81,27 @@
 - (void) findNearByFriendsSuccessWithArray:(NSArray *)users;
 - (void) findNearByFriendFailWithError:(NSError *)error;
 
+- (void) sendFriendReqSuscess;
+- (void) sendFriendReqFailWithError:(NSError *)error;
+
+- (void) getAllFriendRequestSuccessWithArray:(NSArray *)request;
+- (void) getAllFriendRequestFailWithError:(NSError *)error;
+
+- (void) getAllFriendSuccessWithArray:(NSArray *)friends;
+- (void) getAllFriendFailWithError:(NSError *)error;
+
+- (void) acceptFriendSuccessful;
+- (void) acceptFriendFailWithError:(NSError *)error;
+
+- (void) declineFriendSuccessful;
+- (void) declineFriendFailWithError:(NSError *)error;
+
+- (void) updateUserAvatarSuccessWithUser:(User *)user;
+- (void) updateUserAvatarFailedWithError:(NSError *)error;
+
+- (void) updateUserAvatarFromLinkSuccess:(User *)user;
+- (void) updateUserAvatarFromLinkFailedWithError:(NSError *)error;
+
 @end
 
 @interface ServerManager : NSObject
@@ -89,6 +124,12 @@
 - (void) getUserInfoWithToken:(NSString *)token;
 //- (void) findNearByFriendsWithToken:(NSString *)token withLong:(float)_long withLat:(float)_lat;
 - (void) findNearByFriendsWithToken:(NSString *)token;
-
+- (void) sendFriendRequestWithUserId:(NSString *)userId;
+- (void) getAllFriendRequest;
+- (void) getAllFriendsOfUser;
+- (void) acceptFriendRequestWithFriendUsername:(NSString *)username withFields:(NSString *)fields;
+- (void) declineFriendRequestWithRequestId:(NSString *)requestId;
+- (void) updateUserAvatarWithImage: (UIImage *)avatar;
+- (void) updateUserAvatarWithLinkImage: (NSString *)urlImage;
 
 @end

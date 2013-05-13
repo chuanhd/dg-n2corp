@@ -24,6 +24,9 @@
 @interface EnterYourDigitzViewController : UIViewController <ServerManagerDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, GPPSignInDelegate, BSKeyboardControlsDelegate>
 
 @property BOOL personalInfoFilled;
+@property BOOL optionalInfoFilled;
+@property BOOL privacySettingFilled;
+@property BOOL agreeTermAndCondition;
 @property NSMutableDictionary *paramsDict;
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;

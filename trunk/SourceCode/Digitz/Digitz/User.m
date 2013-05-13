@@ -12,7 +12,18 @@
 
 @synthesize userId;
 @synthesize username;
+@synthesize avatarUrl;
 @synthesize name, email, birthday, hometown, state, phoneNumber, gender;
 @synthesize facebookUrl, googleUrl, twitterUrl, instagramUrl, linkedinUrl;
+
+@synthesize company;
+@synthesize address;
+@synthesize homepage;
+@synthesize emailHome;
+@synthesize emailWork;
+@synthesize cellPhone;
+@synthesize phoneHome;
+@synthesize phoneWork;
+@synthesize bio;
 
 @end
