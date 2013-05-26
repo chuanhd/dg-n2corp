@@ -43,6 +43,7 @@
 @property(nonatomic, retain) OAToken *accessToken;
 @property(nonatomic, retain) NSDictionary *profile;
 
+- (IBAction)backBtnTapped:(id)sender;
 - (void)initLinkedInApi;
 - (void)requestTokenFromProvider;
 - (void)allowUserToLogin;

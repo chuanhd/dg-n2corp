@@ -16,6 +16,9 @@
 #import "GTLQueryPlus.h"
 #import "GTLPlusPerson.h"
 #import "OptionalInfoViewController.h"
+#import "AppDelegate.h"
+#import "PrivacySettingsViewController.h"
+#import "DigitzUtils.h"
 
 //NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FBSessionStateChangedNotification";
 
@@ -67,10 +70,33 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Fetching user information"];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if ([_paramsDict objectForKey:kKey_UpdateImageData] != nil) {
+        __weak UIImage *image = [_paramsDict objectForKey:kKey_UpdateImageData];
+        [_serverManager updateUserAvatarWithImage:image];
+    }
+}
+
+- (void)updateUserAvatarSuccessWithUser:(User *)user
+{
+    NSLog(@"Update user avatar success");
+}
+
+- (void)updateUserAvatarFailedWithError:(NSError *)error
+{
+    NSLog(@"Update user avatar fail %@", error);
+}
+
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)viewWillUnload
+{
+    [super viewDidUnload];
 }
 
 - (void)didReceiveMemoryWarning
@@ -88,7 +114,21 @@
 }
 
 - (IBAction)facebookBtnTapped:(id)sender {
-    [self openSessionWithAllowLoginUI:YES];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveNotification:) name:FBSessionStateChangedNotification object:nil];
+    
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    [appDelegate openSessionWithAllowLoginUI:YES];
+}
+
+- (void) receiveNotification:(NSNotification *)noti
+{
+    if ([noti.name isEqualToString:FBSessionStateChangedNotification]) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:FBSessionStateChangedNotification object:nil];
+        if ([FBSession.activeSession isOpen]) {
+            [self queryFBUserInfo];
+        }
+    }
 }
 
 - (IBAction)googleBtnTapped:(id)sender {
@@ -228,30 +268,37 @@
     
     if (![user.avatarUrl isEqual:[NSNull null]] && user.avatarUrl != nil) {
         [_paramsDict setObject:user.avatarUrl forKey:kKey_UpdateAvatar];
+        _optionalInfoFilled = YES;
     }
     
     if (![user.company isEqual:[NSNull null]] && user.company != nil) {
         [_paramsDict setObject:user.company forKey:kKey_UpdateCompany];
+        _optionalInfoFilled = YES;
     }
     
     if (![user.address isEqual:[NSNull null]] && user.address != nil) {
         [_paramsDict setObject:user.address forKey:kKey_UpdateAddress];
+        _optionalInfoFilled = YES;
     }
     
     if (![user.homepage isEqual:[NSNull null]] && user.homepage != nil) {
         [_paramsDict setObject:user.homepage forKey:kKey_UpdateHomepage];
+        _optionalInfoFilled = YES;
     }
     
     if (![user.emailHome isEqual:[NSNull null]] && user.emailHome != nil) {
         [_paramsDict setObject:user.emailHome forKey:kKey_UpdateAlterEmail];
+        _optionalInfoFilled = YES;
     }
     
     if (![user.phoneHome isEqual:[NSNull null]] && user.phoneHome != nil) {
         [_paramsDict setObject:user.phoneHome forKey:kKey_UpdateAlterPhone];
+        _optionalInfoFilled = YES;
     }
     
     if (![user.bio isEqual:[NSNull null]] && user.bio != nil) {
         [_paramsDict setObject:user.bio forKey:kKey_UpdatePersonalBio];
+        _optionalInfoFilled = YES;
     }
     
     if (![user.facebookUrl isEqual:[NSNull null]]) {
@@ -280,9 +327,22 @@
         });
     }
     
+    if (![user.priAcc isEqual:[NSNull null]]) {
+        [self.paramsDict setObject:[DigitzUtils buildFieldsStringFromArray:user.priAcc] forKey:kKey_PrivacyAcc];
+    }
+    
+    if (![user.priBus isEqual:[NSNull null]]) {
+        [self.paramsDict setObject:[DigitzUtils buildFieldsStringFromArray:user.priBus] forKey:kKey_PrivacyAcc];
+    }
+    
+    if (![user.priFri isEqual:[NSNull null]]) {
+        [self.paramsDict setObject:[DigitzUtils buildFieldsStringFromArray:user.priFri] forKey:kKey_PrivacyAcc];
+    }
+    
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     
     _personalInfoFilled = YES;
+    _privacySettingFilled = YES;
     [self.infoTableView reloadData];
 
 }
@@ -435,6 +495,12 @@
         case 2:
         {
             // privacy settings
+            PrivacySettingsViewController *vc = [[PrivacySettingsViewController alloc] init];
+            vc.parentVC = self;
+            
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
+            
+            [self.navigationController pushViewController:vc animated:YES];
         }
             break;
         case 3:
@@ -450,77 +516,11 @@
 // Function to reload table view
 -(void) personalInfoFilled:(NSNotification*)notification
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.infoTableView reloadData];
 }
 
 #pragma mark Facebook functions
-/*
- *  Callback for session changes
- */
-- (void)sessionStateChanged:(FBSession *)session
-                      state:(FBSessionState) state
-                      error:(NSError *)error
-{
-    switch (state) {
-        case FBSessionStateOpen:
-            if (!error) {
-                // We have a valid session
-                NSLog(@"User session found: %@", session.accessTokenData.expirationDate);
-                //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                [self queryFBUserInfo];
-                //});
-            }
-            break;
-        case FBSessionStateClosed:
-        case FBSessionStateClosedLoginFailed:
-            [FBSession.activeSession closeAndClearTokenInformation];
-            break;
-        default:
-            break;
-    }
-    
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"com.n2corp.digitz.login:FBSessionStateChangedNotification"
-     object:session];
-    
-    if (error) {
-        UIAlertView *alertView = [[UIAlertView alloc]
-                                  initWithTitle:@"Error"
-                                  message:error.localizedDescription
-                                  delegate:nil
-                                  cancelButtonTitle:@"OK"
-                                  otherButtonTitles:nil];
-        [alertView show];
-    }
-}
-
-/*
- * Opens a Facebook session and optionally shows the login UX.
- */
-- (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI {
-    
-    //NSArray *permissions = [NSArray arrayWithObjects:@"publish_stream", nil];
-    
-    NSArray *permissions = [NSArray arrayWithObjects:@"email, user_location, user_birthday", nil];
-    
-    //    return [FBSession openActiveSessionWithPublishPermissions:permissions
-    //                                              defaultAudience:FBSessionDefaultAudienceFriends
-    //                                                 allowLoginUI:allowLoginUI
-    //                                            completionHandler:^(FBSession *session,
-    //                                                                FBSessionState status,
-    //                                                                NSError *error){
-    //                                                [self sessionStateChanged:session state:status error:error];
-    //                                            }];
-    
-    return [FBSession openActiveSessionWithReadPermissions:permissions
-                                              allowLoginUI:allowLoginUI
-                                         completionHandler:^(FBSession *session,
-                                                             FBSessionState status,
-                                                             NSError *error){
-                                             [self sessionStateChanged:session state:status error:error];
-                                         }];
-}
-
 
 - (void) queryFBUserInfo
 {
@@ -543,7 +543,7 @@
     
     //FBRequest *fbRequest = [FBRequest requestWithGraphPath:@"me?fields=picture,email,hometown,first_name,last_name,location,gender,birthday,link" parameters:nil HTTPMethod:@"GET"];
     
-    FBRequest *fbRequest = [FBRequest requestWithGraphPath:@"me?fields=link" parameters:nil HTTPMethod:@"GET"];
+    FBRequest *fbRequest = [FBRequest requestWithGraphPath:@"me?fields=link,picture" parameters:nil HTTPMethod:@"GET"];
     
     
     [fbRequest startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary *result, NSError *error){
@@ -562,6 +562,11 @@
                 //facebookLinked = YES;
                 [self.facebookBtn setImage:[UIImage imageNamed:@"icon-fb-r-green.png"] forState:UIControlStateNormal];
             });
+            
+            NSMutableDictionary *avatarUrlData = [result objectForKey:@"picture"];
+            avatarUrlData = [avatarUrlData objectForKey:@"data"];
+            NSString *urlString = [avatarUrlData objectForKey:@"url"];
+            [self.paramsDict setObject:urlString forKey:kKey_UpdateRemoteAvatar];
             
             //            for (NSString *key in result) {
             //                NSLog(@"key: %@ -> value: %@", key, [result objectForKey:key]);
@@ -756,6 +761,12 @@
 	NSDictionary *profile = [notification userInfo];
     if ( profile )
     {
+        if ([profile objectForKey:@"error"] != nil) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[profile objectForKey:@"error"] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alertView show];
+            return;
+        }
+        
         NSLog(@"profile: %@", profile);
         
         NSDictionary *url = [profile objectForKey:@"siteStandardProfileRequest"];

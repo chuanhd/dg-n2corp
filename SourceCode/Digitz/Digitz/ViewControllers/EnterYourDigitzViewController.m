@@ -21,8 +21,8 @@
 #import "LinkedinOAuthView.h"
 #import "OptionalInfoViewController.h"
 #import "PrivacySettingsViewController.h"
+#import "AppDelegate.h"
 
-NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FBSessionStateChangedNotification";
 
 @interface EnterYourDigitzViewController ()
 {
@@ -104,12 +104,6 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
     linkedinLinked = NO;
 
     self.scrollview.contentSize = CGSizeMake(320, 470);
-    
-    // register to be told when the login is finished
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(loginViewDidFinish:)
-//                                                 name:@"loginViewDidFinish"
-//                                               object:oAuthLoginView];
 }
 
 
@@ -130,7 +124,6 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
     [self setBtnTwitter:nil];
     [self setBtnLinkedIn:nil];
     hud = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super viewDidUnload];
 }
 
@@ -277,6 +270,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
                     // privacy settings
                     PrivacySettingsViewController *vc = [[PrivacySettingsViewController alloc] init];
                     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
+                    vc.parentVC = self;
                     
                     [self.navigationController pushViewController:vc animated:YES];
                 }
@@ -294,6 +288,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
 // Function to reload table view
 -(void) personalInfoFilled:(NSNotification*)notification
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.tableView reloadData];
 }
 
@@ -340,7 +335,23 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
 }
 
 - (IBAction)btnFacebookTapped:(id)sender {
-    [self openSessionWithAllowLoginUI:YES];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveNotification:) name:FBSessionStateChangedNotification object:nil];
+    
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    [appDelegate openSessionWithAllowLoginUI:YES];
+}
+
+- (void) receiveNotification:(NSNotification *)noti
+{
+    if ([noti.name isEqualToString:FBSessionStateChangedNotification]) {
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:FBSessionStateChangedNotification object:nil];
+        
+        if ([FBSession.activeSession isOpen]) {
+            [self queryFBUserInfo];
+        }
+    }
 }
 
 - (IBAction)btnGoogleTapped:(id)sender {
@@ -373,11 +384,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
 }
 
 - (IBAction)btnLinkedInTapped:(id)sender {
-//    LinkedinOAuthView *linkedinView = [[LinkedinOAuthView alloc] init];
-//    linkedinView.frame = CGRectMake(10, 40, 310, 400);
-//    linkedinView.hidden = NO;
-//    [linkedinView startOAuth];
-    
+
     oauthLoginView = [[OAuthLoginView alloc] initWithNibName:nil bundle:nil];
     
     // register to be told when the login is finished
@@ -399,11 +406,17 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
 
 -(void) loginViewDidFinish:(NSNotification*)notification
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	NSDictionary *profile = [notification userInfo];
     if ( profile )
     {
+        if ([profile objectForKey:@"error"] != nil) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[profile objectForKey:@"error"] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alertView show];
+            return;
+        }
+        
         NSLog(@"profile: %@", profile);
         
         NSDictionary *url = [profile objectForKey:@"siteStandardProfileRequest"];
@@ -411,14 +424,15 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
         [self.paramsDict setObject:[url objectForKey:@"url"] forKey:kKey_UpdateLinkedLnUrl];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            linkedinLinked = YES;
+            //linkedinLinked = YES;
             [self.btnLinkedIn setImage:[UIImage imageNamed:@"icon-lnk-r-green.png"] forState:UIControlStateNormal];
-
+            
         });
-//        name.text = [[NSString alloc] initWithFormat:@"%@ %@",
-//                     [profile objectForKey:@"firstName"], [profile objectForKey:@"lastName"]];
-//        headline.text = [profile objectForKey:@"headline"];
+        //        name.text = [[NSString alloc] initWithFormat:@"%@ %@",
+        //                     [profile objectForKey:@"firstName"], [profile objectForKey:@"lastName"]];
+        //        headline.text = [profile objectForKey:@"headline"];
     }
+
 }
 
 - (void) instagramOAuthViewDidFinish:(NSNotification *)notification
@@ -447,73 +461,6 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
 }
 
 #pragma mark Facebook functions
-/*
- *  Callback for session changes
- */
-- (void)sessionStateChanged:(FBSession *)session
-                      state:(FBSessionState) state
-                      error:(NSError *)error
-{
-    switch (state) {
-        case FBSessionStateOpen:
-            if (!error) {
-                // We have a valid session
-                NSLog(@"User session found: %@", session.accessTokenData.expirationDate);
-                //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                [self queryFBUserInfo];
-                //});
-            }
-            break;
-        case FBSessionStateClosed:
-        case FBSessionStateClosedLoginFailed:
-            [FBSession.activeSession closeAndClearTokenInformation];
-            break;
-        default:
-            break;
-    }
-    
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:FBSessionStateChangedNotification
-     object:session];
-    
-    if (error) {
-        UIAlertView *alertView = [[UIAlertView alloc]
-                                  initWithTitle:@"Error"
-                                  message:error.localizedDescription
-                                  delegate:nil
-                                  cancelButtonTitle:@"OK"
-                                  otherButtonTitles:nil];
-        [alertView show];
-    }
-}
-
-/*
- * Opens a Facebook session and optionally shows the login UX.
- */
-- (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI {
-    
-    //NSArray *permissions = [NSArray arrayWithObjects:@"publish_stream", nil];
-    
-    NSArray *permissions = [NSArray arrayWithObjects:@"email, user_location, user_birthday", nil];
-    
-    //    return [FBSession openActiveSessionWithPublishPermissions:permissions
-    //                                              defaultAudience:FBSessionDefaultAudienceFriends
-    //                                                 allowLoginUI:allowLoginUI
-    //                                            completionHandler:^(FBSession *session,
-    //                                                                FBSessionState status,
-    //                                                                NSError *error){
-    //                                                [self sessionStateChanged:session state:status error:error];
-    //                                            }];
-    
-    return [FBSession openActiveSessionWithReadPermissions:permissions
-                                              allowLoginUI:allowLoginUI
-                                         completionHandler:^(FBSession *session,
-                                                             FBSessionState status,
-                                                             NSError *error){
-                                             [self sessionStateChanged:session state:status error:error];
-                                         }];
-}
-
 
 - (void) queryFBUserInfo
 {

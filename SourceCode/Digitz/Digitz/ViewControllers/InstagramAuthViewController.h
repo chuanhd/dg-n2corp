@@ -25,5 +25,6 @@
 @property (strong, nonatomic) NSString *mUrl;
 
 @property (weak, nonatomic) IBOutlet UIWebView *oauthWebView;
+- (IBAction)backBtnTapped:(id)sender;
 
 @end

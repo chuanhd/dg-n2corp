@@ -8,6 +8,7 @@
 
 #import "SocialShareCell.h"
 #import "ReceiveRequestViewController.h"
+#import "PrivacySettingsViewController.h"
 
 #define fGoogle @"google_plus_url"
 #define fFacebook @"facebook_url"
@@ -19,6 +20,7 @@
 
 @synthesize parentVC;
 @synthesize index;
+@synthesize section;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -61,6 +63,37 @@
                 default:
                     break;
             }
+        }else if ([parentVC isKindOfClass:[PrivacySettingsViewController class]]){
+            PrivacySettingsViewController *temp = (PrivacySettingsViewController *) parentVC;
+            switch (self.index) {
+                case 0:
+                {
+                    [temp addFieldToArrayType:self.section withField:fFacebook];
+                }
+                    break;
+                case 1:
+                {
+                    [temp addFieldToArrayType:self.section withField:fGoogle];
+                }
+                    break;
+                case 2:
+                {
+                    [temp addFieldToArrayType:self.section withField:fTwitter];
+                }
+                    break;
+                case 3:
+                {
+                    [temp addFieldToArrayType:self.section withField:fInstagram];
+                }
+                    break;
+                case 4:
+                {
+                    [temp addFieldToArrayType:self.section withField:fLinkedIn];
+                }
+                    break;
+                default:
+                    break;
+            }
         }
         
     }else{
@@ -82,6 +115,37 @@
                     break;
                 case 4:
                     [temp removeFieldFromArray:fLinkedIn];
+                    break;
+                default:
+                    break;
+            }
+        }else if ([parentVC isKindOfClass:[PrivacySettingsViewController class]]){
+            PrivacySettingsViewController *temp = (PrivacySettingsViewController *) parentVC;
+            switch (self.index) {
+                case 0:
+                {
+                    [temp removeFieldFromArrayType:self.section withField:fFacebook];
+                }
+                    break;
+                case 1:
+                {
+                    [temp removeFieldFromArrayType:self.section withField:fGoogle];
+                }
+                    break;
+                case 2:
+                {
+                    [temp removeFieldFromArrayType:self.section withField:fTwitter];
+                }
+                    break;
+                case 3:
+                {
+                    [temp removeFieldFromArrayType:self.section withField:fInstagram];
+                }
+                    break;
+                case 4:
+                {
+                    [temp removeFieldFromArrayType:self.section withField:fLinkedIn];
+                }
                     break;
                 default:
                     break;

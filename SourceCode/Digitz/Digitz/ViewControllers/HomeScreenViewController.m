@@ -16,10 +16,12 @@
 #import "ReceiveRequestViewController.h"
 #import "DigitzUtils.h"
 #import "FriendsListViewController.h"
+#import "RequestsViewController.h"
 
 @interface HomeScreenViewController ()
 {
     NSArray *searchResults;
+    BOOL requestChangeVisible;
 }
 
 @end
@@ -30,7 +32,6 @@
 @synthesize locationManager;
 @synthesize bestEffortLocation;
 @synthesize friendsArray;
-@synthesize secondArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -51,10 +52,7 @@
     
     self.digitzUsersTableView.dataSource = self;
     self.digitzUsersTableView.delegate = self;
-    
-    self.secondTableView.dataSource = self;
-    self.secondTableView.delegate = self;
-    
+
     self.searchDisplayController.delegate = self;
     
     locationManager = [[CLLocationManager alloc] init];
@@ -67,6 +65,16 @@
     [locationManager startUpdatingLocation];
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Getting location"];
+    
+    NSNumber *available = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UpdateAvailable];
+    NSLog(@"avail: %@", available);
+    if ([available integerValue] == 1) {
+        [self.btnVisible setImage:[UIImage imageNamed:@"btn-eye-topbar.png"] forState:UIControlStateNormal];
+    }else{
+        [self.btnVisible setImage:[UIImage imageNamed:@"btn-eye-on-topbar.png"] forState:UIControlStateNormal];
+    }
+    
+    requestChangeVisible = NO;
 }
 
 
@@ -137,12 +145,25 @@
 }
 
 - (IBAction)findNearByUserBtnTapped:(id)sender {
-//    NSString *auth_token = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
-//    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES];
-//    [serverManager findNearByFriendsWithToken:auth_token];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES withLabel:@"Getting your location (Temporary function in this build)"];
-    [locationManager startUpdatingLocation];
+    NSString *auth_token = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES];
+    
+    requestChangeVisible = YES;
 
+    NSNumber *available = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UpdateAvailable];
+
+    NSDictionary *params;
+    
+    if (available.integerValue == 1) {
+         params = [NSDictionary dictionaryWithObjectsAndKeys:auth_token,kKey_UserToken,[NSNumber numberWithInteger:0], kKey_UpdateAvailable, nil];
+    }else{
+        params = [NSDictionary dictionaryWithObjectsAndKeys:auth_token,kKey_UserToken,[NSNumber numberWithInteger:1], kKey_UpdateAvailable, nil];
+    }
+
+    [serverManager updateUserInformationWithParams:params];
+//    [serverManager findNearByFriendsWithToken:auth_token];
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES withLabel:@"Getting your location (Temporary function in this build)"];
+//    [locationManager startUpdatingLocation];
 }
 
 - (void)findNearByFriendsSuccessWithArray:(NSArray *)users
@@ -165,10 +186,30 @@
 - (void)updateUserInformationWithParamsSuccess:(User *)user
 {
     [MBProgressHUD hideHUDForView:self.view animated:YES];
-    NSLog(@"update Success");
-    NSString *auth_token = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES withLabel:@"Finding nearby users"];
-    [serverManager findNearByFriendsWithToken:auth_token];
+    if (requestChangeVisible) {
+        
+        requestChangeVisible = NO;
+        NSLog(@"user avail: %d", user.available);
+        
+        if (user.available) {
+            [self.btnVisible setImage:[UIImage imageNamed:@"btn-eye-topbar.png"] forState:UIControlStateNormal];
+            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:1] forKey:kKey_UpdateAvailable];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [DigitzUtils showToast:@"You're visible to find" inView:self.view];
+            });
+        }else{
+            [self.btnVisible setImage:[UIImage imageNamed:@"btn-eye-on-topbar.png"] forState:UIControlStateNormal];
+            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:0] forKey:kKey_UpdateAvailable];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [DigitzUtils showToast:@"You're invisible" inView:self.view];
+            });
+        }
+    }else{
+        NSLog(@"update Success");
+        NSString *auth_token = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:YES withLabel:@"Finding nearby users"];
+        [serverManager findNearByFriendsWithToken:auth_token];
+    }
 }
 
 - (void)updateUserInformationWithParamsFailedWithError:(NSError *)error
@@ -188,17 +229,20 @@
     [serverManager getAllFriendsOfUser];
 }
 
-- (void)getAllFriendSuccessWithArray:(NSArray *)friends
+- (void)getAllFriendSuccessWithDict:(NSDictionary *)friends
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         if (friends.count > 0) {
             [DigitzUtils showToast:@"Get friend list successful" inView:self.view];
             FriendsListViewController *vc = [[FriendsListViewController alloc] initWithNibName:nil bundle:nil];
-            vc.friendsArray = [NSMutableArray arrayWithArray:friends];
+            vc.friendsDict = friends;
+            //vc.friendsArray = [NSMutableArray arrayWithArray:friends];
             [self.navigationController pushViewController:vc animated:YES];
         }else{
-            [DigitzUtils showToast:@"You have no friend" inView:self.view];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [DigitzUtils showToast:@"You have no request" inView:self.view];
+            });
         }
         
     });
@@ -216,11 +260,17 @@
 
 - (void)getAllFriendRequestSuccessWithArray:(NSArray *)request
 {
+    if (request.count == 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [DigitzUtils showToast:@"You have no request" inView:self.view];
+        });
+        return;
+    }
+    
     [MBProgressHUD hideHUDForView:self.view animated:YES];
-    self.secondArray = [request mutableCopy];
-    self.popupView.hidden = NO;
-    self.lblPopupView.text = @"Friend requests";
-    [self.secondTableView reloadData];
+    RequestsViewController *vc = [[RequestsViewController alloc] initWithNibName:nil bundle:nil];
+    vc.requestArray = request;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)getAllFriendRequestFailWithError:(NSError *)error
@@ -231,16 +281,9 @@
 - (IBAction)recentBtnTapped:(id)sender {
 }
 
-- (IBAction)closeBtnTapped:(id)sender {
-    self.popupView.hidden = YES;
-}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    if (tableView != self.secondTableView) {
-        
-    }
     
     static NSString *cellIdentifier = @"UserCell";
     
@@ -253,16 +296,11 @@
     
 
     User *user;
-    
-    if (tableView != self.secondTableView) {
-        if (tableView == self.searchDisplayController.searchResultsTableView) {
-            user = [searchResults objectAtIndex:indexPath.row];
-        }else if(tableView == self.digitzUsersTableView){
-            user = [self.friendsArray objectAtIndex:indexPath.row];
-        }
-    }else{
-        __weak DigitzRequest *request = [self.secondArray objectAtIndex:indexPath.row];
-        user = request.sender;
+
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        user = [searchResults objectAtIndex:indexPath.row];
+    }else if(tableView == self.digitzUsersTableView){
+        user = [self.friendsArray objectAtIndex:indexPath.row];
     }
     
     NSLog(@"cell for row: %d",  indexPath.row);
@@ -275,6 +313,28 @@
         cell.txtUsername.text = user.username;
     }
     cell.txtHometown.text = user.hometown;
+    if (![user.avatarUrl isEqual:[NSNull null]]) {
+        cell.avatarUrlStr = user.avatarUrl;
+        [cell loadAvatarFromUrlString];
+    }
+    
+//    if (![user.avatarUrl isEqual:[NSNull null]]) {
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+//            
+//            NSURL *imageUrl = [NSURL URLWithString:user.avatarUrl];
+//            __block NSData *imageData = [NSData dataWithContentsOfURL:imageUrl];
+//            
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                // update image
+//                if (imageData != nil) {
+//                    cell.imgAvatar.image = [UIImage imageWithData:imageData];
+//                    imageData = nil;
+//                }
+//            });
+//            
+//            imageUrl = nil;
+//        });
+//    }
     
     return cell;
 }
@@ -288,25 +348,17 @@
 {
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         return [searchResults count];
-    }else if (tableView == self.digitzUsersTableView){
-        return self.friendsArray.count;
     }else{
-        return self.secondArray.count;
+        return self.friendsArray.count;
     }
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (tableView != self.secondTableView) {
-        RequestDigitzViewController *vc = [[RequestDigitzViewController alloc] initWithNibName:nil bundle:nil];
-        vc.requestUser = [self.friendsArray objectAtIndex:indexPath.row];
-        [self.navigationController pushViewController:vc animated:YES];
-    }else{
-        ReceiveRequestViewController *vc = [[ReceiveRequestViewController alloc] initWithNibName:nil bundle:nil];
-        __weak DigitzRequest *request = [self.secondArray objectAtIndex:indexPath.row];
-        vc.request = request;
-        [self.navigationController pushViewController:vc animated:YES];
-    }
+    RequestDigitzViewController *vc = [[RequestDigitzViewController alloc] initWithNibName:nil bundle:nil];
+    vc.requestUser = [self.friendsArray objectAtIndex:indexPath.row];
+    [self.navigationController pushViewController:vc animated:YES];
+
     NSLog(@"select row: %d", indexPath.row);
     
 }

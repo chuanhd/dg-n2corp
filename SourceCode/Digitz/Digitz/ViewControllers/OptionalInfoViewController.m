@@ -65,8 +65,8 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
         self.txtAlterPhoneNo.text = [temp.paramsDict objectForKey:kKey_UpdateAlterPhone];
         self.txtPersonalBio.text = [temp.paramsDict objectForKey:kKey_UpdatePersonalBio];
         
-        if ([temp.paramsDict objectForKey:@"avatar"]) {
-            [self showAvatarWithUrl:[temp.paramsDict objectForKey:@"avatar"]];
+        if ([temp.paramsDict objectForKey:kKey_UpdateAvatar]) {
+            [self showAvatarWithUrl:[temp.paramsDict objectForKey:kKey_UpdateAvatar]];
         }
         
     }else if ([self.parentVC isKindOfClass:[ProfileViewController class]]){
@@ -78,10 +78,14 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
         self.txtAlterPhoneNo.text = [temp.paramsDict objectForKey:kKey_UpdateAlterPhone];
         self.txtPersonalBio.text = [temp.paramsDict objectForKey:kKey_UpdatePersonalBio];
         
-        if ([temp.paramsDict objectForKey:@"avatar"]) {
-            [self showAvatarWithUrl:[temp.paramsDict objectForKey:@"avatar"]];
+        if ([temp.paramsDict objectForKey:kKey_UpdateAvatar]) {
+            [self showAvatarWithUrl:[temp.paramsDict objectForKey:kKey_UpdateAvatar]];
         }
     }
+    
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(avatarTapped:)];
+    [self.imgAvatar addGestureRecognizer:tapGesture];
+    [self.imgAvatar setUserInteractionEnabled:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -134,6 +138,11 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
             [temp.paramsDict setObject:self.txtPersonalBio.text forKey:kKey_UpdatePersonalBio];
         }
 
+        
+        if (avatarChanged) {
+            [temp.paramsDict setObject:self.imgAvatar.image forKey:kKey_UpdateImageData];
+        }
+        
         NSLog(@"txtPersonalBio: %@", self.txtPersonalBio.text);
         
         NSLog(@"paramDict: %@", temp);
@@ -179,6 +188,10 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
             [temp.paramsDict setObject:self.txtPersonalBio.text forKey:kKey_UpdatePersonalBio];
         }
         
+        if (avatarChanged) {
+            [temp.paramsDict setObject:self.imgAvatar.image forKey:kKey_UpdateImageData];
+        }
+        
         NSLog(@"txtPersonalBio: %@", self.txtPersonalBio.text);
         
         NSLog(@"paramDict: %@", temp);
@@ -196,7 +209,7 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
     
 }
 
-- (IBAction)avatarTapped:(id)sender {
+- (IBAction)avatarTapped:(UITapGestureRecognizer *)sender {
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Pick Avatar" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Camera", @"Gallery", nil];
     [actionSheet showInView:self.view];
 }
@@ -346,8 +359,10 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         
         dispatch_async(dispatch_get_main_queue(), ^{
             // update image
-            self.imgAvatar.image = [UIImage imageWithData:imageData];
-            imageData = nil;
+            if (imageData != nil) {
+                self.imgAvatar.image = [UIImage imageWithData:imageData];
+                imageData = nil;
+            }
         });
         
         imageUrl = nil;

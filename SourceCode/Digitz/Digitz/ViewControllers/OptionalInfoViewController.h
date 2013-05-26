@@ -28,7 +28,6 @@
 
 - (IBAction)backBtnTapped:(id)sender;
 - (IBAction)saveBtnTapped:(id)sender;
-- (IBAction)avatarTapped:(id)sender;
 
 
 @end

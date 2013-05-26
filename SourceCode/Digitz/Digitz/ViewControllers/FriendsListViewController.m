@@ -9,9 +9,12 @@
 #import "FriendsListViewController.h"
 #import "UserCell.h"
 #import "User.h"
+#import "ServerManager.h"
+#import "SocialHubViewController.h"
 
 @interface FriendsListViewController ()
 {
+    UIMultilineSegmentedControl *segment;
     NSArray *searchResults;
 }
 
@@ -19,7 +22,6 @@
 
 @implementation FriendsListViewController
 
-@synthesize friendsGroupSegment = _friendsGroupSegment;
 @synthesize friendsArray = _friendList;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -47,8 +49,10 @@
 //    
 //    [self.view addSubview:self.friendsGroupSegment];
     
-    UIMultilineSegmentedControl *segment = [[UIMultilineSegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"A", @"B", @"C", @"D", nil]];
+//    UIMultilineSegmentedControl *segment = [[UIMultilineSegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"A", @"B", @"C", @"D", nil]];
     
+    segment = [[UIMultilineSegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"A", @"B", @"C", @"D", nil]];
+
     segment.segmentedControlStyle = UISegmentedControlStyleBar;
     segment.frame = CGRectMake(10, 46, 300, 44);
     
@@ -64,6 +68,17 @@
     [self.view addSubview:segment];
     
     //_friendList = [NSMutableArray array];
+    
+    self.friendsArray = [self.friendsDict objectForKey:@"all"];
+    self.accFriendArray = [self.friendsDict objectForKey:kKey_Accquaintance];
+    self.busFriendArray = [self.friendsDict objectForKey:kKey_BusinessType];
+    self.friFriendArray = [self.friendsDict objectForKey:kKey_FamilyType];
+    
+    NSLog(@"all: %d", self.friendsArray.count);
+    NSLog(@"acc: %d", self.accFriendArray.count);
+    NSLog(@"bus: %d", self.busFriendArray.count);
+    NSLog(@"fri: %d", self.friendsArray.count);
+
     
     self.friendsTableView.delegate = self;
     self.friendsTableView.dataSource = self;
@@ -81,10 +96,9 @@
 - (void) didChangeSegmentedControl:(UIMultilineSegmentedControl *)control
 {
     if (control.selectedSegmentIndex == 0) {
-        
+        [self.friendsTableView reloadData];
     }else{
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"Coming soon!" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alertView show];
+        [self.friendsTableView reloadData];
     }
 }
 
@@ -103,6 +117,20 @@
 //    @autoreleasepool {
 //        UIImage *header = [UIImage imageNamed:@"bg-box-foot.png"];
 //        return [[UIImageView alloc] initWithImage:header];
+//    }
+//}
+
+//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+//{
+//    if (segment.selectedSegmentIndex == 0) {
+//        switch (section) {
+//            case 0:
+//                
+//                break;
+//                
+//            default:
+//                break;
+//        }
 //    }
 //}
 
@@ -125,7 +153,23 @@
         if (tableView == self.searchDisplayController.searchResultsTableView) {
             user = [searchResults objectAtIndex:indexPath.row];
         }else if(tableView == self.friendsTableView){
-            user = [self.friendsArray objectAtIndex:indexPath.row];
+            switch (segment.selectedSegmentIndex) {
+                case 0:
+                    user = [self.friendsArray objectAtIndex:indexPath.row];
+                    break;
+                case 1:
+                    user = [self.friFriendArray objectAtIndex:indexPath.row];
+                    break;
+                case 2:
+                    user = [self.busFriendArray objectAtIndex:indexPath.row];
+                    break;
+                case 3:
+                    user = [self.accFriendArray objectAtIndex:indexPath.row];
+                    break;
+                default:
+                    user = [self.friendsArray objectAtIndex:indexPath.row];
+                    break;
+            }
         }
 //    }else{
 //        __weak DigitzRequest *request = [self.secondArray objectAtIndex:indexPath.row];
@@ -150,6 +194,13 @@
         cell.txtHometown.text = @"Error";
     }
     
+    NSLog(@"user avatar: %@", user.avatarUrl);
+    
+    if (![user.avatarUrl isEqual:[NSNull null]]) {
+        cell.avatarUrlStr = user.avatarUrl;
+        [cell loadAvatarFromUrlString];
+    }
+    
     return cell;
 }
 
@@ -163,7 +214,18 @@
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         return [searchResults count];
     }else{
-        return self.friendsArray.count;
+        switch (segment.selectedSegmentIndex) {
+            case 0:
+                return self.friendsArray.count;
+            case 1:
+                return self.friFriendArray.count;
+            case 2:
+                return self.busFriendArray.count;
+            case 3:
+                return self.accFriendArray.count;
+            default:
+                return self.friendsArray.count;
+        }
     }
 //    else{
 //        return self.secondArray.count;
@@ -174,6 +236,34 @@
 {
     
     NSLog(@"select row: %d", indexPath.row);
+    
+    User *user;
+    
+    //    if (tableView != self.secondTableView) {
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        user = [searchResults objectAtIndex:indexPath.row];
+    }else if(tableView == self.friendsTableView){
+        switch (segment.selectedSegmentIndex) {
+            case 0:
+                user = [self.friendsArray objectAtIndex:indexPath.row];
+                break;
+            case 1:
+                user = [self.friFriendArray objectAtIndex:indexPath.row];
+                break;
+            case 2:
+                user = [self.busFriendArray objectAtIndex:indexPath.row];
+                break;
+            case 3:
+                user = [self.accFriendArray objectAtIndex:indexPath.row];
+                break;
+            default:
+                user = [self.friendsArray objectAtIndex:indexPath.row];
+                break;
+        }
+    }
+    SocialHubViewController *vc = [[SocialHubViewController alloc] initWithNibName:nil bundle:nil];
+    vc.user = user;
+    [self.navigationController pushViewController:vc animated:YES];
     
 }
 
@@ -189,4 +279,7 @@
     return YES;
 }
 
+- (IBAction)backBtnTapped:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
 @end

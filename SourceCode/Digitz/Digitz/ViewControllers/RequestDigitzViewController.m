@@ -52,14 +52,18 @@
 }
 
 - (IBAction)btnAcqAddTapped:(id)sender {
-    [serverManager sendFriendRequestWithUserId:requestUser.userId];
+    [serverManager sendFriendRequestWithUserId:requestUser.userId withType:kKey_Accquaintance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Sending request"];
 }
 
 - (IBAction)btnBusiAddTapped:(id)sender {
+    [serverManager sendFriendRequestWithUserId:requestUser.userId withType:kKey_BusinessType];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Sending request"];
 }
 
 - (IBAction)btnFriendAddTapped:(id)sender {
+    [serverManager sendFriendRequestWithUserId:requestUser.userId withType:kKey_FamilyType];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Sending request"];
 }
 
 - (IBAction)backBtnTapped:(id)sender {

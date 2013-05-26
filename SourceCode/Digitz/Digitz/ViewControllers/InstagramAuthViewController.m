@@ -141,4 +141,11 @@
     
     return YES;
 }
+- (IBAction)backBtnTapped:(id)sender {
+    if ([self respondsToSelector:@selector(dismissModalViewControllerAnimated:)]) {
+        [self dismissModalViewControllerAnimated:YES];
+    }else{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
 @end

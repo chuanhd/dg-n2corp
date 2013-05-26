@@ -14,6 +14,7 @@
 
 @property (strong, nonatomic) UIViewController *parentVC;
 @property NSInteger index;
+@property NSInteger section;
 
 - (IBAction)shareSwitched:(id)sender;
 @end
