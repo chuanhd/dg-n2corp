@@ -12,5 +12,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imgAvatar;
 @property (weak, nonatomic) IBOutlet UILabel *txtUsername;
 @property (weak, nonatomic) IBOutlet UILabel *txtHometown;
+@property (weak, nonatomic) NSString *avatarUrlStr;
+
+- (void) loadAvatarFromUrlString;
 
 @end

@@ -39,5 +39,11 @@
 @property (strong, nonatomic) NSString *phoneWork;
 @property (strong, nonatomic) NSString *bio;
 
+@property (strong, nonatomic) NSMutableArray *priAcc;
+@property (strong, nonatomic) NSMutableArray *priBus;
+@property (strong, nonatomic) NSMutableArray *priFri;
+
+@property BOOL available;
+
 
 @end

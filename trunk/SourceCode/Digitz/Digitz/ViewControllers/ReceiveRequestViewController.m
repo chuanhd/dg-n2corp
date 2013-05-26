@@ -98,7 +98,7 @@
     
     NSLog(@"fields: %@", [self buildFieldsString]);
     
-    [serverManager acceptFriendRequestWithFriendUsername:self.request.sender.username withFields:[self buildFieldsString]];
+    [serverManager acceptFriendRequestWithFriendUsername:self.request.sender.username withFields:[self buildFieldsString] withType:kKey_FamilyType];
 }
 
 - (void)acceptFriendSuccessful

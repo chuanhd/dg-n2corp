@@ -7,7 +7,6 @@
 //
 
 #import "MainMenuViewController.h"
-#import "LoginViewController.h"
 #import "SignUpViewController.h"
 #import "EnterYourDigitzViewController.h"
 #import "MBProgressHUD.h"
@@ -24,6 +23,8 @@
 
 @implementation MainMenuViewController
 
+@synthesize keyboardControls;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -39,6 +40,10 @@
     // Do any additional setup after loading the view from its nib.
     self.txtPassword.delegate = self;
     self.txtUsername.delegate = self;
+    
+    NSArray *fields = @[self.txtUsername, self.txtPassword];
+    [self setKeyboardControls:[[BSKeyboardControls alloc] initWithFields:fields]];
+    self.keyboardControls.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning
@@ -158,6 +163,9 @@
 
 #pragma mark text field delegate
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
+    
+    [self.keyboardControls setActiveField:textField];
+    
     NSLog(@"textField %f", textField.frame.origin.y);
     if (textField.superview.frame.origin.y > 180) {
 		[UIView beginAnimations: @"moveField" context: nil];
@@ -182,6 +190,30 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return YES;
+}
+
+#pragma mark BSKeyboardControl delegate
+- (void)keyboardControls:(BSKeyboardControls *)_keyboardControls selectedField:(UIView *)field inDirection:(BSKeyboardControlsDirection)direction
+{
+//    if (_keyboardControls.activeField.superview.frame.origin.y > 180) {
+//		[UIView beginAnimations: @"moveField" context: nil];
+//		[UIView setAnimationDelegate: self];
+//		[UIView setAnimationDuration: 0.25f];
+//		[UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
+//		self.view.frame = CGRectMake(0, -_keyboardControls.activeField.superview.frame.origin.y + 120, self.view.frame.size.width, self.view.frame.size.height);
+//		[UIView commitAnimations];
+//	}
+}
+
+- (void)keyboardControlsDonePressed:(BSKeyboardControls *)_keyboardControls
+{
+    [_keyboardControls.activeField resignFirstResponder];
+//    [UIView beginAnimations: @"moveField" context: nil];
+//    [UIView setAnimationDelegate: self];
+//    [UIView setAnimationDuration: 0.25f];
+//    [UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
+//    self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+//    [UIView commitAnimations];
 }
 
 @end

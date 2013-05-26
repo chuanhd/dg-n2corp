@@ -26,4 +26,9 @@
 @synthesize phoneWork;
 @synthesize bio;
 
+@synthesize available;
+@synthesize priAcc;
+@synthesize priBus;
+@synthesize priFri;
+
 @end

@@ -60,6 +60,7 @@
 */
 
 - (IBAction)closeBtnTapped:(id)sender {
+    self.hidden = YES;
 }
 
 

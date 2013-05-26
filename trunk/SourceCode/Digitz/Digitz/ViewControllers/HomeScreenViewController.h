@@ -17,14 +17,10 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CLLocation *bestEffortLocation;
 @property (strong, nonatomic) NSMutableArray *friendsArray;
-@property (strong, nonatomic) NSMutableArray *secondArray;
 
 @property (strong, nonatomic) IBOutlet UISearchDisplayController *searchBar;
 @property (weak, nonatomic) IBOutlet UITableView *digitzUsersTableView;
-@property (weak, nonatomic) IBOutlet UIView *popupView;
-@property (weak, nonatomic) IBOutlet UITableView *secondTableView;
-@property (weak, nonatomic) IBOutlet UILabel *lblPopupView;
-
+@property (weak, nonatomic) IBOutlet UIButton *btnVisible;
 
 - (IBAction)refreshButtonTapped:(id)sender;
 - (IBAction)findNearByUserBtnTapped:(id)sender;
@@ -32,6 +28,5 @@
 - (IBAction)friendBtnTapped:(id)sender;
 - (IBAction)showRequestBtnTapped:(id)sender;
 - (IBAction)recentBtnTapped:(id)sender;
-- (IBAction)closeBtnTapped:(id)sender;
 
 @end

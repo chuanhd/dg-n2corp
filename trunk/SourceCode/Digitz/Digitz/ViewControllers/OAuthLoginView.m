@@ -8,6 +8,7 @@
 //
 #import <Foundation/NSNotificationQueue.h>
 #import "OAuthLoginView.h"
+#import "MBProgressHUD.h"
 
 //
 // OAuth steps for version 1.0a:
@@ -87,6 +88,7 @@
     
     userLoginURL = [NSURL URLWithString:userLoginURLWithToken];
     NSURLRequest *request = [NSMutableURLRequest requestWithURL: userLoginURL];
+    webView.delegate = self;
     [webView loadRequest:request];     
 }
 
@@ -124,6 +126,7 @@
     
     addressBar.text = urlString;
     [activityIndicator startAnimating];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Loading..."];
     
     BOOL requestForCallbackURL = ([urlString rangeOfString:linkedInCallbackURL].location != NSNotFound);
     if ( requestForCallbackURL )
@@ -141,7 +144,7 @@
             [[NSNotificationCenter defaultCenter] 
                     postNotificationName:@"loginViewDidFinish"        
                                   object:self 
-                                userInfo:nil];
+                                userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"User refused to allow our app access",@"error", nil]];
 
             NSLog(@"post notification: loginViewDidFinish");
             
@@ -162,6 +165,7 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     [activityIndicator stopAnimating];
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
 
 //
@@ -226,7 +230,7 @@
     NSString *responseBody = [[NSString alloc] initWithData:data
                                                    encoding:NSUTF8StringEncoding];
     
-    NSLog(@"responseBody: %@", responseBody);
+    NSLog(@"testApiCall: responseBody: %@", responseBody);
     
     self.profile = [responseBody objectFromJSONString];
     
@@ -234,7 +238,7 @@
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"loginViewDidFinish"
      object:self
-     userInfo:nil];
+     userInfo:profile];
     
     NSLog(@"post notification: loginViewDidFinish");
     
@@ -255,6 +259,14 @@
 //  This api consumer data could move to a provider object
 //  to allow easy switching between LinkedIn, Twitter, etc.
 //
+- (IBAction)backBtnTapped:(id)sender {
+    if ([self respondsToSelector:@selector(dismissModalViewControllerAnimated:)]) {
+        [self dismissModalViewControllerAnimated:YES];
+    }else{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
 - (void)initLinkedInApi
 {
     apikey = @"9jslwjcd5zyq";

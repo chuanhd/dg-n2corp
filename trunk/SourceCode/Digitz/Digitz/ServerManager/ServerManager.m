@@ -8,6 +8,7 @@
 
 #import "ServerManager.h"
 #import "JSONKit.h"
+#import "DigitzUtils.h"
 #define TIME_OUT 30
 
 @implementation ServerManager
@@ -41,6 +42,7 @@ static id sharedReactor = nil;
         NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
         [userDefault setObject:[result objectForKey:@"token"] forKey:kKey_UserToken];
         [userDefault setObject:[result objectForKey:@"user"] forKey:@"username"];
+        [userDefault setObject:[result objectForKey:@"available"] forKey:kKey_UpdateAvailable];
         [userDefault synchronize];
         switch (status) {
             case 0:
@@ -138,6 +140,7 @@ static id sharedReactor = nil;
                 NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
                 [userDefault setObject:[result objectForKey:@"token"] forKey:kKey_UserToken];
                 [userDefault setObject:[result objectForKey:@"user"] forKey:@"username"];
+                [userDefault setObject:[result objectForKey:@"available"] forKey:kKey_UpdateAvailable];
                 if (_delegate && [_delegate respondsToSelector:@selector(signInSuccess)]) {
                     [_delegate performSelector:@selector(signInSuccess)];
                 }
@@ -188,9 +191,23 @@ static id sharedReactor = nil;
         [mutableParams setObject:auth_token forKey:kKey_UserToken];
     }
     
+    NSMutableURLRequest *request;
+    
+    if ([params objectForKey:kKey_UpdateImageData] != nil) {
+        UIImage *image = [params objectForKey:kKey_UpdateImageData];
+        NSData *imageData = UIImagePNGRepresentation(image);
+        [mutableParams removeObjectForKey:kKey_UpdateImageData];
+        request = [_httpClient multipartFormRequestWithMethod:@"POST" path:PATH_UPDATE_USER_INFO parameters:mutableParams constructingBodyWithBlock: ^(id <AFMultipartFormData> formData) {
+            [formData appendPartWithFileData:imageData name:@"user[avatar]" fileName:@"user[avatar]" mimeType:@"user[avatar]"];
+            //[formData appendPartWithFormData:imageData name:@"user[avatar]"];
+        }];
+    }else{
+        request = [_httpClient requestWithMethod:@"POST" path:PATH_UPDATE_USER_INFO parameters:mutableParams];
+    }
+    
+    
     NSLog(@"params: %@", mutableParams);
 
-    NSMutableURLRequest *request = [_httpClient requestWithMethod:@"POST" path:PATH_UPDATE_USER_INFO parameters:mutableParams];
     request.timeoutInterval = TIME_OUT;
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         NSDictionary *result = JSON;
@@ -228,7 +245,14 @@ static id sharedReactor = nil;
     }else{
         newUser.gender = MALE;
     }
-    newUser.userId = [userDic objectForKey:@"id"];
+    if ([userDic objectForKey:@"id"] != nil) {
+        newUser.avatarUrl = [userDic objectForKey:@"id"];
+    }else{
+        if ([userDic objectForKey:@"_id"] != nil) {
+            newUser.avatarUrl = [userDic objectForKey:@"_id"];
+        }
+    }
+    newUser.birthday = [userDic objectForKey:@"birthday"];
     
     NSLog(@"facebookUrl: %@", [userDic objectForKey:@"facebook_url"]);
     
@@ -238,13 +262,20 @@ static id sharedReactor = nil;
     newUser.linkedinUrl = [userDic objectForKey:@"linkedin_url"];
     newUser.instagramUrl = [userDic objectForKey:@"instagram_url"];
 
-
+    newUser.available = [[userDic objectForKey:@"available"] integerValue] == 1 ? YES : NO;
     
     //newUser.facebook_id = [userDic objectForKey:@"facebook_id"];
     //newUser.facebook_token = [userDic objectForKey:@"facebook_token"];
     //newUser.games_count = ([userDic objectForKey:@"games_count"] != (id)[NSNull null]) ? [[userDic objectForKey:@"games_count"] integerValue] : -1;
     //newUser.device_udid = [userDic objectForKey:@"device_udid"];
-    newUser.avatarUrl = [userDic objectForKey:@"avatar"];
+    if ([userDic objectForKey:@"avatar"] != nil) {
+        newUser.avatarUrl = [userDic objectForKey:@"avatar"];
+    }else{
+        if ([userDic objectForKey:@"avatar_url"] != nil) {
+            newUser.avatarUrl = [userDic objectForKey:@"avatar_url"];
+        }
+    }
+    newUser.state = [userDic objectForKey:@"state"];
     newUser.company = [userDic objectForKey:@"company"];
     newUser.address = [userDic objectForKey:@"address"];
     newUser.homepage = [userDic objectForKey:@"homepage"];
@@ -253,6 +284,11 @@ static id sharedReactor = nil;
     newUser.cellPhone = [userDic objectForKey:@"cell_phone"];
     newUser.phoneHome = [userDic objectForKey:@"home_phone"];
     newUser.phoneWork = [userDic objectForKey:@"work_phone"];
+    newUser.bio = [userDic objectForKey:@"bio"];
+    
+    newUser.priAcc = [DigitzUtils splitString:[userDic objectForKey:@"privacy_a"] withSeparator:@","];
+    newUser.priBus = [DigitzUtils splitString:[userDic objectForKey:@"privacy_b"] withSeparator:@","];
+    newUser.priFri = [DigitzUtils splitString:[userDic objectForKey:@"privacy_f"] withSeparator:@","];
     
     return newUser;
 }
@@ -304,7 +340,7 @@ static id sharedReactor = nil;
     [request setTimeoutInterval:TIME_OUT];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON){
         NSDictionary *result = JSON;
-        NSLog(@"json update user info: %@", result);
+        NSLog(@"find near by: %@", result);
         
         NSArray *users = [result objectForKey:@"users"];
         NSLog(@"users: %d", users.count);
@@ -332,10 +368,10 @@ static id sharedReactor = nil;
     [operation start];
 }
 
-- (void)sendFriendRequestWithUserId:(NSString *)userId
+- (void)sendFriendRequestWithUserId:(NSString *)userId withType:(NSString *)type
 {
     __weak NSString *authToken = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:authToken, @"auth_token", userId, @"receiver_id", nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:authToken, @"auth_token", userId, @"receiver_id", type, @"type", nil];
     NSMutableURLRequest *request = [_httpClient requestWithMethod:@"POST" path:PATH_SEND_FRIEND_REQ parameters:params];
     [request setTimeoutInterval:TIME_OUT];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON){
@@ -402,19 +438,35 @@ static id sharedReactor = nil;
         NSArray *result = (NSArray *) JSON;
         NSLog(@"getAllFriendOfUser: %@", result);
         
+        NSMutableDictionary *friendsDict = [NSMutableDictionary dictionary];
         NSMutableArray *userArray = [NSMutableArray array];
+        NSMutableArray *accFriendArray = [NSMutableArray array];
+        NSMutableArray *busFriendArray = [NSMutableArray array];
+        NSMutableArray *friFriendArray = [NSMutableArray array];
         
         for (NSDictionary *requestDict in result) {
             @autoreleasepool {
                 User *friend = [self userFromDictionary:requestDict];
                 [userArray addObject:friend];
+                if ([[requestDict objectForKey:@"type"] isEqualToString:kKey_Accquaintance]) {
+                    [accFriendArray addObject:friend];
+                }else if ([[requestDict objectForKey:@"type"] isEqualToString:kKey_BusinessType]){
+                    [busFriendArray addObject:friend];
+                }else if ([[requestDict objectForKey:@"type"] isEqualToString:kKey_FamilyType]){
+                    [friFriendArray addObject:friend];
+                }
             }
         }
         
+        [friendsDict setObject:userArray forKey:@"all"];
+        [friendsDict setObject:accFriendArray forKey:kKey_Accquaintance];
+        [friendsDict setObject:busFriendArray forKey:kKey_BusinessType];
+        [friendsDict setObject:friFriendArray forKey:kKey_FamilyType];
+        
         NSLog(@"requestArray: %d", userArray.count);
         
-        if (_delegate && [_delegate respondsToSelector:@selector(getAllFriendSuccessWithArray:)]) {
-            [_delegate performSelector:@selector(getAllFriendSuccessWithArray:) withObject:userArray];
+        if (_delegate && [_delegate respondsToSelector:@selector(getAllFriendSuccessWithDict:)]) {
+            [_delegate performSelector:@selector(getAllFriendSuccessWithDict:) withObject:friendsDict];
         }
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON){
         if (_delegate && [_delegate respondsToSelector:@selector(getALlFriendFailWithError:)]) {
@@ -426,10 +478,10 @@ static id sharedReactor = nil;
 
 }
 
-- (void)acceptFriendRequestWithFriendUsername:(NSString *)username withFields:(NSString *)fields
+- (void)acceptFriendRequestWithFriendUsername:(NSString *)username withFields:(NSString *)fields withType:(NSString *)type
 {
     __weak NSString *authToken = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:authToken, @"auth_token", username, @"friend", fields, @"fields", nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:authToken, @"auth_token", username, @"friend", fields, @"fields", type,@"type", nil];
     
     NSLog(@"accept friend param: %@", params);
     

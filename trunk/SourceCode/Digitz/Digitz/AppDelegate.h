@@ -12,6 +12,7 @@
 #import "GTMOAuth2Authentication.h"
 #import "MainMenuViewController.h"
 
+extern NSString * const FBSessionStateChangedNotification;
 
 @class RootViewController;
 
@@ -23,5 +24,6 @@ static NSString * const kClientId = @"48661555086.apps.googleusercontent.com";
 @property (strong, nonatomic) RootViewController *rootViewController;
 @property (strong, nonatomic) GTMOAuth2Authentication *auth;
 
+- (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI;
 
 @end

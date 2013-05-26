@@ -29,7 +29,6 @@
 #define kKey_UpdateEmail @"user[email]"
 #define kKey_UpdateFacebookId @"user[facebook_id]"
 #define kKey_UpdatePassword @"user[password]"
-#define kKey_UpdateCoin @"user[avatar]"
 #define kKey_UpdateUDID @"user[device_udid]"
 #define kKey_UpdateAge @"user[age]"
 #define kKey_UpdateGender @"user[gender]"
@@ -56,6 +55,16 @@
 #define kKey_UpdateAlterEmail @"user[email_home]"
 #define kKey_UpdateAlterPhone @"user[home_phone]"
 #define kKey_UpdatePersonalBio @"user[bio]"
+
+#define kKey_UpdateImageData @"imageData"
+#define kKey_UpdateAvailable @"user[available]"
+#define kKey_PrivacyAcc @"user[privacy_a]"
+#define kKey_PrivacyFri @"user[privacy_f]"
+#define kKey_PrivacyBus @"user[pricvacy_b]"
+
+#define kKey_BusinessType @"business-friend"
+#define kKey_FamilyType @"friend-family"
+#define kKey_Accquaintance @"accquaintance"
 
 @protocol ServerManagerDelegate <NSObject>
 
@@ -87,7 +96,7 @@
 - (void) getAllFriendRequestSuccessWithArray:(NSArray *)request;
 - (void) getAllFriendRequestFailWithError:(NSError *)error;
 
-- (void) getAllFriendSuccessWithArray:(NSArray *)friends;
+- (void) getAllFriendSuccessWithDict:(NSDictionary *)friends;
 - (void) getAllFriendFailWithError:(NSError *)error;
 
 - (void) acceptFriendSuccessful;
@@ -124,10 +133,10 @@
 - (void) getUserInfoWithToken:(NSString *)token;
 //- (void) findNearByFriendsWithToken:(NSString *)token withLong:(float)_long withLat:(float)_lat;
 - (void) findNearByFriendsWithToken:(NSString *)token;
-- (void) sendFriendRequestWithUserId:(NSString *)userId;
+- (void) sendFriendRequestWithUserId:(NSString *)userId withType:(NSString *)type;
 - (void) getAllFriendRequest;
 - (void) getAllFriendsOfUser;
-- (void) acceptFriendRequestWithFriendUsername:(NSString *)username withFields:(NSString *)fields;
+- (void) acceptFriendRequestWithFriendUsername:(NSString *)username withFields:(NSString *)fields withType:(NSString *)type;
 - (void) declineFriendRequestWithRequestId:(NSString *)requestId;
 - (void) updateUserAvatarWithImage: (UIImage *)avatar;
 - (void) updateUserAvatarWithLinkImage: (NSString *)urlImage;
