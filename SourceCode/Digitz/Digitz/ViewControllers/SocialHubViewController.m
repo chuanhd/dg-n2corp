@@ -48,6 +48,14 @@
 //    [backButton addTarget:self action:@selector(backToPreviousVC:) forControlEvents:UIControlEventTouchUpInside];
 //    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     
+    if (_user.name != nil && ![_user.name isEqual:[NSNull null]]) {
+        self.lblUsername.text = _user.name;
+    }else{
+        if (_user.username != nil && ![_user.username isEqual:[NSNull null]]) {
+            self.lblUsername.text = _user.username;
+        }
+    }
+    
     NSLog(@"Before");
     
     digitzInfo = [[DigitzInfoViewController alloc] initWithNibName:@"DigitzInfoViewController" bundle:nil];
