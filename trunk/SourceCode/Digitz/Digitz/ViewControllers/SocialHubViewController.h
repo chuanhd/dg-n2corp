@@ -16,6 +16,7 @@
 
 @property (strong, nonatomic) CustomTabBarViewController *tabBarController;
 @property (strong, nonatomic) User *user;
+@property (weak, nonatomic) IBOutlet UILabel *lblUsername;
 
 -(IBAction) backToPreviousVC:(id)sender;
 
