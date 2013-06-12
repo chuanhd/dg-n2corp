@@ -10,6 +10,7 @@
 #import "DigitzUtils.h"
 #import "SocialShareCell.h"
 #import "EnterYourDigitzViewController.h"
+#import "DigitzActivity.h"
 
 
 @interface ReceiveRequestViewController ()
@@ -97,12 +98,15 @@
 - (IBAction)acceptBtnTapped:(id)sender {
     
     NSLog(@"fields: %@", [self buildFieldsString]);
-    
+        
     [serverManager acceptFriendRequestWithFriendUsername:self.request.sender.username withFields:[self buildFieldsString] withType:kKey_FamilyType];
 }
 
 - (void)acceptFriendSuccessful
 {
+    DigitzActivity *activity = [[DigitzActivity alloc] initWithDescription:[NSString stringWithFormat:@"Accept %@ friend request.", self.request.sender.username]];
+    [DigitzUtils addActivity:activity];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [DigitzUtils showToast:@"Friend request was accepted" inView:self.view];
         [self.navigationController popViewControllerAnimated:YES];
@@ -121,6 +125,10 @@
 
 - (void)declineFriendSuccessful
 {
+    
+    DigitzActivity *activity = [[DigitzActivity alloc] initWithDescription:[NSString stringWithFormat:@"Decline %@ friend request.", self.request.sender.username]];
+    [DigitzUtils addActivity:activity];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [DigitzUtils showToast:@"Friend request was declined" inView:self.view];
         [self.navigationController popViewControllerAnimated:YES];

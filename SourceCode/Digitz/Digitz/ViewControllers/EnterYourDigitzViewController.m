@@ -22,6 +22,7 @@
 #import "OptionalInfoViewController.h"
 #import "PrivacySettingsViewController.h"
 #import "AppDelegate.h"
+#import "TnCViewController.h"
 
 
 @interface EnterYourDigitzViewController ()
@@ -278,6 +279,11 @@
                 case 3:
                 {
                     // terms & conditions
+                    TnCViewController *vc = [[TnCViewController alloc] init];
+                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
+                    vc.parentVC = self;
+                    
+                    [self.navigationController pushViewController:vc animated:YES];
                 }
                     break;
                 default:
@@ -296,8 +302,8 @@
 - (IBAction)btnContinueTapped:(id)sender {
     //[MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Registering..."];
     
-    if (!personalInfoFilled) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must fill all required fields" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    if (!personalInfoFilled && agreeTermAndCondition) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must fill all required fields and agree terms and conditions" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
         return;
     }

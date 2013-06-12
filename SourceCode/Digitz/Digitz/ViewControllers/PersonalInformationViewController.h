@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UIView *datePickerView;
 @property (weak, nonatomic) IBOutlet UIPickerView *statePicker;
 @property (weak, nonatomic) IBOutlet UITextField *txtState;
+@property (weak, nonatomic) IBOutlet UITextField *txtAutoState;
 
 @property (strong, nonatomic) ServerManager *serverManager;
 //@property (strong, nonatomic) EnterYourDigitzViewController *parentVC;

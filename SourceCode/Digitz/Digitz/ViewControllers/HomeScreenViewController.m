@@ -17,6 +17,8 @@
 #import "DigitzUtils.h"
 #import "FriendsListViewController.h"
 #import "RequestsViewController.h"
+#import "DigitzActivity.h"
+#import "RecentActivityViewController.h"
 
 @interface HomeScreenViewController ()
 {
@@ -69,9 +71,9 @@
     NSNumber *available = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UpdateAvailable];
     NSLog(@"avail: %@", available);
     if ([available integerValue] == 1) {
-        [self.btnVisible setImage:[UIImage imageNamed:@"btn-eye-topbar.png"] forState:UIControlStateNormal];
-    }else{
         [self.btnVisible setImage:[UIImage imageNamed:@"btn-eye-on-topbar.png"] forState:UIControlStateNormal];
+    }else{
+        [self.btnVisible setImage:[UIImage imageNamed:@"btn-eye-topbar.png"] forState:UIControlStateNormal];
     }
     
     requestChangeVisible = NO;
@@ -192,18 +194,22 @@
         NSLog(@"user avail: %d", user.available);
         
         if (user.available) {
-            [self.btnVisible setImage:[UIImage imageNamed:@"btn-eye-topbar.png"] forState:UIControlStateNormal];
+            [self.btnVisible setImage:[UIImage imageNamed:@"btn-eye-on-topbar.png"] forState:UIControlStateNormal];
             [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:1] forKey:kKey_UpdateAvailable];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [DigitzUtils showToast:@"You're visible to find" inView:self.view];
             });
         }else{
-            [self.btnVisible setImage:[UIImage imageNamed:@"btn-eye-on-topbar.png"] forState:UIControlStateNormal];
+            [self.btnVisible setImage:[UIImage imageNamed:@"btn-eye-topbar.png"] forState:UIControlStateNormal];
             [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:0] forKey:kKey_UpdateAvailable];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [DigitzUtils showToast:@"You're invisible" inView:self.view];
             });
         }
+        
+        DigitzActivity *activity = [[DigitzActivity alloc] initWithDescription:@"Change your visibility"];
+        [DigitzUtils addActivity:activity];
+
     }else{
         NSLog(@"update Success");
         NSString *auth_token = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken];
@@ -215,6 +221,7 @@
 - (void)updateUserInformationWithParamsFailedWithError:(NSError *)error
 {
     NSLog(@"update fail: %@", error.description);
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Some error occurred" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     [alert show];
 }
@@ -234,6 +241,10 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         if (friends.count > 0) {
+            
+            DigitzActivity *activity = [[DigitzActivity alloc] initWithDescription:@"Get your friends list"];
+            [DigitzUtils addActivity:activity];
+            
             [DigitzUtils showToast:@"Get friend list successful" inView:self.view];
             FriendsListViewController *vc = [[FriendsListViewController alloc] initWithNibName:nil bundle:nil];
             vc.friendsDict = friends;
@@ -241,7 +252,7 @@
             [self.navigationController pushViewController:vc animated:YES];
         }else{
             dispatch_async(dispatch_get_main_queue(), ^{
-                [DigitzUtils showToast:@"You have no request" inView:self.view];
+                [DigitzUtils showToast:@"You have no friends" inView:self.view];
             });
         }
         
@@ -260,6 +271,8 @@
 
 - (void)getAllFriendRequestSuccessWithArray:(NSArray *)request
 {
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
     if (request.count == 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [DigitzUtils showToast:@"You have no request" inView:self.view];
@@ -267,7 +280,6 @@
         return;
     }
     
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
     RequestsViewController *vc = [[RequestsViewController alloc] initWithNibName:nil bundle:nil];
     vc.requestArray = request;
     [self.navigationController pushViewController:vc animated:YES];
@@ -279,6 +291,8 @@
 }
 
 - (IBAction)recentBtnTapped:(id)sender {
+    RecentActivityViewController *vc = [[RecentActivityViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 

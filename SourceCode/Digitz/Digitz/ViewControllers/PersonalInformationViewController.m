@@ -43,6 +43,7 @@
     self.txtName.delegate = self;
     self.txtPhoneNumber.delegate = self;
     self.txtState.delegate = self;
+    self.txtAutoState.delegate = self;
     
     self.serverManager = [[ServerManager alloc] init];
     self.serverManager.delegate = self;
@@ -254,7 +255,8 @@ static NSString *gender;
         [formater setDateFormat:@"MM-dd-yyyy"];
         self.txtAge.text = [formater stringFromDate:dateFromPicker];
     }else{
-        //self.txtState.text =
+        NSInteger selectedRow = [self.statePicker selectedRowInComponent:0];
+        self.txtState.text = [stateArray objectAtIndex:selectedRow];
     }
     self.datePickerView.hidden = YES;
 
@@ -421,6 +423,24 @@ static NSString *gender;
         
         return YES;
     }
+    
+    if ([textField isEqual:self.txtAutoState]) {
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            for (NSInteger i = 0; i < stateArray.count; i++) {
+                @autoreleasepool {
+                    NSString *state = [stateArray objectAtIndex:i];
+                    if ([state rangeOfString:textField.text options:NSCaseInsensitiveSearch].location == 0) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.statePicker selectRow:i inComponent:0 animated:YES];
+                        });
+                        break;
+                    }
+                }
+            }
+//        });
+        
+    }
+    
     return YES;
 }
 

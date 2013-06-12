@@ -19,6 +19,8 @@
 #import "AppDelegate.h"
 #import "PrivacySettingsViewController.h"
 #import "DigitzUtils.h"
+#import "TnCViewController.h"
+#import "DigitzActivity.h"
 
 //NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FBSessionStateChangedNotification";
 
@@ -110,6 +112,16 @@
 }
 
 - (IBAction)signOutBtnTapped:(id)sender {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kKey_UserToken];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kKey_DeviceToken];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"username"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kKey_UpdateAvailable];
+    [[DigitzUtils getRecentActivity] removeAllObjects];
+    /*
+     [userDefault setObject:[result objectForKey:@"user"] forKey:@"username"];
+     [userDefault setObject:[result objectForKey:@"available"] forKey:kKey_UpdateAvailable];
+     */
+    
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
@@ -203,6 +215,9 @@
 - (void)updateUserInformationWithParamsSuccess:(User *)user
 {
     [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    DigitzActivity *activity = [[DigitzActivity alloc] initWithDescription:@"Update your information"];
+    [DigitzUtils addActivity:activity];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self showToast:@"Update successfully"];
@@ -448,11 +463,11 @@
             break;
         case 3:
             cell.txtInfo.text = @"Terms & Conditions*";
-            if (self.agreeTermAndCondition) {
+//            if (self.agreeTermAndCondition) {
                 cell.imgCheckmark.hidden = NO;
-            }else{
-                cell.imgCheckmark.hidden = YES;
-            }
+//            }else{
+//                cell.imgCheckmark.hidden = YES;
+//            }
             break;
         default:
             break;
@@ -506,6 +521,11 @@
         case 3:
         {
             // terms & conditions
+            TnCViewController *vc = [[TnCViewController alloc] init];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
+            vc.parentVC = self;
+            
+            [self.navigationController pushViewController:vc animated:YES];
         }
             break;
         default:

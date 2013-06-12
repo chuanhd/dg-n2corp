@@ -11,8 +11,9 @@
 #import <FacebookSDK/FacebookSDK.h>
 #import "EnterYourDigitzViewController.h"
 #import <FacebookSDK/NSError+FBError.h>
-#import "UAirship.h"
-#import "UAPush.h"
+//#import "UAirship.h"
+//#import "UAPush.h"
+#import <Parse/Parse.h>
 
 NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FBSessionStateChangedNotification";
 
@@ -30,17 +31,26 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
     [self.window makeKeyAndVisible];
     [self.window makeKeyWindow];
     
+    [Parse setApplicationId:@"qce3UCAv0qrj26EY96K9HYe5otNvNxfB9T5JDdPj"
+                  clientKey:@"bPKy3MpOLaNcQG8kycOwAlAe3AEI21wvcFOMOcSb"];
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
 //    if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
 //        [self openSessionWithAllowLoginUI:YES];
 //    }
     
-    NSMutableDictionary *takeOffOptions = [NSMutableDictionary dictionary];
-    [takeOffOptions setValue:launchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
+//    NSMutableDictionary *takeOffOptions = [NSMutableDictionary dictionary];
+//    [takeOffOptions setValue:launchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
+//    
+//    [UAirship takeOff:takeOffOptions];
+//    
+//    //Register for notification
+//    [[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     
-    [UAirship takeOff:takeOffOptions];
-    
-    //Register for notification
-    [[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+    // Register for push notifications
+    [application registerForRemoteNotificationTypes:
+     UIRemoteNotificationTypeBadge |
+     UIRemoteNotificationTypeAlert |
+     UIRemoteNotificationTypeSound];
     
     return YES;
 }
@@ -71,7 +81,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    [UAirship land];
+//    [UAirship land];
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
@@ -89,15 +99,24 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-    NSString *deviceTk = [[[[deviceToken description]
-                            stringByReplacingOccurrencesOfString: @"<" withString: @""]
-                           stringByReplacingOccurrencesOfString: @">" withString: @""]
-                          stringByReplacingOccurrencesOfString: @" " withString: @""];
-    NSLog(@"Device Token: %@", deviceTk);
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:deviceTk forKey:@"deviceToken"];
-    
-    [[UAPush shared] registerDeviceToken:deviceToken];
+//    NSString *deviceTk = [[[[deviceToken description]
+//                            stringByReplacingOccurrencesOfString: @"<" withString: @""]
+//                           stringByReplacingOccurrencesOfString: @">" withString: @""]
+//                          stringByReplacingOccurrencesOfString: @" " withString: @""];
+//    NSLog(@"Device Token: %@", deviceTk);
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    [defaults setObject:deviceTk forKey:kKey_DeviceToken];
+//    
+//    [[UAPush shared] registerDeviceToken:deviceToken];
+    // Store the deviceToken in the current installation and save it to Parse.
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:deviceToken];
+    [currentInstallation saveInBackground];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    [PFPush handlePush:userInfo];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error

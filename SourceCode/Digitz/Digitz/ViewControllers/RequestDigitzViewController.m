@@ -9,6 +9,7 @@
 #import "RequestDigitzViewController.h"
 #import "MBProgressHUD.h"
 #import "DigitzUtils.h"
+#import "DigitzActivity.h"
 
 @interface RequestDigitzViewController ()
 
@@ -72,6 +73,10 @@
 
 - (void)sendFriendReqSuscess
 {
+    
+    DigitzActivity *activity = [[DigitzActivity alloc] initWithDescription:[NSString stringWithFormat:@"Send friend request to %@", requestUser.username]];
+    [DigitzUtils addActivity:activity];
+    
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     [DigitzUtils showToast:@"Request sent succesfully" inView:self.view];
 }

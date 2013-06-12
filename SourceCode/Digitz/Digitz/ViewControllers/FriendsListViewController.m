@@ -11,6 +11,8 @@
 #import "User.h"
 #import "ServerManager.h"
 #import "SocialHubViewController.h"
+#import "DigitzActivity.h"
+#import "DigitzUtils.h"
 
 @interface FriendsListViewController ()
 {
@@ -261,6 +263,10 @@
                 break;
         }
     }
+    
+    DigitzActivity *activity = [[DigitzActivity alloc] initWithDescription:[NSString stringWithFormat:@"View %@ information", user.username]];
+    [DigitzUtils addActivity:activity];
+    
     SocialHubViewController *vc = [[SocialHubViewController alloc] initWithNibName:nil bundle:nil];
     vc.user = user;
     [self.navigationController pushViewController:vc animated:YES];

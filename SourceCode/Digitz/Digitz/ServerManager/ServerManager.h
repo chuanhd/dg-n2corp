@@ -24,6 +24,7 @@
 #define PATH_ADDRESS_BOOK @"api/users/address_book"
 #define PATH_DECLINE_REQUEST @"api/users/decline_request"
 
+#define kKey_DeviceToken @"deviceToken"
 #define kKey_UserToken @"auth_token"
 #define kKey_UpdateUsername @"user[username]"
 #define kKey_UpdateEmail @"user[email]"
