@@ -9,6 +9,8 @@
 #import "RootViewController.h"
 #import "MainMenuViewController.h"
 #import "SignUpViewController.h"
+#import "ServerManager.h"
+#import "HomeScreenViewController.h"
 
 @interface RootViewController ()
 
@@ -29,8 +31,13 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = YES;
     
-    MainMenuViewController* vc = [[MainMenuViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:kKey_UserToken]) {
+        HomeScreenViewController *vc = [[HomeScreenViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }else{
+        MainMenuViewController* vc = [[MainMenuViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 - (void)viewDidLoad
