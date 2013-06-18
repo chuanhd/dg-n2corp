@@ -242,6 +242,8 @@
 		D99E6B061732CD8B00BF2F93 /* RequestDigitzViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D99E6B041732CD8B00BF2F93 /* RequestDigitzViewController.xib */; };
 		D99E6B0F1732D72300BF2F93 /* InstagramAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D99E6B0D1732D72300BF2F93 /* InstagramAuthViewController.m */; };
 		D99E6B101732D72300BF2F93 /* InstagramAuthViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D99E6B0E1732D72300BF2F93 /* InstagramAuthViewController.xib */; };
+		D99E7F93176F5963001CBE90 /* ForgotPwdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D99E7F91176F5963001CBE90 /* ForgotPwdViewController.m */; };
+		D99E7F94176F5963001CBE90 /* ForgotPwdViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D99E7F92176F5963001CBE90 /* ForgotPwdViewController.xib */; };
 		D9B2F479172C1B3F001DA599 /* PersonalInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B2F477172C1B3E001DA599 /* PersonalInfo.m */; };
 		D9B2F47A172C1B3F001DA599 /* PersonalInfo.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9B2F478172C1B3E001DA599 /* PersonalInfo.xib */; };
 		D9B2F48D172CED2A001DA599 /* states.plist in Resources */ = {isa = PBXBuildFile; fileRef = D9B2F48C172CED2A001DA599 /* states.plist */; };
@@ -848,6 +850,9 @@
 		D99E6B0C1732D72300BF2F93 /* InstagramAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstagramAuthViewController.h; sourceTree = "<group>"; };
 		D99E6B0D1732D72300BF2F93 /* InstagramAuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstagramAuthViewController.m; sourceTree = "<group>"; };
 		D99E6B0E1732D72300BF2F93 /* InstagramAuthViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InstagramAuthViewController.xib; sourceTree = "<group>"; };
+		D99E7F90176F5963001CBE90 /* ForgotPwdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForgotPwdViewController.h; sourceTree = "<group>"; };
+		D99E7F91176F5963001CBE90 /* ForgotPwdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForgotPwdViewController.m; sourceTree = "<group>"; };
+		D99E7F92176F5963001CBE90 /* ForgotPwdViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ForgotPwdViewController.xib; sourceTree = "<group>"; };
 		D9B2F476172C1B3E001DA599 /* PersonalInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonalInfo.h; sourceTree = "<group>"; };
 		D9B2F477172C1B3E001DA599 /* PersonalInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonalInfo.m; sourceTree = "<group>"; };
 		D9B2F478172C1B3E001DA599 /* PersonalInfo.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PersonalInfo.xib; sourceTree = "<group>"; };
@@ -1760,6 +1765,9 @@
 				D9026A791764E7AD00FBF651 /* DigitzActivityCell.m */,
 				D9026A7B1764E80000FBF651 /* DigitzActivity.h */,
 				D9026A7C1764E80000FBF651 /* DigitzActivity.m */,
+				D99E7F90176F5963001CBE90 /* ForgotPwdViewController.h */,
+				D99E7F91176F5963001CBE90 /* ForgotPwdViewController.m */,
+				D99E7F92176F5963001CBE90 /* ForgotPwdViewController.xib */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -3841,6 +3849,7 @@
 				D9026A701764D60600FBF651 /* DigitzActivityViewCell.xib in Resources */,
 				D9026A751764D77A00FBF651 /* TnCViewController.xib in Resources */,
 				D9026A771764DAA800FBF651 /* termcondition.html in Resources */,
+				D99E7F94176F5963001CBE90 /* ForgotPwdViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3998,6 +4007,7 @@
 				D9026A741764D77A00FBF651 /* TnCViewController.m in Sources */,
 				D9026A7A1764E7AD00FBF651 /* DigitzActivityCell.m in Sources */,
 				D9026A7D1764E80000FBF651 /* DigitzActivity.m in Sources */,
+				D99E7F93176F5963001CBE90 /* ForgotPwdViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
