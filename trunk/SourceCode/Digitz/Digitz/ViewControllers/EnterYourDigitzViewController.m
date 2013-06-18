@@ -302,7 +302,7 @@
 - (IBAction)btnContinueTapped:(id)sender {
     //[MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Registering..."];
     
-    if (!personalInfoFilled && agreeTermAndCondition) {
+    if (!personalInfoFilled || !agreeTermAndCondition) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must fill all required fields and agree terms and conditions" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
         return;

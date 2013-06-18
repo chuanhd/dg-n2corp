@@ -126,7 +126,7 @@ static id sharedReactor = nil;
 
 - (void)signInWithUsername: (NSString *)username andPassword: (NSString *)password {
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    NSString *dvToken = [userDefault objectForKey:@"deviceToken"];
+    NSString *dvToken = [userDefault objectForKey:kKey_DeviceToken];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:username, @"username", password, @"password", dvToken, @"user[device_udid]", nil];
     NSMutableURLRequest *request = [_httpClient requestWithMethod:@"POST" path:PATH_SIGNIN parameters:params];
     [request setTimeoutInterval:TIME_OUT];
@@ -158,7 +158,7 @@ static id sharedReactor = nil;
             case 2:
             {
                 [details setObject:@"Invalid password" forKey:NSLocalizedDescriptionKey];
-                NSError *err = [NSError errorWithDomain:@"Invalid password" code:2000 userInfo:details];
+                NSError *err = [NSError errorWithDomain:@"Invalid password" code:2001 userInfo:details];
                 if (_delegate && [_delegate respondsToSelector:@selector(signInFailedWithError:)]) {
                     [_delegate performSelector:@selector(signInFailedWithError:) withObject:err];
                 }
@@ -167,7 +167,7 @@ static id sharedReactor = nil;
                 
             default: {
                 [details setObject:@"Have a problem about service" forKey:NSLocalizedDescriptionKey];
-                NSError *err = [NSError errorWithDomain:@"Have a problem about service" code:2000 userInfo:details];
+                NSError *err = [NSError errorWithDomain:@"Have a problem about service" code:2002 userInfo:details];
                 if (_delegate && [_delegate respondsToSelector:@selector(signInFailedWithError:)]) {
                     [_delegate performSelector:@selector(signInFailedWithError:) withObject:err];
                 }
@@ -599,6 +599,35 @@ static id sharedReactor = nil;
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         if (_delegate && [_delegate respondsToSelector:@selector(updateUserAvatarFromLinkFailedWithError:)]) {
             [_delegate performSelector:@selector(updateUserAvatarFromLinkFailedWithError:) withObject:error];
+        }
+    }];
+    [operation start];
+}
+
+- (void)sentResetPasswordWithEmail:(NSString *)email
+{
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:email, @"email", nil];
+    NSMutableURLRequest *request = [_httpClient requestWithMethod:@"POST" path:PATH_RESET_PASSWORD parameters:params];
+    request.timeoutInterval = TIME_OUT;
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        NSDictionary *result = JSON;
+        NSString *status = [result objectForKey:@"status"];
+        if ([status isEqualToString:@"success"]) {
+            if (_delegate && [_delegate respondsToSelector:@selector(sentResetPasswordRequestSuccess)]) {
+                [_delegate performSelector:@selector(sentResetPasswordRequestSuccess)];
+            }
+        }
+        else {
+            NSError *error = nil;
+            NSDictionary *details = [[NSDictionary alloc] initWithObjectsAndKeys:@"Sent reset password failed", NSLocalizedDescriptionKey, nil];
+            error = [NSError errorWithDomain:@"Sent reset password failed" code:2000 userInfo:details];
+            if (_delegate && [_delegate respondsToSelector:@selector(sentResetPasswordRequestFailedWithError:)]) {
+                [_delegate performSelector:@selector(sentResetPasswordRequestFailedWithError:) withObject:error];
+            }
+        }
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        if (_delegate && [_delegate respondsToSelector:@selector(sentResetPasswordRequestFailedWithError:)]) {
+            [_delegate performSelector:@selector(sentResetPasswordRequestFailedWithError:) withObject:error];
         }
     }];
     [operation start];

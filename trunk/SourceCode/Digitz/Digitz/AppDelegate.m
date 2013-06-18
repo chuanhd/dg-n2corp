@@ -99,17 +99,18 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-//    NSString *deviceTk = [[[[deviceToken description]
-//                            stringByReplacingOccurrencesOfString: @"<" withString: @""]
-//                           stringByReplacingOccurrencesOfString: @">" withString: @""]
-//                          stringByReplacingOccurrencesOfString: @" " withString: @""];
-//    NSLog(@"Device Token: %@", deviceTk);
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    [defaults setObject:deviceTk forKey:kKey_DeviceToken];
-//    
+    NSString *deviceTk = [[[[deviceToken description]
+                            stringByReplacingOccurrencesOfString: @"<" withString: @""]
+                           stringByReplacingOccurrencesOfString: @">" withString: @""]
+                          stringByReplacingOccurrencesOfString: @" " withString: @""];
+    NSLog(@"Device Token: %@", deviceTk);
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:deviceTk forKey:kKey_DeviceToken];
+//
 //    [[UAPush shared] registerDeviceToken:deviceToken];
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    
     [currentInstallation setDeviceTokenFromData:deviceToken];
     [currentInstallation saveInBackground];
 }

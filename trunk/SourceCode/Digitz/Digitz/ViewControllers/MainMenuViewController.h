@@ -10,7 +10,7 @@
 #import "ServerManager.h"
 #import "BSKeyboardControls.h"
 
-@interface MainMenuViewController : UIViewController <ServerManagerDelegate, UITextFieldDelegate, BSKeyboardControlsDelegate>
+@interface MainMenuViewController : UIViewController <ServerManagerDelegate, UITextFieldDelegate, BSKeyboardControlsDelegate, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *txtUsername;
 @property (weak, nonatomic) IBOutlet UITextField *txtPassword;
 @property (strong, nonatomic) BSKeyboardControls *keyboardControls;
