@@ -12,7 +12,7 @@
 #import "User.h"
 #import "DigitzRequest.h"
 
-#define BASE_URL @"http://digitz.herokuapp.com/"
+#define BASE_URL @"http://198.199.65.105/"
 #define PATH_SIGNIN @"api/users/sign_in"
 #define PATH_SIGNUP @"api/users/sign_up"
 #define PATH_UPDATE_USER_INFO @"api/users/update_info"
@@ -23,6 +23,7 @@
 #define PATH_SEND_INFO @"api/users/send_info"
 #define PATH_ADDRESS_BOOK @"api/users/address_book"
 #define PATH_DECLINE_REQUEST @"api/users/decline_request"
+#define PATH_RESET_PASSWORD @"api/users/reset_password"
 
 #define kKey_DeviceToken @"deviceToken"
 #define kKey_UserToken @"auth_token"
@@ -112,6 +113,9 @@
 - (void) updateUserAvatarFromLinkSuccess:(User *)user;
 - (void) updateUserAvatarFromLinkFailedWithError:(NSError *)error;
 
+- (void) sentResetPasswordRequestSuccess;
+- (void) sentResetPasswordRequestFailedWithError:(NSError *)error;
+
 @end
 
 @interface ServerManager : NSObject
@@ -141,5 +145,6 @@
 - (void) declineFriendRequestWithRequestId:(NSString *)requestId;
 - (void) updateUserAvatarWithImage: (UIImage *)avatar;
 - (void) updateUserAvatarWithLinkImage: (NSString *)urlImage;
+- (void) sentResetPasswordWithEmail:(NSString *)email;
 
 @end

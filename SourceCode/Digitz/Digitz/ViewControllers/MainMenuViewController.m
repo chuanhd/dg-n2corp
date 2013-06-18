@@ -12,12 +12,16 @@
 #import "MBProgressHUD.h"
 #import "HomeScreenViewController.h"
 #import "PersonalInformationViewController.h"
+#import "ForgotPwdViewController.h"
 
 #define kUsernameOrPasswordNotFilled 0
 #define kPasswordTooShort 1
 #define kUsernameTooShort 2
 
 @interface MainMenuViewController ()
+{
+    ServerManager *server;
+}
 
 @end
 
@@ -75,7 +79,7 @@
         return;
     }
     
-    ServerManager *server = [ServerManager sharedInstance];
+    server = [ServerManager sharedInstance];
     server.delegate = self;
     [server signInWithUsername:self.txtUsername.text andPassword:self.txtPassword.text];
     
@@ -85,6 +89,9 @@
 - (void)signInSuccess
 {
     [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    NSString *deviceTk = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_DeviceToken];
+    [server updateUserInformationWithParams:[NSDictionary dictionaryWithObjectsAndKeys:deviceTk, kKey_UpdateUDID, nil]];
     
     HomeScreenViewController *vc = [[HomeScreenViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
@@ -97,8 +104,16 @@
     
     NSLog(@"error: %@", error);
     
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"An error occured" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
-    [alertView show];
+    if (error.code == 2001) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Password is incorrect" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:@"Forgot password", nil];
+        alertView.delegate = self;
+        [alertView show];
+    }else{
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"An error occured" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+        [alertView show];
+    }
+    
+    
 }
 
 - (IBAction)signupButtonTapped:(id)sender {
@@ -214,6 +229,26 @@
 //    [UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
 //    self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
 //    [UIView commitAnimations];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([alertView.message isEqualToString:@"Password is incorrect"]) {
+        switch (buttonIndex) {
+            case 0:
+                [alertView dismissWithClickedButtonIndex:buttonIndex animated:YES];
+                break;
+                
+            case 1:
+            {
+                ForgotPwdViewController *vc = [[ForgotPwdViewController alloc] initWithNibName:nil bundle:nil];
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 @end
