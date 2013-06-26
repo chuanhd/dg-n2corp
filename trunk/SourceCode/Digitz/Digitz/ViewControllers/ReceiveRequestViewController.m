@@ -111,6 +111,8 @@
         [DigitzUtils showToast:@"Friend request was accepted" inView:self.view];
         [self.navigationController popViewControllerAnimated:YES];
     });
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)acceptFriendFailWithError:(NSError *)error

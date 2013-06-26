@@ -83,6 +83,7 @@
 
 - (void) sendFriendReqFailWithError:(NSError *)error
 {
+    NSLog(@"Error: %@", error);
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Send request fail!" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     [alertView show];
