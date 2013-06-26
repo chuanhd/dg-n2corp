@@ -11,8 +11,6 @@
 #import <FacebookSDK/FacebookSDK.h>
 #import "EnterYourDigitzViewController.h"
 #import <FacebookSDK/NSError+FBError.h>
-//#import "UAirship.h"
-//#import "UAPush.h"
 #import <Parse/Parse.h>
 
 NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FBSessionStateChangedNotification";
@@ -31,20 +29,9 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
     [self.window makeKeyAndVisible];
     [self.window makeKeyWindow];
     
-    [Parse setApplicationId:@"qce3UCAv0qrj26EY96K9HYe5otNvNxfB9T5JDdPj"
-                  clientKey:@"bPKy3MpOLaNcQG8kycOwAlAe3AEI21wvcFOMOcSb"];
-    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-//    if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
-//        [self openSessionWithAllowLoginUI:YES];
-//    }
-    
-//    NSMutableDictionary *takeOffOptions = [NSMutableDictionary dictionary];
-//    [takeOffOptions setValue:launchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
-//    
-//    [UAirship takeOff:takeOffOptions];
-//    
-//    //Register for notification
-//    [[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+    [Parse setApplicationId:@"zRggiNwMxNACak6LM689tyGzMocS9gIdw4agBilH"
+                  clientKey:@"Ghn3wr2Jgpb0kTfVnibqlZbiNezRGaC5gG3XPoIS"];
+//    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
     // Register for push notifications
     [application registerForRemoteNotificationTypes:
@@ -81,7 +68,6 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-//    [UAirship land];
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation

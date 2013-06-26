@@ -100,7 +100,7 @@
         self.bestEffortLocation = newLocation;
         
         NSLog(@"lat: %f - lon: %f", newLocation.coordinate.latitude, newLocation.coordinate.longitude);
-        NSDictionary *param = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithLong:self.bestEffortLocation.coordinate.longitude],kKey_UpdateLocationLong, [NSNumber numberWithLong:self.bestEffortLocation.coordinate.latitude], kKey_UpdateLocationLat, nil];
+        NSDictionary *param = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:self.bestEffortLocation.coordinate.longitude],kKey_UpdateLocationLong, [NSNumber numberWithFloat:self.bestEffortLocation.coordinate.latitude], kKey_UpdateLocationLat, nil];
         [serverManager updateUserInformationWithParams:param];
         
         if (newLocation.horizontalAccuracy <= locationManager.desiredAccuracy) {
@@ -374,6 +374,8 @@
     [self.navigationController pushViewController:vc animated:YES];
 
     NSLog(@"select row: %d", indexPath.row);
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
 }
 

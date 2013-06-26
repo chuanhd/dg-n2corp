@@ -75,10 +75,10 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if ([_paramsDict objectForKey:kKey_UpdateImageData] != nil) {
-        __weak UIImage *image = [_paramsDict objectForKey:kKey_UpdateImageData];
-        [_serverManager updateUserAvatarWithImage:image];
-    }
+//    if ([_paramsDict objectForKey:kKey_UpdateImageData] != nil) {
+//        __weak UIImage *image = [_paramsDict objectForKey:kKey_UpdateImageData];
+//        [_serverManager updateUserAvatarWithImage:image];
+//    }
 }
 
 - (void)updateUserAvatarSuccessWithUser:(User *)user

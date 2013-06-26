@@ -246,10 +246,10 @@ static id sharedReactor = nil;
         newUser.gender = MALE;
     }
     if ([userDic objectForKey:@"id"] != nil) {
-        newUser.avatarUrl = [userDic objectForKey:@"id"];
+        newUser.userId = [userDic objectForKey:@"id"];
     }else{
         if ([userDic objectForKey:@"_id"] != nil) {
-            newUser.avatarUrl = [userDic objectForKey:@"_id"];
+            newUser.userId = [userDic objectForKey:@"_id"];
         }
     }
     newUser.birthday = [userDic objectForKey:@"birthday"];
@@ -269,7 +269,8 @@ static id sharedReactor = nil;
     //newUser.games_count = ([userDic objectForKey:@"games_count"] != (id)[NSNull null]) ? [[userDic objectForKey:@"games_count"] integerValue] : -1;
     //newUser.device_udid = [userDic objectForKey:@"device_udid"];
     if ([userDic objectForKey:@"avatar"] != nil) {
-        newUser.avatarUrl = [userDic objectForKey:@"avatar"];
+        NSMutableString *temp = [NSMutableString stringWithFormat:@"%@%@", BASE_URL, [userDic objectForKey:@"avatar"]];
+        newUser.avatarUrl = temp;
     }else{
         if ([userDic objectForKey:@"avatar_url"] != nil) {
             newUser.avatarUrl = [userDic objectForKey:@"avatar_url"];

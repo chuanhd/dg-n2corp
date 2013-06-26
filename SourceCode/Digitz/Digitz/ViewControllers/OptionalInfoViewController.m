@@ -67,6 +67,11 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
         
         if ([temp.paramsDict objectForKey:kKey_UpdateAvatar]) {
             [self showAvatarWithUrl:[temp.paramsDict objectForKey:kKey_UpdateAvatar]];
+        }else if ([temp.paramsDict objectForKey:kKey_UpdateImageData]){
+            __weak NSData *imageData = [temp.paramsDict objectForKey:kKey_UpdateImageData];
+            [self showAvatarWithData:imageData];
+        }else if ([temp.paramsDict objectForKey:kKey_UpdateRemoteAvatar]){
+            [self showAvatarWithUrl:[temp.paramsDict objectForKey:kKey_UpdateRemoteAvatar]];
         }
         
     }else if ([self.parentVC isKindOfClass:[ProfileViewController class]]){
@@ -80,6 +85,13 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
         
         if ([temp.paramsDict objectForKey:kKey_UpdateAvatar]) {
             [self showAvatarWithUrl:[temp.paramsDict objectForKey:kKey_UpdateAvatar]];
+        }else if ([temp.paramsDict objectForKey:kKey_UpdateImageData]){
+//            __weak NSData *imageData = [temp.paramsDict objectForKey:kKey_UpdateImageData];
+            __weak UIImage *image = [temp.paramsDict objectForKey:kKey_UpdateImageData];
+            self.imgAvatar.image = image;
+            //[self showAvatarWithData:imageData];
+        }else if ([temp.paramsDict objectForKey:kKey_UpdateRemoteAvatar]){
+            [self showAvatarWithUrl:[temp.paramsDict objectForKey:kKey_UpdateRemoteAvatar]];
         }
     }
     
@@ -366,6 +378,15 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         });
         
         imageUrl = nil;
+    });
+}
+
+- (void) showAvatarWithData:(NSData *)data
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (data != nil) {
+            self.imgAvatar.image = [UIImage imageWithData:data];
+        }
     });
 }
 

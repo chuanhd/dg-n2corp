@@ -316,6 +316,9 @@
     [self.paramsDict setObject:self.txtPassword.text forKey:kKey_UpdatePassword];
     //[self.paramsDict setObject:@"" forKey:kKey_UpdateEmail];
     
+    NSString *deviceTk = [[NSUserDefaults standardUserDefaults] objectForKey:kKey_DeviceToken];
+    [self.paramsDict setObject:deviceTk forKey:kKey_UpdateUDID];
+    
     for (NSString *key in self.paramsDict) {
         NSLog(@"key %@ - value %@", key, [self.paramsDict objectForKey:key]);
     }
