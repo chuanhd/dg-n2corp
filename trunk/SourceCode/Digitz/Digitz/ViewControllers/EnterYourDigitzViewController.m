@@ -17,7 +17,6 @@
 #import "GTLQueryPlus.h"
 #import "GTLPlusPerson.h"
 #import "InformationCell.h"
-#import "PersonalInfo.h"
 #import "LinkedinOAuthView.h"
 #import "OptionalInfoViewController.h"
 #import "PrivacySettingsViewController.h"
@@ -93,7 +92,7 @@
     
     accountStore = [[ACAccountStore alloc] init];
     
-    NSArray *fields = @[ self.txtUsername, self.txtPassword, self.txtConfirmPwd];
+    NSArray *fields = @[self.txtUsername, self.txtPassword, self.txtConfirmPwd];
     
     [self setKeyboardControls:[[BSKeyboardControls alloc] initWithFields:fields]];
     [self.keyboardControls setDelegate:self];
@@ -104,7 +103,7 @@
     instagramLinked = NO;
     linkedinLinked = NO;
 
-    self.scrollview.contentSize = CGSizeMake(320, 470);
+    self.scrollview.contentSize = CGSizeMake(320, 500);
 }
 
 
@@ -243,52 +242,54 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-            switch (indexPath.row) {
-                case 0:
-                {
-                    // personal information
-                    PersonalInformationViewController* vc = [[PersonalInformationViewController alloc] init];
-                    //PersonalInfo *vc = [[PersonalInfo alloc] init];
-                    vc.parentVC = self;
-                    
-                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
-                    
-                    [self.navigationController pushViewController:vc animated:YES];
-                }
-                    break;
-                case 1:
-                {
-                    // optional information
-                    OptionalInfoViewController *vc = [[OptionalInfoViewController alloc] init];
-                    vc.parentVC = self;
-                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
-                    
-                    [self.navigationController pushViewController:vc animated:YES];
-                }
-                    break;
-                case 2:
-                {
-                    // privacy settings
-                    PrivacySettingsViewController *vc = [[PrivacySettingsViewController alloc] init];
-                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
-                    vc.parentVC = self;
-                    
-                    [self.navigationController pushViewController:vc animated:YES];
-                }
-                    break;
-                case 3:
-                {
-                    // terms & conditions
-                    TnCViewController *vc = [[TnCViewController alloc] init];
-                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
-                    vc.parentVC = self;
-                    
-                    [self.navigationController pushViewController:vc animated:YES];
-                }
-                    break;
-                default:
-                    break;
-            }
+    switch (indexPath.row) {
+        case 0:
+        {
+            // personal information
+            PersonalInformationViewController* vc = [[PersonalInformationViewController alloc] init];
+            //PersonalInfo *vc = [[PersonalInfo alloc] init];
+            vc.parentVC = self;
+            
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
+            
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        case 1:
+        {
+            // optional information
+            OptionalInfoViewController *vc = [[OptionalInfoViewController alloc] init];
+            vc.parentVC = self;
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
+            
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        case 2:
+        {
+            // privacy settings
+            PrivacySettingsViewController *vc = [[PrivacySettingsViewController alloc] init];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
+            vc.parentVC = self;
+            
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        case 3:
+        {
+            // terms & conditions
+            TnCViewController *vc = [[TnCViewController alloc] init];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(personalInfoFilled:) name:@"personalInfoFilled" object:vc];
+            vc.parentVC = self;
+            
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        default:
+            break;
+    }
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 // Function to reload table view
@@ -347,6 +348,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveNotification:) name:FBSessionStateChangedNotification object:nil];
     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Connecting to Facebook..."];
+    
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     [appDelegate openSessionWithAllowLoginUI:YES];
 }
@@ -356,6 +359,8 @@
     if ([noti.name isEqualToString:FBSessionStateChangedNotification]) {
         
         [[NSNotificationCenter defaultCenter] removeObserver:self name:FBSessionStateChangedNotification object:nil];
+        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         
         if ([FBSession.activeSession isOpen]) {
             [self queryFBUserInfo];

@@ -51,7 +51,7 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
     self.mKeyboardControls = [[BSKeyboardControls alloc] initWithFields:fields];
     self.mKeyboardControls.delegate = self;
     
-    self.scrllViewFields.contentSize = CGSizeMake(304, 750);
+    self.scrllViewFields.contentSize = CGSizeMake(304, 720);
     
     avatarChanged = NO;
     

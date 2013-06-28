@@ -118,7 +118,7 @@ NSString *const FBSessionStateChangedNotification = @"com.n2corp.digitz.login:FB
     
     //NSArray *permissions = [NSArray arrayWithObjects:@"publish_stream", nil];
     
-    NSArray *permissions = [NSArray arrayWithObjects:@"email, user_location, user_birthday", nil];
+    NSArray *permissions = [NSArray arrayWithObjects:@"email", nil];
     
     //    return [FBSession openActiveSessionWithPublishPermissions:permissions
     //                                              defaultAudience:FBSessionDefaultAudienceFriends

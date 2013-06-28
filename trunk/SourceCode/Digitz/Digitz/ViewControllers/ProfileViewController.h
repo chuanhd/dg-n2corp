@@ -23,6 +23,7 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *facebookBtn;
 @property (weak, nonatomic) IBOutlet UITableView *infoTableView;
+@property (weak, nonatomic) IBOutlet UILabel *txtDigitzInfo;
 
 @property (strong, nonatomic) ServerManager *serverManager;
 @property (strong, nonatomic) NSMutableDictionary *paramsDict;

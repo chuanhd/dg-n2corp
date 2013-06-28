@@ -129,6 +129,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveNotification:) name:FBSessionStateChangedNotification object:nil];
     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Connecting to Facebook..."];
+    
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     [appDelegate openSessionWithAllowLoginUI:YES];
 }
@@ -137,6 +139,9 @@
 {
     if ([noti.name isEqualToString:FBSessionStateChangedNotification]) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:FBSessionStateChangedNotification object:nil];
+        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        
         if ([FBSession.activeSession isOpen]) {
             [self queryFBUserInfo];
         }
@@ -208,7 +213,7 @@
     
         hud.yOffset = 140.f;
 	hud.removeFromSuperViewOnHide = YES;
-	[hud hide:YES afterDelay:1.0f];
+	[hud hide:YES afterDelay:2.0f];
     hud = nil;
 }
 
@@ -220,7 +225,7 @@
     [DigitzUtils addActivity:activity];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self showToast:@"Update successfully"];
+        [DigitzUtils showToast:@"Update successfully" inView:self.view];
     });
     
     
@@ -231,7 +236,9 @@
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self showToast:@"Update fail"];
+        //[DigitzUtils showToast:@"Update fail" inView:self.view];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Update user information fail" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
     });
 }
 
@@ -241,6 +248,10 @@
     if (![user.name isEqual:[NSNull null]] && user.name != nil) {
         [_paramsDict setObject:user.name forKey:kKey_UpdateName];
     }
+    
+    NSInteger spacePos = [user.name rangeOfString:@" "].location;
+    
+    self.txtDigitzInfo.text = [NSString stringWithFormat:@"%@'s Digitz",[user.name substringToIndex:spacePos+1]];
     
     if (![user.email isEqual:[NSNull null]] && user.email != nil) {
         [_paramsDict setObject:user.email forKey:kKey_UpdateEmail];
@@ -531,6 +542,9 @@
         default:
             break;
     }
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
 }
 
 // Function to reload table view
