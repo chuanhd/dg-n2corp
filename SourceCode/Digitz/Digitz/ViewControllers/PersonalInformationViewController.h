@@ -12,7 +12,7 @@
 #import "BSKeyboardControls.h"
 
 @interface PersonalInformationViewController : UIViewController <UITextFieldDelegate, ServerManagerDelegate, UIPickerViewDataSource, UIPickerViewDelegate, BSKeyboardControlsDelegate>
-@property (strong, nonatomic) IBOutlet UITextField *txtName;
+@property (strong, nonatomic) IBOutlet UITextField *txtFirstName;
 @property (strong, nonatomic) IBOutlet UITextField *txtAge;
 @property (strong, nonatomic) IBOutlet UITextField *txtPhoneNumber;
 @property (strong, nonatomic) IBOutlet UITextField *txtEmail;
@@ -24,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet UIPickerView *statePicker;
 @property (weak, nonatomic) IBOutlet UITextField *txtState;
 @property (weak, nonatomic) IBOutlet UITextField *txtAutoState;
+@property (weak, nonatomic) IBOutlet UITextField *txtLastName;
 
 @property (strong, nonatomic) ServerManager *serverManager;
 //@property (strong, nonatomic) EnterYourDigitzViewController *parentVC;

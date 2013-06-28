@@ -40,7 +40,8 @@
     self.txtAge.delegate = self;
     self.txtEmail.delegate = self;
     self.txtHometown.delegate = self;
-    self.txtName.delegate = self;
+    self.txtFirstName.delegate = self;
+    self.txtLastName.delegate = self;
     self.txtPhoneNumber.delegate = self;
     self.txtState.delegate = self;
     self.txtAutoState.delegate = self;
@@ -58,7 +59,7 @@
     
     gender = @"male";
     
-    NSArray *fields = @[self.txtName, self.txtAge, self.txtPhoneNumber, self.txtEmail, self.txtHometown, self.txtState];
+    NSArray *fields = @[self.txtFirstName, self.txtLastName, self.txtAge, self.txtPhoneNumber, self.txtEmail, self.txtHometown, self.txtState];
     [self setKeyboardControls:[[BSKeyboardControls alloc] initWithFields:fields]];
     self.keyboardControls.delegate = self;
 
@@ -75,7 +76,7 @@
 }
 
 - (void)viewDidUnload {
-    [self setTxtName:nil];
+    [self setTxtFirstName:nil];
     [self setTxtAge:nil];
     [self setTxtPhoneNumber:nil];
     [self setTxtEmail:nil];
@@ -94,7 +95,7 @@
     [super viewWillAppear:animated];
     
     if ([self.parentVC isKindOfClass:[EnterYourDigitzViewController class]]) {
-        self.txtName.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateName];
+        self.txtFirstName.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateName];
         //self.txtAge.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateBirthday];
         self.txtEmail.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateEmail];
         self.txtHometown.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateHometown];
@@ -121,7 +122,7 @@
         self.txtPhoneNumber.text  = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdatePhone];
         self.txtState.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateState];
     }else if([self.parentVC isKindOfClass:[ProfileViewController class]]){
-        self.txtName.text = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateName];
+        self.txtFirstName.text = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateName];
         //self.txtAge.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateBirthday];
         self.txtEmail.text = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateEmail];
         self.txtHometown.text = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateHometown];
@@ -170,7 +171,7 @@ static NSString *gender;
 //    NSUserDefaults *df = [NSUserDefaults standardUserDefaults];
 //    NSString *token = [df objectForKey:kKey_UserToken];
     
-    if (self.txtName.text.length == 0 || self.txtAge.text.length == 0 || self.txtPhoneNumber.text.length == 0 || self.txtEmail.text.length == 0 || self.txtHometown.text.length == 0) {
+    if (self.txtFirstName.text.length == 0 || self.txtAge.text.length == 0 || self.txtPhoneNumber.text.length == 0 || self.txtEmail.text.length == 0 || self.txtHometown.text.length == 0 || self.txtLastName.text.length == 0) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must fill all required fields" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show];
         return;
@@ -180,8 +181,12 @@ static NSString *gender;
     //[self.parentVC.paramsDict setObject:token forKey:kKey_UserToken];
     
     if ([self.parentVC isKindOfClass:[EnterYourDigitzViewController class]]) {
-        [ ((EnterYourDigitzViewController *) self.parentVC).paramsDict setObject:self.txtName.text forKey:kKey_UpdateName];
+        [ ((EnterYourDigitzViewController *) self.parentVC).paramsDict setObject:[NSString stringWithFormat:@"%@ %@", self.txtFirstName.text, self.txtLastName.text] forKey:kKey_UpdateName];
+    }else if ([self.parentVC isKindOfClass:[ProfileViewController class]]){
+        [ ((ProfileViewController *) self.parentVC).paramsDict setObject:[NSString stringWithFormat:@"%@ %@", self.txtFirstName.text, self.txtLastName.text] forKey:kKey_UpdateName];
     }
+    
+    
     //[self.parentVC.paramsDict setObject:self.txtName.text forKey:kKey_UpdateName];
     NSString *birthday = self.txtAge.text;
     NSDateFormatter *formater = [[NSDateFormatter alloc] init];
@@ -302,9 +307,20 @@ static NSString *gender;
 		[UIView setAnimationDelegate: self];
 		[UIView setAnimationDuration: 0.25f];
 		[UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
-		self.view.frame = CGRectMake(0, -textField.frame.origin.y + 120, self.view.frame.size.width, self.view.frame.size.height);
+		self.view.frame = CGRectMake(0, -textField.frame.origin.y - 120, self.view.frame.size.width, self.view.frame.size.height);
 		[UIView commitAnimations];
 	}
+    
+    if ([textField isEqual:self.txtAutoState]) {
+        [self.view bringSubviewToFront:self.datePickerView];
+
+        [UIView beginAnimations: @"moveField" context: nil];
+		[UIView setAnimationDelegate: self];
+		[UIView setAnimationDuration: 0.25f];
+		[UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
+		self.datePickerView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+		[UIView commitAnimations];
+    }
 
 }
 
@@ -390,6 +406,8 @@ static NSString *gender;
 {
     self.txtState.text = [stateArray objectAtIndex:row];
     self.datePickerView.hidden = YES;
+    
+    [self.view endEditing:YES];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string

@@ -17,5 +17,6 @@
 
 - (IBAction)loginButtonTapped:(id)sender;
 - (IBAction)signupButtonTapped:(id)sender;
+- (IBAction)forgotPwdButtonTapped:(id)sender;
 
 @end

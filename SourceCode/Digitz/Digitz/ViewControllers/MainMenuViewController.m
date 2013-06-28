@@ -135,6 +135,11 @@
 //    }
 }
 
+- (IBAction)forgotPwdButtonTapped:(id)sender {
+    ForgotPwdViewController *vc = [[ForgotPwdViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 - (NSInteger) validateField
 {
     if (self.txtUsername.text.length == 0 || self.txtPassword.text.length == 0) {
