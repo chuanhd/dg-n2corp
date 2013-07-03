@@ -8,7 +8,7 @@
 
 #import "SocialHubViewController.h"
 
-@interface SocialHubViewController ()
+@interface SocialHubViewController () <UITableViewDelegate>
 {
     DigitzInfoViewController *digitzInfo;
     SocialInfoViewController *facebookInfo;
@@ -81,7 +81,9 @@
     
     twitterInfo = [[SocialInfoViewController alloc] initWithNibName:nil bundle:nil];
     twitterInfo.tag = @"twitter";
-    twitterInfo.socialLink = [NSString stringWithFormat:@"https://twitter.com/%@", _user.twitterUrl];
+    if (![_user.twitterUrl isEqual:[NSNull null]]) {
+        twitterInfo.socialLink = [NSString stringWithFormat:@"https://twitter.com/%@", _user.twitterUrl];
+    }
     NSLog(@"twitter social link: %@", twitterInfo.socialLink);
     twitterInfo.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Twitter" image:[UIImage imageNamed:@"icon-social-tw-grey.png"] tag:5];
     
@@ -132,6 +134,10 @@
 //    sixth.image = [UIImage imageNamed:@"icon-social-lnk-grey.png"];
     _tabBarController.delegate = self;
     [self.view addSubview:_tabBarController.view];
+    
+//    UITableView *tableView = (UITableView *) _tabBarController.moreNavigationController.topViewController.view;
+//    tableView.delegate = self;
+
 }
 
 -(IBAction) backToPreviousVC:(id)sender {
@@ -149,6 +155,11 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+//- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return indexPath;
+//}
 
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
