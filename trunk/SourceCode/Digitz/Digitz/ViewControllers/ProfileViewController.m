@@ -358,11 +358,11 @@
     }
     
     if (![user.priBus isEqual:[NSNull null]]) {
-        [self.paramsDict setObject:[DigitzUtils buildFieldsStringFromArray:user.priBus] forKey:kKey_PrivacyAcc];
+        [self.paramsDict setObject:[DigitzUtils buildFieldsStringFromArray:user.priBus] forKey:kKey_PrivacyBus];
     }
     
     if (![user.priFri isEqual:[NSNull null]]) {
-        [self.paramsDict setObject:[DigitzUtils buildFieldsStringFromArray:user.priFri] forKey:kKey_PrivacyAcc];
+        [self.paramsDict setObject:[DigitzUtils buildFieldsStringFromArray:user.priFri] forKey:kKey_PrivacyFri];
     }
     
     [MBProgressHUD hideHUDForView:self.view animated:YES];

@@ -9,7 +9,7 @@
 #import "SocialInfoViewController.h"
 #import "DigitzUtils.h"
 
-@interface SocialInfoViewController ()
+@interface SocialInfoViewController () <UIAlertViewDelegate>
 
 @end
 
@@ -48,10 +48,20 @@
     }
     
     self.webViewSocialNetwork.delegate = self;
-    if(self.socialLink != nil){
+    if(self.socialLink != nil && ![self.socialLink isEqual:[NSNull null]]){
         NSURL *socialUrl = [NSURL URLWithString:self.socialLink];
         NSURLRequest *request = [NSURLRequest requestWithURL:socialUrl];
         [self.webViewSocialNetwork loadRequest:request];
+    }else{
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"This information is not shared for you" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alertView show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([alertView.title isEqualToString:@"This information is not shared for you"]) {
+        //[self.navigationController popViewControllerAnimated:YES];
     }
 }
 
