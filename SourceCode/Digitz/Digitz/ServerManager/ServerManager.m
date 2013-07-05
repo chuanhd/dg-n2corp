@@ -273,7 +273,8 @@ static id sharedReactor = nil;
         newUser.avatarUrl = temp;
     }else{
         if ([userDic objectForKey:@"avatar_url"] != nil) {
-            newUser.avatarUrl = [userDic objectForKey:@"avatar_url"];
+            NSMutableString *temp = [NSMutableString stringWithFormat:@"%@%@", BASE_URL, [userDic objectForKey:@"avatar_url"]];
+            newUser.avatarUrl = temp;
         }
     }
     newUser.state = [userDic objectForKey:@"state"];
@@ -493,7 +494,7 @@ static id sharedReactor = nil;
         NSLog(@"result: %@", result);
         
         if ([[result objectForKey:@"success"] boolValue] == YES) {
-            if (_delegate && [_delegate respondsToSelector:@selector(acceptFriendSuccessful:)]) {
+            if (_delegate && [_delegate respondsToSelector:@selector(acceptFriendSuccessful)]) {
                 [_delegate performSelector:@selector(acceptFriendSuccessful)];
             }
         }else{

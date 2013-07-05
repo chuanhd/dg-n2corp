@@ -542,7 +542,6 @@
 								<string key="NSFrame">{{15, 660}, {274, 44}}</string>
 								<reference key="NSSuperview" ref="1012513258"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -912,10 +911,15 @@
 					<string key="className">OptionalInfoViewController</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="avatarTapped:">UITapGestureRecognizer</string>
 						<string key="backBtnTapped:">id</string>
 						<string key="saveBtnTapped:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="avatarTapped:">
+							<string key="name">avatarTapped:</string>
+							<string key="candidateClassName">UITapGestureRecognizer</string>
+						</object>
 						<object class="IBActionInfo" key="backBtnTapped:">
 							<string key="name">backBtnTapped:</string>
 							<string key="candidateClassName">id</string>

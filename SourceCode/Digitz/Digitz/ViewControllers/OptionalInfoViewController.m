@@ -240,7 +240,7 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
     NSLog(@"frame: %f", textField.superview.frame.origin.y);
     
     if (textField.superview.frame.origin.y > 80) {
-        CGRect rect = CGRectMake(textField.frame.origin.x, textField.frame.origin.y, self.scrllViewFields.frame.size.width, 575 - textField.superview.frame.origin.y);
+        CGRect rect = CGRectMake(textField.frame.origin.x, textField.frame.origin.y - 20, self.scrllViewFields.frame.size.width, 575 - textField.superview.frame.origin.y);
         NSLog(@"scroll to rect: %@", NSStringFromCGRect(rect));
         [self.scrllViewFields scrollRectToVisible:rect animated:YES];
     }
@@ -254,7 +254,7 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
     NSLog(@"frame: %f", textView.frame.origin.y);
     
     if (textView.superview.frame.origin.y > 80) {
-        CGRect rect = CGRectMake(textView.frame.origin.x, textView.frame.origin.y, self.scrllViewFields.frame.size.width, self.scrllViewFields.contentSize.height - textView.superview.frame.origin.y);
+        CGRect rect = CGRectMake(textView.frame.origin.x, textView.frame.origin.y - 20, self.scrllViewFields.frame.size.width, self.scrllViewFields.contentSize.height - textView.superview.frame.origin.y);
         NSLog(@"scroll to rect: %@", NSStringFromCGRect(rect));
         [self.scrllViewFields scrollRectToVisible:rect animated:YES];
     }

@@ -34,7 +34,7 @@
 #define kKey_UpdateUDID @"user[device_udid]"
 #define kKey_UpdateAge @"user[age]"
 #define kKey_UpdateGender @"user[gender]"
-#define kKey_UpdatePhone @"user[phone]"
+#define kKey_UpdatePhone @"user[phone_number]"
 #define kKey_UpdateHometown @"user[hometown]"
 #define kKey_UpdateBirthday @"user[birthday]"
 #define kKey_UpdateBlogUrl @"user[blog_url]"
