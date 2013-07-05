@@ -98,12 +98,16 @@
 - (IBAction)acceptBtnTapped:(id)sender {
     
     NSLog(@"fields: %@", [self buildFieldsString]);
-        
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Request to server..."];
+    
     [serverManager acceptFriendRequestWithFriendUsername:self.request.sender.username withFields:[self buildFieldsString] withType:kKey_FamilyType];
 }
 
 - (void)acceptFriendSuccessful
 {
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
     DigitzActivity *activity = [[DigitzActivity alloc] initWithDescription:[NSString stringWithFormat:@"Accept %@ friend request.", self.request.sender.username]];
     [DigitzUtils addActivity:activity];
     
@@ -117,16 +121,24 @@
 
 - (void)acceptFriendFailWithError:(NSError *)error
 {
+    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Accept friend failed" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     [alertView show];
 }
 
 - (IBAction)declineBtnTapped:(id)sender {
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Request to server..."];
+    
     [serverManager declineFriendRequestWithRequestId:_request.requestId];
 }
 
 - (void)declineFriendSuccessful
 {
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+
     
     DigitzActivity *activity = [[DigitzActivity alloc] initWithDescription:[NSString stringWithFormat:@"Decline %@ friend request.", self.request.sender.username]];
     [DigitzUtils addActivity:activity];
@@ -138,6 +150,9 @@
 
 - (void)declineFriendFailWithError:(NSError *)error
 {
+    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Decline friend request failed" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     [alertView show];
 }

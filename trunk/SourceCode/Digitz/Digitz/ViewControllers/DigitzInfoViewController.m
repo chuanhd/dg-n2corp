@@ -45,6 +45,24 @@
     self.lblMobilePhone.text = ![_user.phoneNumber isEqual:[NSNull null]] ? _user.phoneNumber : @"N/A";
     self.lblOrganization.text = ![_user.company isEqual:[NSNull null]] ? _user.company : @"N/A";
     self.lblPersonalBio.text = ![_user.bio isEqual:[NSNull null]] ? _user.bio : @"N/A";
+    
+    if (_user.avatarUrl != nil && ![_user.avatarUrl isEqual:[NSNull null]]) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            
+            NSURL *imageUrl = [NSURL URLWithString:_user.avatarUrl];
+            __block NSData *imageData = [NSData dataWithContentsOfURL:imageUrl];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // update image
+                if (imageData != nil) {
+                    self.imgAvatar.image = [UIImage imageWithData:imageData];
+                    imageData = nil;
+                }
+            });
+            
+            imageUrl = nil;
+        });
+    }
 }
 
 - (void)didReceiveMemoryWarning

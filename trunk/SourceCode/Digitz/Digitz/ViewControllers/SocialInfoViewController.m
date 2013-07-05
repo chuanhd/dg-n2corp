@@ -47,6 +47,13 @@
         //self.title = @"Instagram";
     }
     
+
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
     self.webViewSocialNetwork.delegate = self;
     if(self.socialLink != nil && ![self.socialLink isEqual:[NSNull null]]){
         NSURL *socialUrl = [NSURL URLWithString:self.socialLink];

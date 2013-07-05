@@ -95,7 +95,13 @@
     [super viewWillAppear:animated];
     
     if ([self.parentVC isKindOfClass:[EnterYourDigitzViewController class]]) {
-        self.txtFirstName.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateName];
+        
+        __weak NSString *fullname = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateName];
+        NSInteger lastSpace = [fullname rangeOfString:@" " options:NSBackwardsSearch].location;
+        self.txtFirstName.text = [fullname substringToIndex:lastSpace];
+        self.txtLastName.text = [fullname substringFromIndex:lastSpace+1];
+        
+//        self.txtFirstName.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateName];
         //self.txtAge.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateBirthday];
         self.txtEmail.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateEmail];
         self.txtHometown.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateHometown];
@@ -122,7 +128,12 @@
         self.txtPhoneNumber.text  = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdatePhone];
         self.txtState.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateState];
     }else if([self.parentVC isKindOfClass:[ProfileViewController class]]){
-        self.txtFirstName.text = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateName];
+        
+        __weak NSString *fullname = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateName];
+        NSInteger lastSpace = [fullname rangeOfString:@" " options:NSBackwardsSearch].location;
+        self.txtFirstName.text = [fullname substringToIndex:lastSpace];
+        self.txtLastName.text = [fullname substringFromIndex:lastSpace+1];
+        
         //self.txtAge.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateBirthday];
         self.txtEmail.text = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateEmail];
         self.txtHometown.text = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateHometown];
