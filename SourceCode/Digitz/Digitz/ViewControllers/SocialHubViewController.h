@@ -14,9 +14,10 @@
 
 @interface SocialHubViewController : UIViewController <UITabBarControllerDelegate, UINavigationControllerDelegate>
 
-@property (strong, nonatomic) CustomTabBarViewController *tabBarController;
+@property (strong, nonatomic) UITabBarController *tabBarController;
 @property (strong, nonatomic) User *user;
 @property (weak, nonatomic) IBOutlet UILabel *lblUsername;
+@property (weak, nonatomic) IBOutlet UIView *topBarView;
 
 -(IBAction) backToPreviousVC:(id)sender;
 

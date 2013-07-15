@@ -75,6 +75,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    if ([self.paramsDict objectForKey:kKey_UpdateFirstName] && ![[self.paramsDict objectForKey:kKey_UpdateFirstName] isEqual:[NSNull null]]) {
+        self.txtDigitzInfo.text = [NSString stringWithFormat:@"%@'s Digitz", [self.paramsDict objectForKey:kKey_UpdateFirstName]];
+    }
+    
 //    if ([_paramsDict objectForKey:kKey_UpdateImageData] != nil) {
 //        __weak UIImage *image = [_paramsDict objectForKey:kKey_UpdateImageData];
 //        [_serverManager updateUserAvatarWithImage:image];
@@ -129,7 +134,9 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveNotification:) name:FBSessionStateChangedNotification object:nil];
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Connecting to Facebook..."];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Connecting to Facebook..."];
+    });
     
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     [appDelegate openSessionWithAllowLoginUI:YES];
@@ -140,7 +147,9 @@
     if ([noti.name isEqualToString:FBSessionStateChangedNotification]) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:FBSessionStateChangedNotification object:nil];
         
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+        });
         
         if ([FBSession.activeSession isOpen]) {
             [self queryFBUserInfo];
@@ -245,13 +254,15 @@
 #pragma mark ServerManager delegate
 - (void)getUserInformationSuccessWithUser:(User *)user
 {
-    if (![user.name isEqual:[NSNull null]] && user.name != nil) {
-        [_paramsDict setObject:user.name forKey:kKey_UpdateName];
+    if (![user.firstName isEqual:[NSNull null]] && user.firstName != nil) {
+        [_paramsDict setObject:user.firstName forKey:kKey_UpdateFirstName];
     }
     
-    NSInteger spacePos = [user.name rangeOfString:@" "].location;
-    
-    self.txtDigitzInfo.text = [NSString stringWithFormat:@"%@'s Digitz",[user.name substringToIndex:spacePos+1]];
+    if (![user.lastName isEqual:[NSNull null]] && user.lastName != nil) {
+        [_paramsDict setObject:user.lastName forKey:kKey_UpdateLastName];
+    }
+        
+    self.txtDigitzInfo.text = [NSString stringWithFormat:@"%@'s Digitz",user.firstName];
     
     if (![user.email isEqual:[NSNull null]] && user.email != nil) {
         [_paramsDict setObject:user.email forKey:kKey_UpdateEmail];
@@ -560,6 +571,8 @@
 {
     //FBRequest *fbRequest = [FBRequest requestForMe];
     
+    NSLog(@"Fetching user data");
+    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Fetching user data"];
     
     //    [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection,
@@ -577,7 +590,7 @@
     
     //FBRequest *fbRequest = [FBRequest requestWithGraphPath:@"me?fields=picture,email,hometown,first_name,last_name,location,gender,birthday,link" parameters:nil HTTPMethod:@"GET"];
     
-    FBRequest *fbRequest = [FBRequest requestWithGraphPath:@"me?fields=link,picture" parameters:nil HTTPMethod:@"GET"];
+    FBRequest *fbRequest = [FBRequest requestWithGraphPath:@"me?fields=link,picture.width(200).height(200)" parameters:nil HTTPMethod:@"GET"];
     
     
     [fbRequest startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary *result, NSError *error){
@@ -587,13 +600,14 @@
         if (error) {
             NSLog(@"Query FB user info: %@", error);
         }else{
-            
+                        
             [self.paramsDict setObject:[result objectForKey:@"link"] forKey:kKey_UpdateFacebookUrl];
             
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"Your Facebook account are linked" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [alert show];
             dispatch_async(dispatch_get_main_queue(), ^{
                 //facebookLinked = YES;
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"Your Facebook account are linked" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert show];
+                
                 [self.facebookBtn setImage:[UIImage imageNamed:@"icon-fb-r-green.png"] forState:UIControlStateNormal];
             });
             
@@ -601,6 +615,9 @@
             avatarUrlData = [avatarUrlData objectForKey:@"data"];
             NSString *urlString = [avatarUrlData objectForKey:@"url"];
             [self.paramsDict setObject:urlString forKey:kKey_UpdateRemoteAvatar];
+            
+            NSLog(@"Query FB info successful with link: %@ - with avatarUrl: %@", [result objectForKey:@"link"], urlString);
+
             
             //            for (NSString *key in result) {
             //                NSLog(@"key: %@ -> value: %@", key, [result objectForKey:key]);
@@ -679,10 +696,12 @@
                         NSLog(@"Avatar url: %@", person.image.url);
                         NSLog(@"Profile url: %@", person.url);
                         [self.paramsDict setObject:person.url forKey:kKey_UpdateGooglePlusUrl];
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"Your google+ account are linked" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                        [alert show];
                         dispatch_async(dispatch_get_main_queue(), ^{
                             //googleLinked = YES;
+                            
+                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"Your google+ account are linked" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                            [alert show];
+                            
                             [self.googleBtn setImage:[UIImage imageNamed:@"icon-gg-r-green.png"] forState:UIControlStateNormal];
                         });
                     }
@@ -709,7 +728,14 @@
     if ([self userHasAccessToTwitter]) {
         ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
         
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Fetching Twitter info"];
+        
         [accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+            });
+            
             if(granted) {
                 NSArray *accountsArray = [accountStore accountsWithAccountType:accountType];
                 
@@ -722,6 +748,10 @@
                     [self.paramsDict setObject:twitterAccount.username forKey:kKey_UpdateTwitterUrl];
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:[NSString stringWithFormat:@"Your Twitter account is linked with username: %@", twitterAccount.username] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                        [alert show];
+                        
                         //twitterLinked = YES;
                         [self.twitterBtn setImage:[UIImage imageNamed:@"icon-tw-r-green.png"] forState:UIControlStateNormal];
                     });
@@ -785,6 +815,10 @@
         }];
         
     }
+    else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You cannot connect to Twitter right now. Please check your Twitter account in Setting>Twitter" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+    }
     
 }
 
@@ -808,6 +842,10 @@
         [self.paramsDict setObject:[url objectForKey:@"url"] forKey:kKey_UpdateLinkedLnUrl];
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:[NSString stringWithFormat:@"Your Linkedln account is linked with profile: %@", [url objectForKey:@"url"]] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert show];
+            
             //linkedinLinked = YES;
             [self.linkedlnBtn setImage:[UIImage imageNamed:@"icon-lnk-r-green.png"] forState:UIControlStateNormal];
             
@@ -836,6 +874,10 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             //instagramLinked = YES;
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:[NSString stringWithFormat:@"Your Instagram account is linked with username: %@", urlString] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert show];
+            
             [self.instagramBtn setImage:[UIImage imageNamed:@"icon-ins-r-green.png"] forState:UIControlStateNormal];
             
         });

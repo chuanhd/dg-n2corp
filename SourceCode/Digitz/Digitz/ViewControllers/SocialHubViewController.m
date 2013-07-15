@@ -34,9 +34,9 @@
     return self;
 }
 
-- (void)viewDidLoad
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidLoad];
+    [super viewWillAppear:animated];
     // Do any additional setup after loading the view from its nib.
     
 //    [self.navigationController setNavigationBarHidden:NO animated:NO];
@@ -48,11 +48,24 @@
 //    [backButton addTarget:self action:@selector(backToPreviousVC:) forControlEvents:UIControlEventTouchUpInside];
 //    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     
-    if (_user.name != nil && ![_user.name isEqual:[NSNull null]]) {
-        self.lblUsername.text = _user.name;
+    if (![_user.firstName isEqual:[NSNull null]]) {
+        
+        NSMutableString *fullName = [NSMutableString stringWithString:_user.firstName];
+        
+        if (![_user.lastName isEqual:[NSNull null]]) {
+            [fullName appendFormat:@" %@", _user.lastName];
+        }
+        
+        self.lblUsername.text = fullName;
     }else{
-        if (_user.username != nil && ![_user.username isEqual:[NSNull null]]) {
-            self.lblUsername.text = _user.username;
+        if (![_user.lastName isEqual:[NSNull null]]) {
+            self.lblUsername.text = _user.lastName;
+        }else{
+            if(![_user.username isEqual:[NSNull null]]){
+                self.lblUsername.text = _user.username;
+            }else{
+                self.lblUsername.text = @"Error";
+            }
         }
     }
     
@@ -120,7 +133,8 @@
     UITabBarItem *forth = [_tabBarController.tabBar.items objectAtIndex:3];
     forth.image = [UIImage imageNamed:@"icon-social-tw-grey.png"];
     
-    _tabBarController.moreNavigationController.navigationBar.hidden = YES;
+    _tabBarController.moreNavigationController.navigationBar.hidden = NO;
+    _tabBarController.moreNavigationController.navigationBar.tintColor = [UIColor blackColor];
 //    _tabBarController.moreNavigationController.navigationBar.topItem.rightBarButtonItem
 
 //    UITableView *moreTableView = (UITableView *) _tabBarController.moreNavigationController.topViewController.view;
@@ -171,10 +185,45 @@
             [alertView show];
             return NO;
         }else{
+            
+            self.topBarView.hidden = NO;
+            _tabBarController.moreNavigationController.navigationBar.hidden = YES;
+            _tabBarController.moreNavigationController.navigationBar.tintColor = [UIColor blackColor];
+            _tabBarController.view.frame = CGRectMake(0, 44, 320, 416);
+            
             return YES;
         }
+    }else if([viewController isKindOfClass:[DigitzInfoViewController class]]){
+        self.topBarView.hidden = NO;
+        _tabBarController.moreNavigationController.navigationBar.hidden = YES;
+        _tabBarController.moreNavigationController.navigationBar.tintColor = [UIColor blackColor];
+        _tabBarController.view.frame = CGRectMake(0, 44, 320, 416);
+    }else{
+        self.topBarView.hidden = YES;
+        _tabBarController.moreNavigationController.navigationBar.hidden = NO;
+        _tabBarController.moreNavigationController.navigationBar.tintColor = [UIColor blackColor];
+        _tabBarController.view.frame = CGRectMake(0, 0, 320, 460);
     }
     return YES;
+}
+
+- (void)tabBarController:(UITabBarController *)tabBarController willBeginCustomizingViewControllers:(NSArray *)viewControllers
+{
+    NSLog(@"will begin");
+    self.topBarView.hidden = YES;
+    _tabBarController.view.frame = CGRectMake(0, 0, 320, 460);
+    
+    UIView *editView = [tabBarController.view.subviews objectAtIndex:1];
+    UINavigationBar *modalBar = [editView.subviews objectAtIndex:0];
+    modalBar.tintColor = [UIColor blackColor];
+    
+}
+
+- (void)tabBarController:(UITabBarController *)tabBarController willEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed
+{
+    NSLog(@"will end");
+//    self.topBarView.hidden = NO;
+//    _tabBarController.view.frame = CGRectMake(0, 44, 320, 416);
 }
 
 

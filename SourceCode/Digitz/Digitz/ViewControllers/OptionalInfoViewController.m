@@ -65,11 +65,12 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
         self.txtAlterPhoneNo.text = [temp.paramsDict objectForKey:kKey_UpdateAlterPhone];
         self.txtPersonalBio.text = [temp.paramsDict objectForKey:kKey_UpdatePersonalBio];
         
-        if ([temp.paramsDict objectForKey:kKey_UpdateAvatar]) {
-            [self showAvatarWithUrl:[temp.paramsDict objectForKey:kKey_UpdateAvatar]];
-        }else if ([temp.paramsDict objectForKey:kKey_UpdateImageData]){
+        if ([temp.paramsDict objectForKey:kKey_UpdateImageData]){
             __weak NSData *imageData = [temp.paramsDict objectForKey:kKey_UpdateImageData];
             [self showAvatarWithData:imageData];
+        }
+        else if ([temp.paramsDict objectForKey:kKey_UpdateAvatar]) {
+            [self showAvatarWithUrl:[temp.paramsDict objectForKey:kKey_UpdateAvatar]];
         }else if ([temp.paramsDict objectForKey:kKey_UpdateRemoteAvatar]){
             [self showAvatarWithUrl:[temp.paramsDict objectForKey:kKey_UpdateRemoteAvatar]];
         }
@@ -83,14 +84,23 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
         self.txtAlterPhoneNo.text = [temp.paramsDict objectForKey:kKey_UpdateAlterPhone];
         self.txtPersonalBio.text = [temp.paramsDict objectForKey:kKey_UpdatePersonalBio];
         
-        if ([temp.paramsDict objectForKey:kKey_UpdateAvatar]) {
-            [self showAvatarWithUrl:[temp.paramsDict objectForKey:kKey_UpdateAvatar]];
-        }else if ([temp.paramsDict objectForKey:kKey_UpdateImageData]){
-//            __weak NSData *imageData = [temp.paramsDict objectForKey:kKey_UpdateImageData];
+        
+        if ([temp.paramsDict objectForKey:kKey_UpdateImageData]){
+            
+            NSLog(@"Have image data");
+            
             __weak UIImage *image = [temp.paramsDict objectForKey:kKey_UpdateImageData];
             self.imgAvatar.image = image;
             //[self showAvatarWithData:imageData];
+        }else if ([temp.paramsDict objectForKey:kKey_UpdateAvatar]) {
+            
+            NSLog(@"Have image url: %@", [temp.paramsDict objectForKey:kKey_UpdateAvatar]);
+            
+            [self showAvatarWithUrl:[temp.paramsDict objectForKey:kKey_UpdateAvatar]];
         }else if ([temp.paramsDict objectForKey:kKey_UpdateRemoteAvatar]){
+            
+            NSLog(@"Have image url: %@", [temp.paramsDict objectForKey:kKey_UpdateRemoteAvatar]);
+            
             [self showAvatarWithUrl:[temp.paramsDict objectForKey:kKey_UpdateRemoteAvatar]];
         }
     }
@@ -253,10 +263,19 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
     
     NSLog(@"frame: %f", textView.frame.origin.y);
     
-    if (textView.superview.frame.origin.y > 80) {
-        CGRect rect = CGRectMake(textView.frame.origin.x, textView.frame.origin.y - 20, self.scrllViewFields.frame.size.width, self.scrllViewFields.contentSize.height - textView.superview.frame.origin.y);
-        NSLog(@"scroll to rect: %@", NSStringFromCGRect(rect));
-        [self.scrllViewFields scrollRectToVisible:rect animated:YES];
+    if (textView.frame.origin.y < 380) {
+//        CGRect rect = CGRectMake(textView.frame.origin.x, textView.frame.origin.y - 20, self.scrllViewFields.frame.size.width, self.scrllViewFields.contentSize.height - textView.superview.frame.origin.y);
+//        NSLog(@"scroll to rect: %@", NSStringFromCGRect(rect));
+//        
+//        [self.scrllViewFields scrollRectToVisible:rect animated:YES];
+        
+        [UIView beginAnimations: @"moveField" context: nil];
+		[UIView setAnimationDelegate: self];
+		[UIView setAnimationDuration: 0.25f];
+		[UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
+		self.view.frame = CGRectMake(0, -120, self.view.frame.size.width, self.view.frame.size.height);
+                
+		[UIView commitAnimations];
     }
     
     if ([textView.text isEqualToString:kPlaceholderPostMessage]) {
@@ -276,7 +295,14 @@ NSString * const kPlaceholderPostMessage = @"[Your personal bio]";
     if ([textView.text isEqualToString:@""]) {
         [self resetYourBioTextView];
     }
-}
+    
+    [UIView beginAnimations: @"moveField" context: nil];
+    [UIView setAnimationDelegate: self];
+    [UIView setAnimationDuration: 0.25f];
+    [UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
+    self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    
+    [UIView commitAnimations];}
 
 - (void)keyboardControls:(BSKeyboardControls *)keyboardControls selectedField:(UIView *)field inDirection:(BSKeyboardControlsDirection)direction
 {
@@ -364,6 +390,10 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 
 - (void) showAvatarWithUrl:(NSString *)urlString
 {
+    
+    self.loadingView.hidden = NO;
+    [self.loadingView startAnimating];
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
 
         NSURL *imageUrl = [NSURL URLWithString:urlString];
@@ -372,6 +402,10 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         dispatch_async(dispatch_get_main_queue(), ^{
             // update image
             if (imageData != nil) {
+                
+                self.loadingView.hidden = YES;
+                [self.loadingView stopAnimating];
+                
                 self.imgAvatar.image = [UIImage imageWithData:imageData];
                 imageData = nil;
             }

@@ -231,7 +231,8 @@ static id sharedReactor = nil;
 - (User *)userFromDictionary: (NSDictionary *)userDic {
     User *newUser = [[User alloc] init];
     newUser.username = [userDic objectForKey:@"username"];
-    newUser.name = [userDic objectForKey:@"name"];
+    newUser.firstName = [userDic objectForKey:@"first_name"];
+    newUser.lastName = [userDic objectForKey:@"last_name"];
     newUser.email = [userDic objectForKey:@"email"];
     //newUser.age = [userDic objectForKey:@"age"];
     newUser.phoneNumber = [userDic objectForKey:@"phone_number"];
@@ -268,11 +269,11 @@ static id sharedReactor = nil;
     //newUser.facebook_token = [userDic objectForKey:@"facebook_token"];
     //newUser.games_count = ([userDic objectForKey:@"games_count"] != (id)[NSNull null]) ? [[userDic objectForKey:@"games_count"] integerValue] : -1;
     //newUser.device_udid = [userDic objectForKey:@"device_udid"];
-    if ([userDic objectForKey:@"avatar"] != nil) {
+    if ([userDic objectForKey:@"avatar"] != nil && ![[userDic objectForKey:@"avatar"] isEqual:[NSNull null]]) {
         NSMutableString *temp = [NSMutableString stringWithFormat:@"%@%@", BASE_URL, [userDic objectForKey:@"avatar"]];
         newUser.avatarUrl = temp;
     }else{
-        if ([userDic objectForKey:@"avatar_url"] != nil) {
+        if ([userDic objectForKey:@"avatar_url"] != nil  && ![[userDic objectForKey:@"avatar_url"] isEqual:[NSNull null]]) {
             NSMutableString *temp = [NSMutableString stringWithFormat:@"%@%@", BASE_URL, [userDic objectForKey:@"avatar_url"]];
             newUser.avatarUrl = temp;
         }

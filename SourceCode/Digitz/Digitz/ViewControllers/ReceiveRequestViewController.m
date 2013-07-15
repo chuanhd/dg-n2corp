@@ -46,15 +46,26 @@
     serverManager = [[ServerManager alloc] init];
     serverManager.delegate = self;
     
-    if (_request.sender.name != nil && ![_request.sender.name isEqual:[NSNull null]]) {
-        self.lblUsername.text = _request.sender.name;
+    if (_request.sender.firstName != nil && ![_request.sender.firstName isEqual:[NSNull null]]) {
+        
+        NSMutableString *fullName = [NSMutableString stringWithString:_request.sender.firstName];
+        
+        if (_request.sender.lastName != nil && ![_request.sender.lastName isEqual:[NSNull null]]) {
+            [fullName appendFormat:@" %@", _request.sender.lastName];
+        }
+        
+        self.lblUsername.text = fullName;
     }else{
-        self.lblUsername.text = _request.sender.username;
+        
+        if (_request.sender.lastName != nil && ![_request.sender.lastName isEqual:[NSNull null]]) {
+            self.lblUsername.text = _request.sender.lastName;
+        }else
+            self.lblUsername.text = _request.sender.username;
     }
     
     self.lblAddress.text = _request.sender.hometown;
     
-    _fields = [NSMutableArray arrayWithObjects:@"username", @"email", @"name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar", @"facebook_url", @"google_plus_url", @"twitter_url", @"linkedin_url", @"instagram_url", @"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
+    _fields = [NSMutableArray arrayWithObjects:@"username", @"email", @"first_name", @"last_name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar", @"facebook_url", @"google_plus_url", @"twitter_url", @"linkedin_url", @"instagram_url", @"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
 }
 
 - (NSString *) buildFieldsString

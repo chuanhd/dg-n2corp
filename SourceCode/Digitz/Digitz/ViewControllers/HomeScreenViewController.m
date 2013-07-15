@@ -222,7 +222,7 @@
 {
     NSLog(@"update fail: %@", error.description);
     [MBProgressHUD hideHUDForView:self.view animated:YES];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Some error occurred" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[NSString stringWithFormat:@"Some error occurred: %@", error.description] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     [alert show];
 }
 
@@ -321,11 +321,22 @@
     
     NSLog(@"user %@", user.username);
     
-    if (![user.name isEqual:[NSNull null]]) {
-        cell.txtUsername.text = user.name;
+    if (![user.firstName isEqual:[NSNull null]]) {
+        
+        NSMutableString *fullName = [NSMutableString stringWithString:user.firstName];
+        if (![user.lastName isEqual:[NSNull null]]) {
+            [fullName appendFormat:@" %@", user.lastName];
+        }
+        cell.txtUsername.text = fullName;
     }else{
-        cell.txtUsername.text = user.username;
+        
+        if (![user.lastName isEqual:[NSNull null]]) {
+            cell.txtUsername.text = user.lastName;
+        }else{
+            cell.txtUsername.text = user.username;
+        }
     }
+    
     cell.txtHometown.text = user.hometown;
     if (![user.avatarUrl isEqual:[NSNull null]]) {
         cell.avatarUrlStr = user.avatarUrl;

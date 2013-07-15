@@ -37,10 +37,21 @@
     serverManager = [[ServerManager alloc] init];
     serverManager.delegate = self;
     
-    if (requestUser.name != nil && ![requestUser.name isEqual:[NSNull null]]) {
-        self.txtUsername.text = requestUser.name;
+    if (requestUser.firstName != nil && ![requestUser.firstName isEqual:[NSNull null]]) {
+        
+        NSMutableString *fullName = [NSMutableString stringWithString:requestUser.firstName];
+        
+        if (![requestUser.lastName isEqual:[NSNull null]]) {
+            [fullName appendFormat:@" %@", requestUser.lastName];
+        }
+        
+        self.txtUsername.text = fullName;
     }else{
-        self.txtUsername.text = requestUser.username;
+        
+        if (![requestUser.lastName isEqual:[NSNull null]]) {
+            self.txtUsername.text = requestUser.lastName;
+        }else
+            self.txtUsername.text = requestUser.username;
     }
     
     self.txtLocation.text = requestUser.hometown;

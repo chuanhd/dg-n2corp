@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *txtPersonalBio;
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrllViewFields;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingView;
 
 @property (strong, nonatomic) UIViewController *parentVC;
 @property (strong, nonatomic) BSKeyboardControls *mKeyboardControls;

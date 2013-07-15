@@ -497,7 +497,7 @@
     
     //FBRequest *fbRequest = [FBRequest requestWithGraphPath:@"me?fields=picture,email,hometown,first_name,last_name,location,gender,birthday,link" parameters:nil HTTPMethod:@"GET"];
     
-    FBRequest *fbRequest = [FBRequest requestWithGraphPath:@"me?fields=link,picture" parameters:nil HTTPMethod:@"GET"];
+    FBRequest *fbRequest = [FBRequest requestWithGraphPath:@"me?fields=link,picture.width(200).height(200)" parameters:nil HTTPMethod:@"GET"];
 
     
     [fbRequest startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary *result, NSError *error){
@@ -631,7 +631,13 @@
     if ([self userHasAccessToTwitter]) {
         ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
         
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES cancelable:NO withLabel:@"Fetching Twitter info"];
+        
         [accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+            });
             if(granted) {
                 NSArray *accountsArray = [accountStore accountsWithAccountType:accountType];
                 
@@ -698,9 +704,16 @@
                 
             }else{
                 NSLog(@"Error: %@", error.description);
+                if (error.code == 6) {
+                    [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Account not found. Please setup your account in setting app." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil] show];
+                }else if (error.code == 7){
+                    [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Access denied." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil] show];
+                }
             }
         }];
-
+    }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You cannot connect to Twitter right now. Please check your Twitter account in Setting>Twitter" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
     }
     
 }
