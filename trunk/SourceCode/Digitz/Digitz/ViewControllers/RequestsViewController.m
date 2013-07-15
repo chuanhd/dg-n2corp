@@ -67,13 +67,26 @@
     __weak User *sender = request.sender;
 
     NSLog(@"user %@", sender.username);
-
-    if (![sender.name isEqual:[NSNull null]]) {
-        cell.txtUsername.text = sender.name;
-    }else if(![sender.username isEqual:[NSNull null]]){
-        cell.txtUsername.text = sender.username;
+    
+    if (![sender.firstName isEqual:[NSNull null]]) {
+        
+        NSMutableString *fullName = [NSMutableString stringWithString:sender.firstName];
+        
+        if (![sender.lastName isEqual:[NSNull null]]) {
+            [fullName appendFormat:@" %@", sender.lastName];
+        }
+        
+        cell.txtUsername.text = fullName;
     }else{
-        cell.txtUsername.text = @"Error";
+        if (![sender.lastName isEqual:[NSNull null]]) {
+            cell.txtUsername.text = sender.lastName;
+        }else{
+            if(![sender.username isEqual:[NSNull null]]){
+                cell.txtUsername.text = sender.username;
+            }else{
+                cell.txtUsername.text = @"Error";
+            }
+        }
     }
 
     if (![sender.hometown isEqual:[NSNull null]]) {

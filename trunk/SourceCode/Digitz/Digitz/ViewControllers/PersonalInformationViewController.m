@@ -96,10 +96,8 @@
     
     if ([self.parentVC isKindOfClass:[EnterYourDigitzViewController class]]) {
         
-        __weak NSString *fullname = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateName];
-        NSInteger lastSpace = [fullname rangeOfString:@" " options:NSBackwardsSearch].location;
-        self.txtFirstName.text = [fullname substringToIndex:lastSpace];
-        self.txtLastName.text = [fullname substringFromIndex:lastSpace+1];
+        self.txtFirstName.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateFirstName];
+        self.txtLastName.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateLastName];
         
 //        self.txtFirstName.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateName];
         //self.txtAge.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateBirthday];
@@ -129,10 +127,8 @@
         self.txtState.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateState];
     }else if([self.parentVC isKindOfClass:[ProfileViewController class]]){
         
-        __weak NSString *fullname = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateName];
-        NSInteger lastSpace = [fullname rangeOfString:@" " options:NSBackwardsSearch].location;
-        self.txtFirstName.text = [fullname substringToIndex:lastSpace];
-        self.txtLastName.text = [fullname substringFromIndex:lastSpace+1];
+        self.txtFirstName.text = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateFirstName];
+        self.txtLastName.text = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateLastName];
         
         //self.txtAge.text = [((EnterYourDigitzViewController *) parentVC).paramsDict objectForKey:kKey_UpdateBirthday];
         self.txtEmail.text = [((ProfileViewController *) parentVC).paramsDict objectForKey:kKey_UpdateEmail];
@@ -192,9 +188,11 @@ static NSString *gender;
     //[self.parentVC.paramsDict setObject:token forKey:kKey_UserToken];
     
     if ([self.parentVC isKindOfClass:[EnterYourDigitzViewController class]]) {
-        [ ((EnterYourDigitzViewController *) self.parentVC).paramsDict setObject:[NSString stringWithFormat:@"%@ %@", self.txtFirstName.text, self.txtLastName.text] forKey:kKey_UpdateName];
+        [((EnterYourDigitzViewController *) self.parentVC).paramsDict setObject:self.txtFirstName.text forKey:kKey_UpdateFirstName];
+        [((EnterYourDigitzViewController *) self.parentVC).paramsDict setObject:self.txtLastName.text forKey:kKey_UpdateLastName];
     }else if ([self.parentVC isKindOfClass:[ProfileViewController class]]){
-        [ ((ProfileViewController *) self.parentVC).paramsDict setObject:[NSString stringWithFormat:@"%@ %@", self.txtFirstName.text, self.txtLastName.text] forKey:kKey_UpdateName];
+        [((ProfileViewController *) self.parentVC).paramsDict setObject:self.txtFirstName.text forKey:kKey_UpdateFirstName];
+        [((ProfileViewController *) self.parentVC).paramsDict setObject:self.txtLastName.text forKey:kKey_UpdateLastName];
     }
     
     
@@ -313,12 +311,14 @@ static NSString *gender;
     
     [_keyboardControls setActiveField:textField];
     
-    if (textField.frame.origin.y > 160) {
+    NSLog(@"textField frame y: %f", textField.frame.origin.y);
+    
+    if (textField.frame.origin.y > 130) {
 		[UIView beginAnimations: @"moveField" context: nil];
 		[UIView setAnimationDelegate: self];
 		[UIView setAnimationDuration: 0.25f];
 		[UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
-		self.view.frame = CGRectMake(0, -textField.frame.origin.y - 120, self.view.frame.size.width, self.view.frame.size.height);
+		self.view.frame = CGRectMake(0, -textField.frame.origin.y + 120, self.view.frame.size.width, self.view.frame.size.height);
 		[UIView commitAnimations];
 	}
     
@@ -332,7 +332,6 @@ static NSString *gender;
 		self.datePickerView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
 		[UIView commitAnimations];
     }
-
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
@@ -352,14 +351,14 @@ static NSString *gender;
 
 - (void)keyboardControls:(BSKeyboardControls *)keyboardControls selectedField:(UIView *)field inDirection:(BSKeyboardControlsDirection)direction
 {
-    if (field.frame.origin.y > 160) {
-		[UIView beginAnimations: @"moveField" context: nil];
-		[UIView setAnimationDelegate: self];
-		[UIView setAnimationDuration: 0.25f];
-		[UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
-		self.view.frame = CGRectMake(0, -field.frame.origin.y + 120, self.view.frame.size.width, self.view.frame.size.height);
-		[UIView commitAnimations];
-	}
+//    if (field.frame.origin.y > 130) {
+//		[UIView beginAnimations: @"moveField" context: nil];
+//		[UIView setAnimationDelegate: self];
+//		[UIView setAnimationDuration: 0.25f];
+//		[UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
+//		self.view.frame = CGRectMake(0, -field.frame.origin.y + 120, self.view.frame.size.width, self.view.frame.size.height);
+//		[UIView commitAnimations];
+//	}
 }
 
 - (void)keyboardControlsDonePressed:(BSKeyboardControls *)keyboardControls
@@ -454,11 +453,21 @@ static NSString *gender;
     }
     
     if ([textField isEqual:self.txtAutoState]) {
+        
+        NSString *typed = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        
+        NSLog(@"entered state: %@ - typed: %@", textField.text, typed);
+        
+//        [self performSelector:@selector(scrollTo)];
+        
 //        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             for (NSInteger i = 0; i < stateArray.count; i++) {
                 @autoreleasepool {
                     NSString *state = [stateArray objectAtIndex:i];
-                    if ([state rangeOfString:textField.text options:NSCaseInsensitiveSearch].location == 0) {
+                    if ([state rangeOfString:typed options:NSCaseInsensitiveSearch].location == 0) {
+                        
+                        NSLog(@"Scroll to index: %d", i);
+                        
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [self.statePicker selectRow:i inComponent:0 animated:YES];
                         });
@@ -471,6 +480,26 @@ static NSString *gender;
     }
     
     return YES;
+}
+
+- (void) scrollTo
+{
+    NSLog(@"txtState: %@", self.txtAutoState.text);
+    
+    for (NSInteger i = 0; i < stateArray.count; i++) {
+        @autoreleasepool {
+            NSString *state = [stateArray objectAtIndex:i];
+            if ([state rangeOfString:self.txtAutoState.text options:NSCaseInsensitiveSearch].location == 0) {
+                
+                NSLog(@"Scroll to index: %d", i);
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.statePicker selectRow:i inComponent:0 animated:YES];
+                });
+                break;
+            }
+        }
+    }
 }
 
 -(NSString*)formatNumber:(NSString*)mobileNumber

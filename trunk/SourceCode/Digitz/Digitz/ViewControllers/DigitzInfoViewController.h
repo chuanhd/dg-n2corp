@@ -24,6 +24,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblAlterEmail;
 @property (weak, nonatomic) IBOutlet UILabel *lblPersonalBio;
 - (IBAction)backBtnTapped:(id)sender;
+- (IBAction)callBtnTapped:(id)sender;
+- (IBAction)mailBtnTapped:(id)sender;
+- (IBAction)smsBtnTapped:(id)sender;
 
 @property (strong, nonatomic) User *user;
 

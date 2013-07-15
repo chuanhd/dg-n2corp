@@ -13,7 +13,7 @@
 @synthesize userId;
 @synthesize username;
 @synthesize avatarUrl;
-@synthesize name, email, birthday, hometown, state, phoneNumber, gender;
+@synthesize firstName, lastName, email, birthday, hometown, state, phoneNumber, gender;
 @synthesize facebookUrl, googleUrl, twitterUrl, instagramUrl, linkedinUrl;
 
 @synthesize company;

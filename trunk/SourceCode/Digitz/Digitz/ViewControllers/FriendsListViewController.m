@@ -182,14 +182,27 @@
     
     NSLog(@"user %@", user.username);
     
-    if (![user.name isEqual:[NSNull null]]) {
-        cell.txtUsername.text = user.name;
-    }else if(![user.username isEqual:[NSNull null]]){
-        cell.txtUsername.text = user.username;
+    if (![user.firstName isEqual:[NSNull null]]) {
+        
+        NSMutableString *fullName = [NSMutableString stringWithString:user.firstName];
+        
+        if (![user.lastName isEqual:[NSNull null]]) {
+            [fullName appendFormat:@" %@", user.lastName];
+        }
+        
+        cell.txtUsername.text = fullName;
     }else{
-        cell.txtUsername.text = @"Error";
+        if (![user.lastName isEqual:[NSNull null]]) {
+            cell.txtUsername.text = user.lastName;
+        }else{
+            if(![user.username isEqual:[NSNull null]]){
+                cell.txtUsername.text = user.username;
+            }else{
+                cell.txtUsername.text = @"Error";
+            }
+        }
     }
-    
+        
     if (![user.hometown isEqual:[NSNull null]]) {
         cell.txtHometown.text = user.hometown;
     }else{

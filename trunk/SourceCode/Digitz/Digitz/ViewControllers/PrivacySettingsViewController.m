@@ -43,15 +43,7 @@
     
     _serverManager = [[ServerManager alloc] init];
     _serverManager.delegate = self;
-    
-//    _privacyFieldsAcc = [NSMutableArray arrayWithObjects:@"username", @"email", @"name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar", @"facebook_url", @"google_plus_url", @"twitter_url", @"linkedin_url", @"instagram_url", @"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
-//    
-//    _privacyFieldsBus = [NSMutableArray arrayWithObjects:@"username", @"email", @"name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar", @"facebook_url", @"google_plus_url", @"twitter_url", @"linkedin_url", @"instagram_url", @"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
-//    
-//    _privacyFieldsFri = [NSMutableArray arrayWithObjects:@"username", @"email", @"name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar", @"facebook_url", @"google_plus_url", @"twitter_url", @"linkedin_url", @"instagram_url", @"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
-    
-    // @"facebook_url", @"google_plus_url", @"twitter_url", @"linkedin_url", @"instagram_url", 
-    
+
     if ([_parentVC isKindOfClass:[EnterYourDigitzViewController class]]) {
         EnterYourDigitzViewController *temp = (EnterYourDigitzViewController *) _parentVC;
         
@@ -60,7 +52,7 @@
         _privacyFieldsAcc = [DigitzUtils splitString:tempStr withSeparator:@","];
         
         if (_privacyFieldsAcc == nil || _privacyFieldsAcc.count == 0) {
-            _privacyFieldsAcc = [NSMutableArray arrayWithObjects:@"username", @"email", @"name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar",@"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
+            _privacyFieldsAcc = [NSMutableArray arrayWithObjects:@"username", @"email", @"first_name", @"last_name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar",@"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
         }
         
         tempStr = [temp.paramsDict objectForKey:kKey_PrivacyBus];
@@ -68,7 +60,7 @@
         _privacyFieldsBus = [DigitzUtils splitString:tempStr withSeparator:@","];
         
         if (_privacyFieldsBus == nil || _privacyFieldsBus.count == 0) {
-            _privacyFieldsBus = [NSMutableArray arrayWithObjects:@"username", @"email", @"name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar",@"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
+            _privacyFieldsBus = [NSMutableArray arrayWithObjects:@"username", @"email", @"first_name", @"last_name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar",@"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
         }
         
         tempStr = [temp.paramsDict objectForKey:kKey_PrivacyFri];
@@ -76,7 +68,7 @@
         _privacyFieldsFri = [DigitzUtils splitString:tempStr withSeparator:@","];
         
         if (_privacyFieldsFri == nil || _privacyFieldsFri.count == 0) {
-            _privacyFieldsFri = [NSMutableArray arrayWithObjects:@"username", @"email", @"name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar",@"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
+            _privacyFieldsFri = [NSMutableArray arrayWithObjects:@"username", @"email", @"first_name", @"last_name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar",@"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
         }
     }else if ([_parentVC isKindOfClass:[ProfileViewController class]]){
         ProfileViewController *temp = (ProfileViewController *) _parentVC;
@@ -85,7 +77,7 @@
         _privacyFieldsAcc = [DigitzUtils splitString:tempStr withSeparator:@","];
         
         if (_privacyFieldsAcc == nil || _privacyFieldsAcc.count == 0) {
-            _privacyFieldsAcc = [NSMutableArray arrayWithObjects:@"username", @"email", @"name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar",@"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
+            _privacyFieldsAcc = [NSMutableArray arrayWithObjects:@"username", @"email", @"first_name", @"last_name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar",@"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
         }
         
         tempStr = [temp.paramsDict objectForKey:kKey_PrivacyBus];
@@ -93,7 +85,7 @@
         _privacyFieldsBus = [DigitzUtils splitString:tempStr withSeparator:@","];
         
         if (_privacyFieldsBus == nil || _privacyFieldsBus.count == 0) {
-            _privacyFieldsBus = [NSMutableArray arrayWithObjects:@"username", @"email", @"name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar",@"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
+            _privacyFieldsBus = [NSMutableArray arrayWithObjects:@"username", @"email", @"first_name", @"last_name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar",@"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
         }
         
         tempStr = [temp.paramsDict objectForKey:kKey_PrivacyFri];
@@ -101,7 +93,7 @@
         _privacyFieldsFri = [DigitzUtils splitString:tempStr withSeparator:@","];
         
         if (_privacyFieldsFri == nil || _privacyFieldsFri.count == 0) {
-            _privacyFieldsFri = [NSMutableArray arrayWithObjects:@"username", @"email", @"name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar",@"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
+            _privacyFieldsFri = [NSMutableArray arrayWithObjects:@"username", @"email", @"first_name", @"last_name", @"age", @"gender", @"phone_number",@"hometown", @"birthday", @"blog_url", @"notes", @"avatar",@"company", @"address", @"homepage", @"email_home", @"email_work", @"cell_phone" ,@"home_phone", @"work_phone", @"bio", nil];
         }
     }
     
